@@ -1,0 +1,21 @@
+version: '3.8'
+services:
+  web:
+    build: .
+    container_name: fastapi_backend
+    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0"]
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+  db:
+    container_name: postgres_db
+    image: postgres:13
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: a39sKzäBU32as9khÖ8asdDüÜ24ßQdaäUZÜAN98
+      POSTGRES_DB: studypale
+    ports:
+      - "5432:5432"

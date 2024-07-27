@@ -1,0 +1,105 @@
+import pytest
+from pymongo import MongoClient
+from fastapi.testclient import TestClient
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from app.main import app
+from app.config import modb, psql
+from app.db import mongodb, postgres, postgrestables
+from app.oauth2 import create_access_token
+
+MONGODB_URI = modb.mongodb_uri
+
+
+@pytest.fixture(scope="function")
+def mongo_session():
+    client = MongoClient(MONGODB_URI)
+    client.drop_database("curatechai_test")
+    db = client["curatechai_test"]
+    yield db
+
+
+PSQL_DB_URL = psql.test_database_url_psql
+engine = create_engine(PSQL_DB_URL.replace(
+    "postgres", "postgresql"), echo=True)
+TestingSessionLocal = sessionmaker(
+    autocommit=False, autoflush=False, bind=engine)
+
+
+@pytest.fixture(scope="function")
+def postgres_session():
+    postgrestables.Base.metadata.drop_all(bind=engine)
+    postgrestables.Base.metadata.create_all(bind=engine)
+    db = TestingSessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+
+@pytest.fixture(scope="function")
+def client(mongo_session, postgres_session):
+    def override_get_db_mongo():
+        yield mongo_session
+
+    def override_get_db_postgres():
+        try:
+            yield postgres_session
+        finally:
+            postgres_session.close()
+
+    app.dependency_overrides[mongodb.get_db] = override_get_db_mongo
+    app.dependency_overrides[postgres.get_db] = override_get_db_postgres
+    yield TestClient(app)
+
+
+@pytest.fixture
+def test_user(client: TestClient):
+    user_data = {
+        "email": "mongodbtestuser@gmail.com",
+        "username": "mongodbtestuser",
+        "password": "Password123!",
+        "name": "Tom der Tester",
+        "age": 18
+    }
+    response = client.post("/auth/sign_up", json=user_data)
+    assert response.status_code == 201
+    return response.json()
+
+
+@pytest.fixture
+def token(test_user):
+    return create_access_token(data={"user_id": str(test_user["id"])})
+
+
+@pytest.fixture
+def authorized_client(client: TestClient, token):
+    client.headers = {
+        **client.headers,
+        "Authorization": f"Bearer {token}"
+    }
+    return client
+
+
+@pytest.fixture
+def empty_conversation_created(authorized_client: TestClient):
+    response = authorized_client.post("chat/create_conversation")
+    assert response.status_code == 201
+    return response.json()
+
+
+@pytest.fixture
+def conversation_with_messages(authorized_client: TestClient, empty_conversation_created):
+    messages = ["Hello, world!", "Welcome to the chat.", "How can I assist you today?",
+                "Have a great day!", "Thank you for your inquiry.", "Goodbye!"]
+    for message in messages:
+        response = authorized_client.post(
+            url="chat/ask_question",
+            json={
+                "convId": empty_conversation_created["convId"],
+                "content": message
+            }
+        )
+        assert response.status_code == 201
+    
+    return empty_conversation_created["convId"]
