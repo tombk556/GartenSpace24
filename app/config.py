@@ -1,6 +1,5 @@
 from dotenv import load_dotenv
 import os
-from fastapi_mail import ConnectionConfig
 
 load_dotenv()
 

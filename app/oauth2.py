@@ -3,7 +3,6 @@ from datetime import datetime, timedelta
 
 from .models import usermodels
 
-from .db import postgres
 from .db import postgrestables
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
