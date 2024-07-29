@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from .db import postgrestables
 from .routers import auth
-from .utils import SecurityHeadersMiddleware
+from .utils import SecurityHeadersMiddleware, RateLimitMiddleware
 from .db.postgres import engine
 
 postgrestables.Base.metadata.create_all(bind=engine)
@@ -10,7 +10,7 @@ postgrestables.Base.metadata.create_all(bind=engine)
 app = FastAPI()
 
 app.add_middleware(SecurityHeadersMiddleware)
-
+app.add_middleware(RateLimitMiddleware)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:3000"],
