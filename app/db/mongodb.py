@@ -7,5 +7,8 @@ MONGODB_URI = modb.mongodb_uri
 client = MongoClient(MONGODB_URI)
 
 def get_db() -> Generator:
-    db = client["curatechai"]
-    yield db
+    db = client["ELTS"]
+    try:
+        yield db
+    finally:
+        client.close()

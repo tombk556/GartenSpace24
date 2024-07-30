@@ -27,7 +27,7 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request, call_next):
         client_ip = request.client.host
         current_time = time()
-        if current_time - self.rate_limit_records[client_ip] < 1:
+        if current_time - self.rate_limit_records[client_ip] < 0.0001:
             return Response("Rate limit exceeded", status_code=429)
         
         self.rate_limit_records[client_ip] = current_time

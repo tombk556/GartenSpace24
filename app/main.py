@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from .db import postgrestables
-from .routers import auth
+from .routers import auth, entities
 from .middleware import SecurityHeadersMiddleware, RateLimitMiddleware
 from .db.postgres import engine
 
@@ -24,3 +24,4 @@ def root():
     return {"message": "Server is Running"}
 
 app.include_router(auth.router)
+app.include_router(entities.router)
