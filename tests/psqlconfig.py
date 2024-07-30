@@ -1,3 +1,4 @@
+from fastapi import FastAPI
 from fastapi.testclient import TestClient
 from app.db.postgres import get_db
 from sqlalchemy import create_engine
@@ -16,6 +17,11 @@ TestingSessionLocal = sessionmaker(
 
 Base = declarative_base()
 
+def create_test_app() -> FastAPI:
+    test_app = FastAPI()
+    for route in app.routes:
+        test_app.router.routes.append(route)
+    return test_app
 
 @pytest.fixture(scope="function")
 def session():
@@ -27,7 +33,6 @@ def session():
     finally:
         db.close()
 
-
 @pytest.fixture(scope="function")
 def client(session):
     def override_get_db():
@@ -35,8 +40,9 @@ def client(session):
             yield session
         finally:
             session.close()
+    test_app = create_test_app()
     app.dependency_overrides[get_db] = override_get_db
-    yield TestClient(app)
+    yield TestClient(test_app)
 
 
 @pytest.fixture
