@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from .db import postgrestables
 from .routers import auth
-from .utils import SecurityHeadersMiddleware, RateLimitMiddleware
+from .middleware import SecurityHeadersMiddleware, RateLimitMiddleware
 from .db.postgres import engine
 
 postgrestables.Base.metadata.create_all(bind=engine)
