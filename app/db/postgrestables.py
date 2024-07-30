@@ -13,11 +13,11 @@ class User(Base):
     password = Column(String, nullable=False)
     name = Column(String, nullable=False)
     age = Column(Integer, nullable=False)
-    created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
+    created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text("now()"))
 
 class BannedTokens(Base):
     __tablename__ = "bannedtokens"
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, unique=True, nullable=False)
     token = Column(String, nullable=False)
-    banned_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
+    banned_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text("now()"))
     

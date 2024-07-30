@@ -9,7 +9,7 @@ from ..oauth2 import oauth2_scheme
 
 router = APIRouter(
     prefix="/auth",
-    tags=['Authentication'])
+    tags=["Authentication"])
 
 
 @router.post("/sign_up", status_code=status.HTTP_201_CREATED, response_model=usermodels.User)
@@ -66,7 +66,7 @@ def update_user(update_user: usermodels.UserUpdate, current_user: usermodels.Use
     return user.first()
 
 
-@router.post('/login', response_model=usermodels.Token)
+@router.post("/login", response_model=usermodels.Token)
 def login(user_credentials: OAuth2PasswordRequestForm = Depends(),
           db: Session = Depends(postgres.get_db)):
     user = db.query(postgrestables.User).filter(
