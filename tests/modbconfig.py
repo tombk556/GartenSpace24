@@ -8,8 +8,17 @@ from fastapi import FastAPI
 from app.config import modb, psql
 from app.db import mongodb, postgres, postgrestables
 from app.oauth2 import create_access_token
+import json
+import os
 
 MONGODB_URI = modb.mongodb_uri
+
+def load_json_data(filename):
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    full_path = os.path.join(dir_path, filename)
+    with open(full_path, 'r') as file:
+        data = json.load(file)
+    return data
 
 def create_test_app() -> FastAPI:
     test_app = FastAPI()
@@ -86,26 +95,15 @@ def authorized_client(client: TestClient, token):
     }
     return client
 
-
 @pytest.fixture
-def empty_conversation_created(authorized_client: TestClient):
-    response = authorized_client.post("chat/create_conversation")
-    assert response.status_code == 201
-    return response.json()
-
-
-@pytest.fixture
-def conversation_with_messages(authorized_client: TestClient, empty_conversation_created):
-    messages = ["Hello, world!", "Welcome to the chat.", "How can I assist you today?",
-                "Have a great day!", "Thank you for your inquiry.", "Goodbye!"]
-    for message in messages:
-        response = authorized_client.post(
-            url="chat/ask_question",
-            json={
-                "convId": empty_conversation_created["convId"],
-                "content": message
-            }
-        )
-        assert response.status_code == 201
+def entities(authorized_client: TestClient):
+    entities = load_json_data("data/entities.json")
     
-    return empty_conversation_created["convId"]
+    for entity in entities:
+        print(entity)
+        print("-"*100)
+        response = authorized_client.post("/entities/create_entity", json=entity)
+        assert response.status_code == 201
+        
+    return entities
+    

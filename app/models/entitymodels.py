@@ -49,7 +49,6 @@ class Entity(BaseModel):
         use_enum_values = True
 
         json_schema_extra = {
-            "userId": "bf599aa6-2c73-40a3-9917-3633d64819ee",
             "address": {
                 "country": "Musterland",
                 "city": "Musterstadt",
@@ -68,3 +67,8 @@ class Entity(BaseModel):
                 "garage": True
             }
         }
+
+class EntityResponse(BaseModel):
+    address: Address
+    meta: Meta
+    properties: Optional[Dict] = None

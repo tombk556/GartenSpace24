@@ -26,3 +26,9 @@ def test_create_entity(authorized_client: TestClient):
         }
     )
     assert response.status_code == 201
+    
+
+def test_get_entities(authorized_client: TestClient, entities):
+    response = authorized_client.get(url="entities/get_entities")
+    assert response.status_code == 200
+    assert response.json() == entities
