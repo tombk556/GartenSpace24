@@ -1,6 +1,7 @@
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, status, HTTPException
 from ..db.mongodb import get_db
 from ..models.usermodels import User
+from ..models.entitymodels import Entity
 from pymongo.collection import Collection
 from .. import oauth2
 
@@ -9,5 +10,7 @@ router = APIRouter(
     tags=["Entities"])
 
 @router.post("/create_entity", status_code=status.HTTP_201_CREATED)
-def create_entity(user: User = Depends(oauth2.get_current_user), db: Collection = Depends(get_db)):
-    db["entities"].insert_one({"name": "entity"})
+def create_entity(entity: Entity, current_user: User = Depends(oauth2.get_current_user), db: Collection = Depends(get_db)):
+    entity.userId = str(current_user.id)
+    db["entities"].insert_one(entity.model_dump())
+    return {"message": "Entity created successfully"}

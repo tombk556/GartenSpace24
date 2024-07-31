@@ -4,18 +4,24 @@ from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from app.main import app
+from fastapi import FastAPI
 from app.config import modb, psql
 from app.db import mongodb, postgres, postgrestables
 from app.oauth2 import create_access_token
 
 MONGODB_URI = modb.mongodb_uri
 
+def create_test_app() -> FastAPI:
+    test_app = FastAPI()
+    for route in app.routes:
+        test_app.router.routes.append(route)
+    return test_app
 
 @pytest.fixture(scope="function")
 def mongo_session():
     client = MongoClient(MONGODB_URI)
-    client.drop_database("curatechai_test")
-    db = client["curatechai_test"]
+    client.drop_database("ELTS_test")
+    db = client["ELTS_test"]
     yield db
 
 
@@ -47,10 +53,10 @@ def client(mongo_session, postgres_session):
             yield postgres_session
         finally:
             postgres_session.close()
-
+    test_app = create_test_app()
     app.dependency_overrides[mongodb.get_db] = override_get_db_mongo
     app.dependency_overrides[postgres.get_db] = override_get_db_postgres
-    yield TestClient(app)
+    yield TestClient(test_app)
 
 
 @pytest.fixture
