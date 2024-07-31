@@ -8,7 +8,4 @@ client = MongoClient(MONGODB_URI)
 
 def get_db() -> Generator:
     db = client["ELTS"]
-    try:
-        yield db
-    finally:
-        client.close()
+    yield db

@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, field_validator, root_validator
 from fastapi import HTTPException, status
 from datetime import datetime
 from bson import ObjectId
@@ -69,6 +69,13 @@ class Entity(BaseModel):
         }
 
 class EntityResponse(BaseModel):
+    id: str = Field(..., alias="_id")
     address: Address
     meta: Meta
     properties: Optional[Dict] = None
+    
+    @root_validator(pre=True)
+    def convert_id(cls, values):
+        if "_id" in values and isinstance(values["_id"], ObjectId):
+            values["_id"] = str(values["_id"])
+        return values

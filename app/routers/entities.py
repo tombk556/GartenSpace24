@@ -10,7 +10,7 @@ router = APIRouter(
     tags=["Entities"])
 
 
-@router.post("/create_entity", status_code=status.HTTP_201_CREATED, response_model=EntityResponse)
+@router.post("/create_entity", status_code=status.HTTP_201_CREATED)
 def create_entity(entity: Entity, current_user: User = Depends(oauth2.get_current_user), db: Collection = Depends(get_db)):
     entity.userId = str(current_user.id)
     db["entities"].insert_one(entity.model_dump())
@@ -21,5 +21,5 @@ def create_entity(entity: Entity, current_user: User = Depends(oauth2.get_curren
 @router.get("/get_entities", response_model=list[EntityResponse])
 def get_entities(db: Collection = Depends(get_db)):
     entities = db["entities"].find({"address": {"$exists": True}})
-    
+
     return entities
