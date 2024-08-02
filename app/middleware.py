@@ -32,7 +32,6 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
         
         self.rate_limit_records[client_ip] = current_time
         path = request.url.path
-        await self.log_message(f"Client {client_ip} accessed {path}")
         
         start_time = time()
         response = await call_next(request)
@@ -41,7 +40,5 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
         custom_header = {"X-Process-Time": str(process_time)}
         for header, value in custom_header.items():
             response.headers.append(header, value)
-        
-        await self.log_message(f"Response for {path} took {process_time} seconds")
         
         return response

@@ -69,7 +69,7 @@ class Entity(BaseModel):
         }
 
 class EntityResponse(BaseModel):
-    id: str = Field(..., alias="_id")
+    id: Optional[str] = Field(..., alias="_id")
     address: Address
     meta: Meta
     properties: Optional[Dict] = None
