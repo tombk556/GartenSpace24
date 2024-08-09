@@ -5,7 +5,9 @@ from google.oauth2.credentials import Credentials
 import os
 
 
-router = APIRouter()
+router = APIRouter(
+    prefix="/google",
+)
 root_path = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
@@ -20,17 +22,16 @@ def get_google_oauth2_flow() -> Flow:
     )
 
 
-@router.get("/login/google")
-async def login_via_google(request: Request):
+@router.get("/login")
+async def login_google(request: Request):
     flow = get_google_oauth2_flow()
     authorization_url, state = flow.authorization_url(prompt='select_account')
     request.session['state'] = state
     return RedirectResponse(authorization_url)
 
 
-@router.get("/google/auth")
-async def auth_via_google(request: Request):
-    state = request.session.pop('state', None)
+@router.get("/auth")
+async def auth_google(request: Request):
     flow = get_google_oauth2_flow()
     flow.fetch_token(authorization_response=request.url._url)
 
@@ -48,7 +49,7 @@ async def auth_via_google(request: Request):
     return RedirectResponse(url="/")
 
 
-@router.get("/logout/google")
+@router.get("/logout")
 async def logout_google(request: Request):
     request.session.clear()
     return RedirectResponse(url="/")
