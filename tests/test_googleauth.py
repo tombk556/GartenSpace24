@@ -45,30 +45,10 @@ def client(session):
     test_app.add_middleware(SessionMiddleware, secret_key="secret_key")
     app.dependency_overrides[get_db] = override_get_db
     yield TestClient(test_app)
+    
 
-
-@pytest.fixture
-def test_user(client: TestClient):
-    user_data = {"email": "testuser@gmail.com", "username": "testuser",
-                 "password": "Password123!", "name": "Tom der Tester", "age": 18}
-    response = client.post("/auth/sign_up", json=user_data)
-
-    assert response.status_code == 201
-    new_user = response.json()
-    new_user["email"] = user_data["email"]
-    new_user["password"] = user_data["password"]
-
-    return new_user
-
-
-@pytest.fixture
-def token(test_user):
-    return create_access_token(data={"user_id": str(test_user["id"])})
-
-@pytest.fixture
-def authorized_client(client: TestClient, token):
-    client.headers = {
-        **client.headers,
-        "Authorization": f"Bearer {token}"
-    }
-    return client
+def test_login_google(client: TestClient):
+    response = client.get(url="/login/google")
+    url = response.url
+    print(url)
+    assert url != None
