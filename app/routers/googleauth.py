@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Request, HTTPException, Depends, status
+from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 from fastapi.responses import RedirectResponse
 from google.oauth2.credentials import Credentials
@@ -27,7 +28,7 @@ async def auth_google(request: Request, db: Session = Depends(get_db)):
     flow.fetch_token(authorization_response=request.url._url)
 
     credentials: Credentials = flow.credentials
-    request.session['access_token'] = credentials.token
+    request.session['google_access_token'] = credentials.token
 
     from googleapiclient.discovery import build
     service = build('oauth2', 'v2', credentials=credentials)
@@ -38,7 +39,12 @@ async def auth_google(request: Request, db: Session = Depends(get_db)):
     
     access_token = check_user_and_create_token(user_info, db)
     
-    return {"access_token": access_token, "token_type": "bearer"}
+    response = JSONResponse(content={"access_token": access_token, "token_type": "bearer"})
+    
+    response.set_cookie(key="access_token", value=access_token, httponly=True, secure=True)
+
+    
+    return response
  
  
 @router.get("/logout/google")
