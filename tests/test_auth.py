@@ -18,6 +18,28 @@ def test_create_user(client: TestClient):
     assert isinstance(new_user.id, UUID)
     assert response.status_code == 201
 
+def test_create_user2(client: TestClient):
+    response = client.post(
+        url="/auth/sign_up",
+        json={"email": "testuser@gmail.com", "username": "testuser",
+              "password": "Password123!"}
+    )
+    new_user = usermodels.User(**response.json())
+    assert new_user.email == "testuser@gmail.com"
+    assert isinstance(new_user.id, UUID)
+    assert response.status_code == 201
+
+def test_create_user3(client: TestClient):
+    response = client.post(
+        url="/auth/sign_up",
+        json={"email": "testuser@gmail.com", "username": "testuser",
+              "password": "Password123!", "google_account": True}
+    )
+    new_user = usermodels.User(**response.json())
+    assert new_user.email == "testuser@gmail.com"
+    assert isinstance(new_user.id, UUID)
+    assert response.status_code == 201
+
 
 def test_wrong_password_creation(client: TestClient):
     response = client.post(
