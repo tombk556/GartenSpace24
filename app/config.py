@@ -12,6 +12,7 @@ class Settings:
             os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES"))
         self.api = os.getenv("API")
         self.model = os.getenv("MODEL")
+        self.cred_path = os.getenv("CRED_PATH")
 
 
 class PsqlCred:
