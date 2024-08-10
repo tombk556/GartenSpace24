@@ -8,8 +8,9 @@ class UserCreate(BaseModel):
     email: EmailStr
     username: str = Field(..., pattern=r"^[a-zA-Z0-9-' ]+$")
     password: str = Field(min_length=8, max_length=100)
-    name: str = Field(..., pattern=r"^[a-zA-Z0-9-' ]+$")
-    age: int = Field(gt=17, lt=100)
+    name: Optional[str] = Field(pattern=r"^[a-zA-Z0-9-' ]+$", default=None)
+    age: Optional[int] = Field(gt=17, lt=100, default=None)
+    google_account: Optional[bool] = Field(default=False)
 
     class Config:
         json_schema_extra = {
@@ -32,8 +33,8 @@ class UserCreate(BaseModel):
 class UserUpdate(BaseModel):
     email: EmailStr
     username: str = Field(..., pattern=r"^[a-zA-Z0-9-' ]+$")
-    name: str = Field(..., pattern=r"^[a-zA-Z0-9-' ]+$")
-    age: int = Field(gt=17, lt=100)
+    name: Optional[str] = Field(..., pattern=r"^[a-zA-Z0-9-' ]+$")
+    age: Optional[int] = Field(gt=17, lt=100)
 
     class Config:
         json_schema_extra = {

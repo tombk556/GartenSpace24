@@ -11,9 +11,10 @@ class User(Base):
     email = Column(String, nullable=False, unique=True)
     username = Column(String, nullable=False)
     password = Column(String, nullable=False)
-    name = Column(String, nullable=False)
-    age = Column(Integer, nullable=False)
+    name = Column(String, nullable=True)
+    age = Column(Integer, nullable=True)
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text("now()"))
+    google_account = Column(Boolean, nullable=False, server_default=text("false"))
 
 class BannedTokens(Base):
     __tablename__ = "bannedtokens"
