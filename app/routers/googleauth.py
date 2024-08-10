@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Request, HTTPException, Depends
+from fastapi import APIRouter, Request, HTTPException, Depends, status
 from sqlalchemy.orm import Session
 from fastapi.responses import RedirectResponse
 from google.oauth2.credentials import Credentials
@@ -7,6 +7,7 @@ from ..db import postgrestables
 from ..db.postgres import get_db
 from ..models import usermodels
 import os
+from .. import utils, oauth2
 
 router = APIRouter()
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
@@ -35,33 +36,39 @@ async def auth_google(request: Request, db: Session = Depends(get_db)):
         raise HTTPException(
             status_code=400, detail="Failed to retrieve user information.")
     
-    email = user_info['email']
-    existing_user = db.query(postgrestables.User).filter(
-        postgrestables.User.email == email).first()
+    access_token = check_user_and_create_token(user_info, db)
     
-    if existing_user and existing_user.google_account:
-        user_id = existing_user.id
-        return {"message": "Google Account already present -> login",
-                "user_id": user_id}
-        # create access token
-        
-    elif not existing_user:
-        user = usermodels.GoogleUserCreate(**user_info)
-        new_user = postgrestables.User(**user.model_dump())
-        db.add(new_user)
-        db.commit()
-        db.refresh(new_user)
-        # create access token
-        
-        return {"message": "Google Account created -> register"}
-    else:
-        return {"message": "There is already an account with this email address. Please login with your email and password."}
-        
-        
-    
-
-
+    return {"access_token": access_token, "token_type": "bearer"}
+ 
+ 
 @router.get("/logout/google")
 async def logout_google(request: Request):
     request.session.clear()
     return RedirectResponse(url="/")
+       
+def check_user_and_create_token(user_info, db: Session) -> str:
+    existing_user = db.query(postgrestables.User).filter(
+        postgrestables.User.email == user_info['email']).first()
+    
+    if existing_user and existing_user.google_account:
+        user_id = existing_user.id
+    elif not existing_user:
+        user = usermodels.GoogleUserCreate(**user_info)
+        user.password = utils.hash(user.password)
+        new_user = postgrestables.User(**user.model_dump())
+        db.add(new_user)
+        db.commit()
+        db.refresh(new_user)
+        user_id = new_user.id
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="There is already an gmail account with this email address. Please login with your email and password."
+        )
+    access_token = oauth2.create_access_token(data={"user_id": str(user_id)})
+    return access_token
+        
+       
+
+
+
