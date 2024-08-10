@@ -39,19 +39,23 @@ async def auth_google(request: Request, db: Session = Depends(get_db)):
     existing_user = db.query(postgrestables.User).filter(
         postgrestables.User.email == email).first()
     
-    if existing_user:
+    if existing_user and existing_user.google_account:
         user_id = existing_user.id
         return {"message": "Google Account already present -> login",
                 "user_id": user_id}
+        # create access token
         
-    else:
+    elif not existing_user:
         user = usermodels.GoogleUserCreate(**user_info)
         new_user = postgrestables.User(**user.model_dump())
         db.add(new_user)
         db.commit()
         db.refresh(new_user)
+        # create access token
         
         return {"message": "Google Account created -> register"}
+    else:
+        return {"message": "There is already an account with this email address. Please login with your email and password."}
         
         
     
