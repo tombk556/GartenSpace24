@@ -29,9 +29,6 @@ def root():
     return {"message": "Server is Running"}
 
 
-def get_access_token_cookie(access_token: str = Cookie(None)):
-    return access_token
-
 @app.get("/check-token")
 def get_token(access_token: str = Cookie(None)):
     return {"token": access_token}

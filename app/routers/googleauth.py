@@ -39,11 +39,8 @@ async def auth_google(request: Request, db: Session = Depends(get_db)):
 
     access_token = check_user_and_create_token(user_info, db)
 
-    response = JSONResponse(content={"message": "Successfully logged in"})
-
-    response.set_cookie(key="access_token",
-                        value=access_token)
-
+    response = RedirectResponse(url="/", status_code=302)
+    response.set_cookie(key="access_token", value=access_token)
     return response
 
 
