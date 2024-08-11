@@ -36,26 +36,27 @@ async def auth_google(request: Request, db: Session = Depends(get_db)):
     if not user_info:
         raise HTTPException(
             status_code=400, detail="Failed to retrieve user information.")
-    
-    access_token = check_user_and_create_token(user_info, db)
-    
-    response = JSONResponse(content={"access_token": access_token, "token_type": "bearer"})
-    
-    response.set_cookie(key="access_token", value=access_token, httponly=True, secure=True)
 
-    
+    access_token = check_user_and_create_token(user_info, db)
+
+    response = JSONResponse(content={"message": "Successfully logged in"})
+
+    response.set_cookie(key="access_token",
+                        value=access_token)
+
     return response
- 
- 
+
+
 @router.get("/logout/google")
 async def logout_google(request: Request):
     request.session.clear()
     return RedirectResponse(url="/")
-       
+
+
 def check_user_and_create_token(user_info, db: Session) -> str:
     existing_user = db.query(postgrestables.User).filter(
         postgrestables.User.email == user_info['email']).first()
-    
+
     if existing_user and existing_user.google_account:
         user_id = existing_user.id
     elif not existing_user:
@@ -73,8 +74,3 @@ def check_user_and_create_token(user_info, db: Session) -> str:
         )
     access_token = oauth2.create_access_token(data={"user_id": str(user_id)})
     return access_token
-        
-       
-
-
-

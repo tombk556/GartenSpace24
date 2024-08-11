@@ -1,11 +1,12 @@
-from fastapi import APIRouter, Depends, status, HTTPException
+from fastapi import APIRouter, Depends, status, HTTPException, Request
+from fastapi.responses import JSONResponse
 from fastapi.security.oauth2 import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from ..models import usermodels
 from ..db import postgres, postgrestables
 from .. import utils, oauth2
 from ..db.postgres import get_db
-from ..oauth2 import oauth2_scheme
+
 
 router = APIRouter(
     prefix="/auth",
@@ -33,8 +34,7 @@ def create_user(user: usermodels.UserCreate, db: Session = Depends(get_db)):
 
 @router.delete("/delete_user", status_code=status.HTTP_204_NO_CONTENT)
 def delte_user(current_user: usermodels.User = Depends(oauth2.get_current_user), db: Session = Depends(get_db),
-               token: str = Depends(oauth2_scheme)):
-
+               token: str = Depends(oauth2.get_access_token)):
     existing_user = db.query(postgrestables.User).filter(
         postgrestables.User.id == current_user.id)
     existing_user.delete(synchronize_session=False)
@@ -66,7 +66,7 @@ def update_user(update_user: usermodels.UserUpdate, current_user: usermodels.Use
     return user.first()
 
 
-@router.post("/login", response_model=usermodels.Token)
+@router.post("/login")
 def login(user_credentials: OAuth2PasswordRequestForm = Depends(),
           db: Session = Depends(postgres.get_db)):
     user = db.query(postgrestables.User).filter(
@@ -82,7 +82,10 @@ def login(user_credentials: OAuth2PasswordRequestForm = Depends(),
 
     access_token = oauth2.create_access_token(data={"user_id": str(user.id)})
 
-    return {"access_token": access_token, "token_type": "bearer"}
+    response = JSONResponse(content={"message": "Successfully logged in"})
+    response.set_cookie(key="access_token",
+                        value=access_token)
+    return response
 
 
 @router.get("/users/me", response_model=usermodels.User)

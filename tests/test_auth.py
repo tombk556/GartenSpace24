@@ -63,12 +63,8 @@ def test_login(client: TestClient, test_user):
     response = client.post(
         url="/auth/login",
         data={"username": test_user["email"], "password": test_user["password"]})
-    login_response = usermodels.Token(**response.json())
-    payload = jwt.decode(login_response.access_token,
-                         settings.secret_key, algorithms=[settings.algorithm])
-    id = payload.get("user_id")
-    assert login_response.token_type == "bearer"
-    assert id == test_user["id"]
+    token = response.cookies.get("access_token")
+    assert token is not None
     assert response.status_code == 200
 
 

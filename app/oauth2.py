@@ -1,4 +1,5 @@
 from jose import JWTError, jwt
+from fastapi import Request
 from datetime import datetime, timedelta
 from .models import usermodels
 from .db import postgrestables
@@ -54,15 +55,20 @@ def verify_access_token(token: str, credential_exception, db: Session):
     return token_data
 
 
-def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
+def get_current_user(request: Request, db: Session = Depends(get_db)):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
         headers={"WWW-Authenticate": "Bearer"}
     )
+    
+    token = request.cookies.get("access_token")
     token_data = verify_access_token(token, credentials_exception, db)
     user = db.query(postgrestables.User).filter(
         postgrestables.User.id == token_data.id).first()
     if not user:
         raise credentials_exception
     return user
+
+def get_access_token(request: Request) -> str:
+    return request.cookies.get("access_token")

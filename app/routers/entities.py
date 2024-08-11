@@ -18,7 +18,8 @@ def create_entity(entity: Entity, current_user: User = Depends(oauth2.get_curren
 
 
 @router.get("/get_all_entities", response_model=list[EntityResponse])
-def get_all_entities(db: Collection = Depends(get_db)):
+def get_all_entities(db: Collection = Depends(get_db), current_user: User = Depends(oauth2.get_current_user)):
+    print(current_user.id)
     entities = db["entities"].find({"address": {"$exists": True}})
 
     return entities
