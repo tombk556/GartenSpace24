@@ -17,11 +17,11 @@ const Nav = () => {
       </Link>
       <div className="sm:flex hidden">
         <div className="flex gap-3 md:gap-5">
-          <Link href="/login" className="outline_btn">
+          <Link href="/login" className="black_btn">
             Login
           </Link>
-          <Link href="/signup" className="outline_btn">
-            Signup
+          <Link href="/find" className="outline_btn">
+            Find Venues
           </Link>
         </div>
       </div>
