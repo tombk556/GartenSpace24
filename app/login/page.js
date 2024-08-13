@@ -31,7 +31,7 @@ export default function Page() {
                   type="email"
                   autoComplete="email"
                   required
-                  className="w-full text text-gray-800 px-4 py-3.5 rounded-md focus:bg-transparent"
+                  className="w-full text text-gray-800 px-4 py-3.5 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
                   placeholder="Email address"
                 />
               </div>
@@ -41,7 +41,7 @@ export default function Page() {
                   type="password"
                   autoComplete="current-password"
                   required
-                  className="w-full text text-gray-800 px-4 py-3.5 rounded-md focus:bg-transparent"
+                  className="w-full text text-gray-800 px-4 py-3.5 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
                   placeholder="Password"
                 />
               </div>
