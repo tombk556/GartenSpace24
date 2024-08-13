@@ -8,10 +8,10 @@ export default function Page() {
             <h2 className="lg:text-5xl text-4xl font-extrabold lg:leading-[55px] text-black-800">
               Login to access your Account
             </h2>
-            <p className="text mt-6 text-gray-800">
+            <p className="lg:text-2xl mt-6 text-gray-800">
               Access your account to manage your venues, bookings and more.
             </p>
-            <p className="text-sm mt-12 text-gray-800">
+            <p className="lg:text-xl mt-12 text-gray-800">
               Don't have an account?{" "}
               <Link href="/signup" className="orange_text font-semibold hover:underline">
                   Register here
@@ -21,7 +21,7 @@ export default function Page() {
 
           <form className="max-w-md md:ml-auto w-full">
             <h3 className="text-black-800 text-3xl font-extrabold mb-8">
-              Sign in
+              Login
             </h3>
 
             <div className="space-y-4">
@@ -79,6 +79,20 @@ export default function Page() {
                 Log in
               </button>
             </div>
+            <div class="mt-3 flex items-center gap-4">
+              <hr class="w-full border-gray-300" />
+              <p class="text-sm text-gray-800 text-center">or</p>
+              <hr class="w-full border-gray-300" />
+            </div>
+            <div className="mt-3">
+              <button
+                type="submit"
+                className="outline_btn w-full text-white text-sm font-semibold py-3.5 rounded-md"
+              >
+                Continue with Google
+              </button>
+            </div>
+
           </form>
         </div>
   );
