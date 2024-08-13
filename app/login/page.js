@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import { FcGoogle } from "react-icons/fc";
 
 export default function Page() {
   return (
@@ -79,16 +80,17 @@ export default function Page() {
                 Log in
               </button>
             </div>
-            <div class="mt-3 flex items-center gap-4">
-              <hr class="w-full border-gray-300" />
-              <p class="text-sm text-gray-800 text-center">or</p>
-              <hr class="w-full border-gray-300" />
+            <div className="mt-3 flex items-center gap-4">
+              <hr className="w-full border-gray-300" />
+              <p className="text-sm text-gray-800 text-center">or</p>
+              <hr className="w-full border-gray-300" />
             </div>
             <div className="mt-3">
               <button
                 type="submit"
                 className="outline_btn w-full text-white text-sm font-semibold py-3.5 rounded-md"
               >
+                <FcGoogle size={20} className="mr-2"/> 
                 Continue with Google
               </button>
             </div>
