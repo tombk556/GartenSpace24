@@ -1,8 +1,18 @@
 "use client";
 import Link from "next/link";
 import { FcGoogle } from "react-icons/fc";
-
+import { useState } from "react";
 export default function Page() {
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("Email:", email);
+    console.log("Password:", password);
+  };
+
   return (
         <div className="grid md:grid-cols-2 items-center gap-10 max-w-6xl w-full">
           <div>
@@ -20,31 +30,35 @@ export default function Page() {
             </p>
           </div>
 
-          <form className="max-w-md md:ml-auto w-full">
+          <form className="max-w-md md:ml-auto w-full" onSubmit={handleSubmit}>
             <h3 className="text-black-800 text-3xl font-extrabold mb-8">
               Login
             </h3>
 
             <div className="space-y-4">
               <div>
-                <input
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  required
-                  className="w-full text text-gray-800 px-4 py-3.5 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
-                  placeholder="Email address"
-                />
+              <input
+                name="email"
+                type="email"
+                autoComplete="email"
+                required
+                className="w-full text text-gray-800 px-4 py-3.5 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
+                placeholder="Email address"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
               </div>
               <div>
-                <input
-                  name="password"
-                  type="password"
-                  autoComplete="current-password"
-                  required
-                  className="w-full text text-gray-800 px-4 py-3.5 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
-                  placeholder="Password"
-                />
+              <input
+                name="password"
+                type="password"
+                autoComplete="current-password"
+                required
+                className="w-full text text-gray-800 px-4 py-3.5 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
               </div>
               <div className="flex flex-wrap items-center justify-between gap-4">
                 <div className="flex items-center">
@@ -77,7 +91,7 @@ export default function Page() {
                 type="submit"
                 className="black_btn w-full text-white text-sm font-semibold py-3.5 rounded-md"
               >
-                Log in
+                Login
               </button>
             </div>
             <div className="mt-3 flex items-center gap-4">
