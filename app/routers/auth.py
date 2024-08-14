@@ -83,7 +83,7 @@ def login(user_credentials: OAuth2PasswordRequestForm = Depends(),
     access_token = oauth2.create_access_token(data={"user_id": str(user.id)})
 
     response = JSONResponse(content={"message": "Successfully logged in"})
-    response.set_cookie(key="access_token",
+    response.set_cookie(key="access_token", samesite="None",
                         value=access_token)
     return response
 
