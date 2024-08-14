@@ -7,10 +7,30 @@ export default function Page() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Email:", email);
-    console.log("Password:", password);
+
+    try {
+      const response = await fetch("http://localhost:8000/auth/login", {
+        method: "POST",
+        body: new URLSearchParams({
+          username: email, // Since OAuth2PasswordRequestForm expects `username`
+          password: password,
+        }),
+        credentials: "include",
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Successfully logged in");
+      } else {
+        const errorData = await response.json();
+        console.error("Login error:", errorData);
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      
+    }
   };
 
   return (
