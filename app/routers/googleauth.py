@@ -22,7 +22,7 @@ async def login_google(request: Request):
     return RedirectResponse(authorization_url)
 
 
-@router.get("/google/auth")
+@router.get("/google/auth", response_model=usermodels.Token)
 async def auth_google(request: Request, db: Session = Depends(get_db)):
     flow = get_google_oauth2_flow()
     flow.fetch_token(authorization_response=request.url._url)
@@ -39,9 +39,7 @@ async def auth_google(request: Request, db: Session = Depends(get_db)):
 
     access_token = check_user_and_create_token(user_info, db)
 
-    response = RedirectResponse(url="/", status_code=302)
-    response.set_cookie(key="access_token", value=access_token)
-    return response
+    return {"access_token": access_token, "token_type": "bearer"}
 
 
 @router.get("/logout/google")
