@@ -1,37 +1,19 @@
 "use client";
 import Link from "next/link";
 import { FcGoogle } from "react-icons/fc";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { AuthContext } from "../../context/AuthContext";
+
 export default function Page() {
 
-  const [email, setEmail] = useState("");
+  const { login } = useContext(AuthContext);
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    try {
-      const response = await fetch("http://localhost:8000/auth/login", {
-        method: "POST",
-        body: new URLSearchParams({
-          username: email, // Since OAuth2PasswordRequestForm expects `username`
-          password: password,
-        }),
-        credentials: "include",
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        console.log("Successfully logged in");
-      } else {
-        const errorData = await response.json();
-        console.error("Login error:", errorData);
-      }
-    } catch (error) {
-      console.error("Login error:", error);
-      
-    }
-  };
+    login(username, password);
+  }
 
   return (
         <div className="grid md:grid-cols-2 items-center gap-10 max-w-6xl w-full">
@@ -64,8 +46,8 @@ export default function Page() {
                 required
                 className="w-full text text-gray-800 px-4 py-3.5 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
                 placeholder="Email address"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
               />
               </div>
               <div>
