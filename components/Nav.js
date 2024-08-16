@@ -2,8 +2,12 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { useContext } from "react";
+import { AuthContext } from "@context/AuthContext";
 
 const Nav = () => {
+  const { user, logout } = useContext(AuthContext);
+
   return (
     <nav className="flex-between w-full mb-16 pt-3">
       <Link href="/" className="flex gap-2 flex-center">
@@ -16,14 +20,25 @@ const Nav = () => {
         />
       </Link>
       <div className="sm:flex hidden">
-        <div className="flex gap-3 md:gap-5">
-          <Link href="/login" className="black_btn">
-            Login
-          </Link>
-          <Link href="/find" className="outline_btn">
-            Find Venues
-          </Link>
-        </div>
+        {user ? (
+          <div className="flex gap-3 md:gap-5">
+            <Link href="/dashboard" className="black_btn">
+              Dashboard
+            </Link>
+            <button onClick={logout} className="outline_btn">
+              Logout
+            </button>
+          </div>
+        ) : (
+          <div className="flex gap-3 md:gap-5">
+            <Link href="/login" className="black_btn">
+              Login
+            </Link>
+            <Link href="/signup" className="outline_btn">
+              Signup
+            </Link>
+          </div>
+        )}
       </div>
     </nav>
   );
