@@ -3,6 +3,7 @@
 import { createContext, useState, useEffect } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { jwtDecode } from "jwt-decode";
 
 export const AuthContext = createContext();
 
@@ -14,13 +15,27 @@ export const AuthProvider = ({ children }) => {
         const rehydrateUser = async () => {
             const token = localStorage.getItem('access_token');
             if (token) {
-                axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-                try {
-                    const response = await axios.get('http://localhost:8000/auth/users/me');
-                    setUser(response.data);
-                    router.push('/');
-                } catch (error) {
-                    console.error('Failed to rehydrate user:', error);
+                const decodedToken = jwtDecode(token);
+                const currentTime = Date.now() / 1000;
+
+                if (decodedToken.exp < currentTime) {
+                    // Token is expired
+                    logout();
+                } else {
+                    // Token is valid, set it
+                    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+                    try {
+                        const response = await axios.get('http://localhost:8000/auth/users/me');
+                        setUser(response.data);
+                        // Automatically log out when token expires
+                        const expiresIn = decodedToken.exp * 1000 - Date.now();
+                        setTimeout(() => {
+                            logout();
+                        }, expiresIn);
+                    } catch (error) {
+                        console.error('Failed to rehydrate user:', error);
+                        logout();  // Log out if there's an error during rehydration
+                    }
                 }
             }
         };
@@ -33,15 +48,26 @@ export const AuthProvider = ({ children }) => {
             formData.append('username', username);
             formData.append('password', password);
             const response = await axios.post('http://localhost:8000/auth/login', formData, {
-                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             });
-            axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.access_token}`;
-            localStorage.setItem('access_token', response.data.access_token);
+
+            const token = response.data.access_token;
+            const decodedToken = jwtDecode(token);
+
+            axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+            localStorage.setItem('access_token', token);
             setUser(response.data);
+
+            // Automatically log out when token expires
+            const expiresIn = decodedToken.exp * 1000 - Date.now();
+            setTimeout(() => {
+                logout();
+            }, expiresIn);
+
             router.push('/');
             return null;
         } catch (error) {
-            console.log('Login Failed:');
+            console.log('Login Failed:', error);
             return error.response.data.detail;
         }
     };
