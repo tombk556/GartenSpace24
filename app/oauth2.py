@@ -8,6 +8,7 @@ from sqlalchemy.orm import Session
 from .config import settings
 from .db.postgres import get_db
 from google_auth_oauthlib.flow import Flow
+from typing import Dict
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
@@ -27,10 +28,10 @@ def get_google_oauth2_flow() -> Flow:
     )
 
 
-def create_access_token(data: dict):
+def create_access_token(data: Dict[str, any]):
     to_encode = data.copy()
     expire = datetime.now() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    to_encode.update({"exp": expire})
+    to_encode.update({"exp": expire.timestamp()})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
     return encoded_jwt
