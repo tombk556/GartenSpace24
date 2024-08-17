@@ -15,10 +15,9 @@ export const AuthProvider = ({ children }) => {
             const token = localStorage.getItem('access_token');
             if (token) {
                 axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-                // Optionally verify token with backend to fetch user data
                 try {
                     const response = await axios.get('http://localhost:8000/auth/users/me');
-                    setUser(response.data); // Set user data received from backend
+                    setUser(response.data);
                     router.push('/');
                 } catch (error) {
                     console.error('Failed to rehydrate user:', error);
@@ -38,7 +37,7 @@ export const AuthProvider = ({ children }) => {
             });
             axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.access_token}`;
             localStorage.setItem('access_token', response.data.access_token);
-            setUser(response.data); // Assume response.data contains user info
+            setUser(response.data);
             router.push('/');
         } catch (error) {
             console.log('Login Failed:', error);

@@ -10,19 +10,19 @@ export default function Page() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
-  const [loading, setLoading] = useState(true); // New loading state
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const token = localStorage.getItem('access_token');
     if (token) {
-      router.push('/dashboard'); // Redirects if token exists
+      router.push('/dashboard');
     } else {
-      setLoading(false); // Hides loading spinner and shows login form if no token
+      setLoading(false);
     }
   }, [router]);
 
   if (loading) {
-    return <div></div>; // Or a styled loading spinner
+    return <div></div>;
   }
 
   const handleSubmit = async (e) => {
