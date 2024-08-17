@@ -4,6 +4,7 @@ import { useContext, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { AuthContext } from "../../context/AuthContext";
 import { FcGoogle } from "react-icons/fc";
+import ErrorMessage from "@components/ErrorMessage";
 
 export default function Page() {
   const { user, login } = useContext(AuthContext);
@@ -11,6 +12,7 @@ export default function Page() {
   const [password, setPassword] = useState("");
   const router = useRouter();
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const token = localStorage.getItem('access_token');
@@ -27,7 +29,10 @@ export default function Page() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    login(username, password);
+    const errorMessage = await login(username, password);
+    if (errorMessage) {
+      setError(errorMessage);
+    }
   }
 
   return (
@@ -77,6 +82,7 @@ export default function Page() {
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
+            <ErrorMessage message={error}  />
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div className="flex items-center">
               <input

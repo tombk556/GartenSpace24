@@ -39,8 +39,10 @@ export const AuthProvider = ({ children }) => {
             localStorage.setItem('access_token', response.data.access_token);
             setUser(response.data);
             router.push('/');
+            return null;
         } catch (error) {
-            console.log('Login Failed:', error);
+            console.log('Login Failed:');
+            return error.response.data.detail;
         }
     };
 
