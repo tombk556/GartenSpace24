@@ -3,8 +3,8 @@ import Nav from "@components/Nav";
 import { AuthProvider } from "@context/AuthContext";
 
 export const metadata = {
-  title: "Promptopia",
-  description: "Discover & Share AI Prompts",
+  title: "ELTS",
+  description: "Discover & Share Event Locations",
 };
 
 const rootlayout = ({ children }) => {
