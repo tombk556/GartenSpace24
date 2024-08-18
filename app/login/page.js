@@ -123,9 +123,10 @@ export default function Page() {
           <hr className="w-full border-gray-300" />
         </div>
         <div className="mt-3">
-          <button
-            type="submit"
+        <button
+            type="button"
             className="outline_btn w-full text-white text-sm font-semibold py-3.5 rounded-md"
+            onClick={() => window.location.href = 'http://localhost:8000/login/google'}
           >
             <FcGoogle size={20} className="mr-2"/> 
             Continue with Google
