@@ -39,8 +39,8 @@ async def auth_google(request: Request, db: Session = Depends(get_db)):
 
     access_token = check_user_and_create_token(user_info, db)
 
-    return {"access_token": access_token, "token_type": "bearer"}
-
+    redirect_url = f"http://localhost:3000/google/callback?token={access_token}"
+    return RedirectResponse(url=redirect_url)
 
 @router.get("/logout/google")
 async def logout_google(request: Request):
