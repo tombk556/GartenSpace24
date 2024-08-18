@@ -1,5 +1,4 @@
 from fastapi import APIRouter, Request, HTTPException, Depends, status
-from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 from fastapi.responses import RedirectResponse
 from google.oauth2.credentials import Credentials
@@ -7,6 +6,7 @@ from ..oauth2 import get_google_oauth2_flow
 from ..db import postgrestables
 from ..db.postgres import get_db
 from ..models import usermodels
+from ..config import settings
 import os
 from .. import utils, oauth2
 
@@ -39,7 +39,7 @@ async def auth_google(request: Request, db: Session = Depends(get_db)):
 
     access_token = check_user_and_create_token(user_info, db)
 
-    redirect_url = f"http://localhost:3000/google/callback?token={access_token}"
+    redirect_url = f"{settings.frontend_url}/google/callback?token={access_token}"
     return RedirectResponse(url=redirect_url)
 
 @router.get("/logout/google")

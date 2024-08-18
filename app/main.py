@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Cookie, Depends
+from fastapi import FastAPI, Cookie
 from fastapi.middleware.cors import CORSMiddleware
 from .db import postgrestables
 from .routers import auth, entities, googleauth
@@ -6,8 +6,6 @@ from .middleware import SecurityHeadersMiddleware, RateLimitMiddleware
 from .db.postgres import engine
 from starlette.middleware.sessions import SessionMiddleware
 from .config import settings
-from .oauth2 import get_current_user, verify_access_token
-from .models.usermodels import User
 
 postgrestables.Base.metadata.create_all(bind=engine)
 

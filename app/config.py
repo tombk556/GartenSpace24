@@ -13,6 +13,7 @@ class Settings:
         self.api = os.getenv("API")
         self.model = os.getenv("MODEL")
         self.cred_path = os.getenv("CRED_PATH")
+        self.frontend_url = os.getenv("FRONTEND_URL")
 
 
 class PsqlCred:
