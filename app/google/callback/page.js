@@ -1,20 +1,33 @@
 "use client";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from 'next/navigation';
 
 export default function Page() {
   const router = useRouter();
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     const queryParams = new URLSearchParams(window.location.search);
     const token = queryParams.get("token");
+    const error = queryParams.get("error");
+
     if (token) {
       localStorage.setItem("access_token", token);
-      router.push('/dashboard')
+      router.push('/dashboard');
+    } else if (error) {
+      setErrorMessage(error);
     } else {
-      router.push('/login')
+      router.push('/login');
     }
-  }, []);
+  }, [router]);
 
-  return <div>Loading...</div>;
+  return (
+    <div>
+      {errorMessage ? (
+        <div style={{ color: 'red' }}>{errorMessage}</div>
+      ) : (
+        <div>Loading...</div>
+      )}
+    </div>
+  );
 }

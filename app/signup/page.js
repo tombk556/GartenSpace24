@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { AuthContext } from "../../context/AuthContext";
 import { FcGoogle } from "react-icons/fc";
 import Link from "next/link";
+import axios from "axios";
 import ErrorMessage from "@components/ErrorMessage";
 
 export default function Page() {
@@ -16,11 +17,33 @@ export default function Page() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const errorMessage = await login(username, password);
-    if (errorMessage) {
-      setError(errorMessage);
+    setError(""); 
+    try {
+      const response = await axios.post("http://localhost:8000/auth/sign_up", {
+        email,
+        username,
+        password,
+      });
+
+      if (response.status === 201) {
+        router.push("/login");
+      }
+    } catch (err) {
+      if (err.response && err.response.data && err.response.data.detail) {
+        const errorDetails = err.response.data.detail;
+        if (Array.isArray(errorDetails) && errorDetails.length > 0) {
+          const firstError = errorDetails[0];
+          setError(firstError.msg); 
+        } else {
+          setError(err.response.data.detail);
+        }
+      } else {
+        setError("An unexpected error occurred. Please try again.");
+      }
     }
   };
+
+
   return (
     <div className="max-w-md w-full mx-auto rounded-2xl p-8">
       <form className="max-w-md md:ml-auto w-full" onSubmit={handleSubmit}>
