@@ -12,12 +12,19 @@ export default function Page() {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [termsAccepted, setTermsAccepted] = useState(false);
   const router = useRouter();
   const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(""); 
+
+    if (!termsAccepted) {
+      setError("You must accept the Terms & Conditions to create an account.");
+      return;
+    }
+
     try {
       const response = await axios.post("http://localhost:8000/auth/sign_up", {
         email,
@@ -95,6 +102,7 @@ export default function Page() {
                 name="remember-me"
                 type="checkbox"
                 className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                onChange={(e) => setTermsAccepted(e.target.checked)}
               />
               <label
                 htmlFor="remember-me"
