@@ -45,7 +45,7 @@ async def auth_google(request: Request, db: Session = Depends(get_db)):
     except HTTPException as e:
         if e.status_code == status.HTTP_409_CONFLICT:
             error_message = e.detail
-            redirect_url = f"{settings.frontend_url}/google/callback?error={error_message}"
+            redirect_url = f"{settings.frontend_url}/login?error={error_message}"
             return RedirectResponse(url=redirect_url)
         else:
             raise e
