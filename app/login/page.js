@@ -19,6 +19,11 @@ export default function Page() {
     if (token) {
       router.push('/dashboard');
     } else {
+      const queryParams = new URLSearchParams(window.location.search);
+      const errorParam = queryParams.get("error");
+      if (errorParam) {
+        setError(errorParam);
+      }
       setLoading(false);
     }
   }, [router]);
@@ -33,7 +38,7 @@ export default function Page() {
     if (errorMessage) {
       setError(errorMessage);
     }
-  }
+  };
 
   return (
     <div className="grid md:grid-cols-2 items-center gap-10 max-w-6xl w-full">
@@ -47,7 +52,7 @@ export default function Page() {
         <p className="lg:text-xl mt-12 text-gray-800">
           Don't have an account?{" "}
           <Link href="/signup" className="orange_text font-semibold hover:underline">
-              Register here
+            Register here
           </Link>
         </p>
       </div>
@@ -82,7 +87,7 @@ export default function Page() {
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
-            <ErrorMessage message={error}  />
+          <ErrorMessage message={error} />
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div className="flex items-center">
               <input
@@ -123,12 +128,12 @@ export default function Page() {
           <hr className="w-full border-gray-300" />
         </div>
         <div className="mt-3">
-        <button
+          <button
             type="button"
             className="outline_btn w-full text-white text-sm font-semibold py-3.5 rounded-md"
             onClick={() => window.location.href = 'http://localhost:8000/login/google'}
           >
-            <FcGoogle size={20} className="mr-2"/> 
+            <FcGoogle size={20} className="mr-2" /> 
             Continue with Google
           </button>
         </div>
