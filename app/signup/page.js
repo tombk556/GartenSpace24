@@ -52,7 +52,7 @@ export default function Page() {
 
 
   return (
-    <div className="max-w-md w-full mx-auto rounded-2xl p-8">
+    <div className="max-w-md w-full mx-auto rounded-2xl">
       <form className="max-w-md md:ml-auto w-full" onSubmit={handleSubmit}>
         <h3 className="text-black-800 text-3xl font-extrabold mb-8">
           Create Your Account

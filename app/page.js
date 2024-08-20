@@ -1,7 +1,7 @@
 
 const Home = () => {
   return (
-    <section className="w-full flex-center flex-col">
+    <section>
       <h1 className="head_text text-center">
         Discover and Rent
         <br className="max-hd:hidden" />

@@ -9,8 +9,8 @@ const Nav = () => {
   const { user, logout } = useContext(AuthContext);
 
   return (
-    <nav className="flex-between w-full mb-16 pt-3">
-      <Link href="/" className="flex gap-2 flex-center">
+    <nav className="flex-between w-full mb-3 pt-3">
+      <Link href="/" className="flex gap-2 flex-center ml-5">
         <Image
           src="/assets/images/logo_icon.png"
           alt="Promptopia Logo"
@@ -19,7 +19,7 @@ const Nav = () => {
           className="object-contain"
         />
       </Link>
-      <div className="sm:flex hidden">
+      <div className="sm:flex hidden mr-5">
         {user ? (
           <div className="flex gap-3 md:gap-5">
             <Link href="/dashboard" className="black_btn">
