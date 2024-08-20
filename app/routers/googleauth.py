@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Request, HTTPException, Depends, status
+from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 from fastapi.responses import RedirectResponse
 from google.oauth2.credentials import Credentials
@@ -37,10 +38,17 @@ async def auth_google(request: Request, db: Session = Depends(get_db)):
         raise HTTPException(
             status_code=400, detail="Failed to retrieve user information.")
 
-    access_token = check_user_and_create_token(user_info, db)
-
-    redirect_url = f"{settings.frontend_url}/google/callback?token={access_token}"
-    return RedirectResponse(url=redirect_url)
+    try:
+        access_token = check_user_and_create_token(user_info, db)
+        redirect_url = f"{settings.frontend_url}/google/callback?token={access_token}"
+        return RedirectResponse(url=redirect_url)
+    except HTTPException as e:
+        if e.status_code == status.HTTP_409_CONFLICT:
+            error_message = e.detail
+            redirect_url = f"{settings.frontend_url}/google/callback?error={error_message}"
+            return RedirectResponse(url=redirect_url)
+        else:
+            raise e
 
 @router.get("/logout/google")
 async def logout_google(request: Request):
