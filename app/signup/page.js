@@ -1,14 +1,12 @@
 "use client";
-import { useContext, useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { AuthContext } from "../../context/AuthContext";
 import { FcGoogle } from "react-icons/fc";
 import Link from "next/link";
 import axios from "axios";
 import ErrorMessage from "@components/ErrorMessage";
 
 export default function Page() {
-  const { user, login } = useContext(AuthContext);
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");

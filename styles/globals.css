@@ -17,8 +17,6 @@
     radial-gradient(at 97% 96%, hsla(38, 60%, 95.5%, 1) 0px, transparent 50%),
     radial-gradient(at 33% 50%, hsla(222, 67%, 95.5%, 1) 0px, transparent 50%),
     radial-gradient(at 79% 53%, hsla(343, 68%, 95.5%, 1) 0px, transparent 50%);
-  height: 100vh; /* Adjust as needed */
-  width: 100vw; /* Adjust as needed */
 }
 
 .custom-gradient::before {
@@ -35,6 +33,17 @@
   pointer-events: none; /* Allows interactions with elements underneath */
   z-index: -1;
 }
+
+.mybackground {
+  background-image: 
+    radial-gradient(at 97% 21%, hsla(125, 98%, 95.5%, 1) 0px, transparent 50%),
+    radial-gradient(at 52% 99%, hsla(354, 98%, 95.5%, 1) 0px, transparent 50%),
+    radial-gradient(at 10% 29%, hsla(256, 96%, 95.5%, 1) 0px, transparent 50%),
+    radial-gradient(at 97% 96%, hsla(38, 60%, 95.5%, 1) 0px, transparent 50%),
+    radial-gradient(at 33% 50%, hsla(222, 67%, 95.5%, 1) 0px, transparent 50%),
+    radial-gradient(at 79% 53%, hsla(343, 68%, 95.5%, 1) 0px, transparent 50%);
+}
+
 
 
 .black_btn {
