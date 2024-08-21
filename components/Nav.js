@@ -9,7 +9,7 @@ const Nav = () => {
   const { user, logout } = useContext(AuthContext);
 
   return (
-    <nav className="fixed flex-between w-full mb-3 pt-3 z-50"> {/* Added bg-white/90 and backdrop-blur-lg */}
+    <nav className="fixed flex-between w-full mb-3 pt-3 z-50">
       <Link href="/" className="flex gap-2 flex-center ml-5">
         <Image
           src="/assets/images/logo_icon.png"

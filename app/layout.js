@@ -19,7 +19,7 @@ const rootlayout = ({ children }) => {
               {children}
             </main>
           </div>
-          <hr className="border-gray-300"/>
+          <hr className="border"/>
           <Footer />
         </body>
       </html>
