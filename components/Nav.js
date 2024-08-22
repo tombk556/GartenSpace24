@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useContext } from "react";
 import { AuthContext } from "@context/AuthContext";
+import DropdownMenu from "./DropDownMenu";
 
 const Nav = () => {
   const { user, logout } = useContext(AuthContext);
@@ -26,12 +27,7 @@ const Nav = () => {
           <Link href="/venues" className="black_btn">
             Find Venues
           </Link>
-            <Link href="/dashboard" className="black_btn">
-              Dashboard
-            </Link>
-            <button onClick={logout} className="outline_btn">
-              Logout
-            </button>
+          <DropdownMenu/>
           </div>
         ) : (
           <div className="flex gap-3 md:gap-5">
