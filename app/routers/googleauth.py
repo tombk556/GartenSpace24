@@ -57,8 +57,11 @@ async def logout_google(request: Request):
 
 
 def check_user_and_create_token(user_info, db: Session) -> str:
+    user_name = user_info["email"].split("@")[0]
     existing_user = db.query(postgrestables.User).filter(
-        postgrestables.User.email == user_info['email']).first()
+        (postgrestables.User.email == user_info['email'])
+        | (postgrestables.User.username == user_name)
+        ).first()
 
     if existing_user and existing_user.google_account:
         user_id = existing_user.id
@@ -73,7 +76,8 @@ def check_user_and_create_token(user_info, db: Session) -> str:
     else:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
-            detail="There is already an gmail account with this email address. Please login with your email and password."
+            detail="""There is already an gmail account with this email address or user name. 
+                      Please login with your email and password."""
         )
     access_token = oauth2.create_access_token(data={"user_id": str(user_id)})
     return access_token
