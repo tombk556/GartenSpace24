@@ -36,16 +36,12 @@ class UserCreate(BaseModel):
 class UserUpdate(BaseModel):
     email: EmailStr
     username: str = Field(..., pattern=r"^[a-zA-Z0-9-' ]+$")
-    name: Optional[str] = Field(..., pattern=r"^[a-zA-Z0-9-' ]+$")
-    age: Optional[int] = Field(gt=17, lt=100)
 
     class Config:
         json_schema_extra = {
             "example": {
                 "email": "updateduser@example.com",
-                "username": "newupdatedusername",
-                "name": "newupdatedusername",
-                "age": 19
+                "username": "newupdatedusername"
             }}
 
 class GoogleUserCreate(BaseModel):
