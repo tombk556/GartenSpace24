@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import ErrorMessage from "@components/ErrorMessage";
 
 export default function Profile() {
   const [user, setUser] = useState({ email: '', username: '', id: '' });
@@ -31,32 +32,29 @@ export default function Profile() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('access_token');
 
     axios
       .put(
-        'http://localhost:8000/auth/users/me',
+        'http://localhost:8000/auth/update_user_infos',
         {
           email: user.email,
-          username: user.username,
-          password: user.password,
-        },
+          username: user.username        },
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       )
-      .then((response) => {
+      .then(() => {
         alert('Profile updated successfully');
       })
       .catch((error) => {
-        setError('Failed to update profile');
+        setError(error.response.data.detail);
       });
   };
 
   if (loading) return <div className="text-center">Loading...</div>;
-  if (error) return <div className="text-center text-red-500">{error}</div>;
 
   return (
     <div className="w-full max-w-lg mx-auto mt-10 p-6 rounded-lg">
@@ -86,6 +84,7 @@ export default function Profile() {
                 className="w-full text text-gray-800 px-4 py-3.5 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
               />
             </div>
+          <ErrorMessage message={error} />
             <button
               type="submit"
               className="black_btn w-full text-white text-sm font-semibold py-3.5 rounded-md"

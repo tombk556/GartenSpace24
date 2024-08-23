@@ -76,7 +76,7 @@ export const AuthProvider = ({ children }) => {
         setUser(null);
         localStorage.removeItem('access_token');
         delete axios.defaults.headers.common['Authorization'];
-        router.push('/login');
+        router.push('/');
     };
 
     return (
