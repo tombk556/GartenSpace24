@@ -30,7 +30,7 @@ export default function Profile() {
     setUser({ ...user, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const updateAccount = (e) => {
     e.preventDefault();
     const token = localStorage.getItem('access_token');
 
@@ -52,7 +52,22 @@ export default function Profile() {
       .catch((error) => {
         setError(error.response.data.detail);
       });
-  };
+    };
+    
+    const deleteAccount = (e) => {
+      e.preventDefault();
+      const token = localStorage.getItem('access_token');
+      
+      axios
+      .delete('http://localhost:8000/auth/delete_user')
+      .then(() => {
+        localStorage.removeItem('access_token');
+        window.location.href = '/';
+        alert('Account deleted successfully');
+      }).catch((error) => {
+        console.log(error);
+      });
+    };
 
   if (loading) return <div className="text-center">Loading...</div>;
 
@@ -62,7 +77,7 @@ export default function Profile() {
           <p className="text-gray-700 mb-6"> ID:
             <span className="orange_text"> {user.id}</span>
           </p>
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={updateAccount} className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700">Email:</label>
               <input
@@ -90,6 +105,13 @@ export default function Profile() {
               className="black_btn w-full text-white text-sm font-semibold py-3.5 rounded-md"
             >
               Update Profile
+            </button>
+            <button
+              type="submit"
+              className="red_btn w-full text-white text-sm font-semibold py-3.5 rounded-md"
+              onClick={deleteAccount}
+            >
+              Delete Account
             </button>
           </form>
         </div>
