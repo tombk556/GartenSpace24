@@ -3,6 +3,7 @@ from ..db.mongodb import get_db
 from ..models.usermodels import User
 from ..models.entitymodels import Entity, EntityResponse
 from pymongo.collection import Collection
+from bson import ObjectId
 from .. import oauth2
 
 router = APIRouter(
@@ -18,8 +19,14 @@ def create_entity(entity: Entity, current_user: User = Depends(oauth2.get_curren
 
 
 @router.get("/get_all_entities", response_model=list[EntityResponse])
-def get_all_entities(db: Collection = Depends(get_db), current_user: User = Depends(oauth2.get_current_user)):
-    print(current_user.id)
+def get_all_entities(db: Collection = Depends(get_db)):
     entities = db["entities"].find({"address": {"$exists": True}})
 
     return entities
+
+@router.get("/get_entity/{id}", response_model=Entity)
+def get_entity(id: str, db: Collection = Depends(get_db)):
+    entity = db["entities"].find_one({'_id': ObjectId(id)})
+    if entity:
+        entity['_id'] = str(entity['_id'])
+    return entity

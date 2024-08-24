@@ -70,9 +70,7 @@ class Entity(BaseModel):
 
 class EntityResponse(BaseModel):
     id: str = Field(..., alias="_id")
-    address: Address
     meta: Meta
-    properties: Optional[Dict] = None
     
     @field_validator("id", mode="before")
     def validate_object_id(cls, value):
@@ -82,4 +80,3 @@ class EntityResponse(BaseModel):
         except ValueError:
             raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
                                 detail="Invalid ObjectId")
-            
