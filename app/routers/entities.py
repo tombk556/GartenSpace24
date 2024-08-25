@@ -1,10 +1,16 @@
-from fastapi import APIRouter, Depends, status
-from ..db.mongodb import get_db
+from fastapi import APIRouter, Depends, status, UploadFile, File, HTTPException, Form
+from fastapi.responses import StreamingResponse
+from ..db.mongodb import get_db, get_fs
 from ..models.usermodels import User
 from ..models.entitymodels import Entity, EntityResponse
 from pymongo.collection import Collection
 from bson import ObjectId
+from bson.binary import Binary
+from typing import List
+from gridfs import GridFS
 from .. import oauth2
+import json
+import base64
 
 router = APIRouter(
     prefix="/entities",
@@ -30,3 +36,19 @@ def get_entity(id: str, db: Collection = Depends(get_db)):
     if entity:
         entity['_id'] = str(entity['_id'])
     return entity
+
+
+@router.post("/upload/")
+async def upload_image(file: UploadFile = File(...), fs: GridFS = Depends(get_fs)):
+    file_content = await file.read()
+    file_id = fs.put(file_content, filename=file.filename)
+    return {"file_id": str(file_id)}
+
+
+@router.get("/download/{file_id}")
+async def download_image(file_id: str, fs: GridFS = Depends(get_fs)):
+    try:
+        grid_out = fs.get(ObjectId(file_id))
+        return StreamingResponse(grid_out, media_type="image/jpeg")
+    except Exception as e:
+        raise HTTPException(status_code=404, detail="File not found")
