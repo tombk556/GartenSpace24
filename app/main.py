@@ -2,7 +2,6 @@ from fastapi import FastAPI, Cookie
 from fastapi.middleware.cors import CORSMiddleware
 from .db import postgrestables
 from .routers import auth, entities, googleauth
-from .middleware import SecurityHeadersMiddleware, RateLimitMiddleware
 from .db.postgres import engine
 from starlette.middleware.sessions import SessionMiddleware
 from .config import settings
@@ -11,8 +10,6 @@ postgrestables.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
-app.add_middleware(SecurityHeadersMiddleware)
-app.add_middleware(RateLimitMiddleware)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:3000"],
