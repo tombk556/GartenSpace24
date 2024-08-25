@@ -5,12 +5,8 @@ from ..models.usermodels import User
 from ..models.entitymodels import Entity, EntityResponse
 from pymongo.collection import Collection
 from bson import ObjectId
-from bson.binary import Binary
-from typing import List
 from gridfs import GridFS
 from .. import oauth2
-import json
-import base64
 
 router = APIRouter(
     prefix="/entities",
