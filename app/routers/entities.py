@@ -16,8 +16,8 @@ router = APIRouter(
 @router.post("/create_entity", status_code=status.HTTP_201_CREATED)
 def create_entity(entity: Entity, current_user: User = Depends(oauth2.get_current_user), db: Collection = Depends(get_db)):
     entity.userId = str(current_user.id)
-    db["entities"].insert_one(entity.model_dump())
-    return entity
+    result = db["entities"].insert_one(entity.model_dump())
+    return str(result.inserted_id)
 
 
 @router.get("/get_all_entities", response_model=list[EntityResponse])
@@ -42,11 +42,20 @@ async def upload_image(file: UploadFile = File(...), fs: GridFS = Depends(get_fs
 
 
 @router.put("/upload/{entity_id}")
-async def upload_image(entity_id: str, file: UploadFile = File(...), fs: GridFS = Depends(get_fs)):
+async def upload_image(entity_id: str, file: UploadFile = File(...), current_user: User = Depends(oauth2.get_current_user), 
+                       fs: GridFS = Depends(get_fs), db: Collection = Depends(get_db)):
+    
+    user_id = db["entities"].find_one({"_id": ObjectId(entity_id)})["userId"]
+    
+    if str(current_user.id) != user_id:
+        raise HTTPException(status_code=403, detail="You are not authorized to upload image for this entity")
+    
     if not ObjectId.is_valid(entity_id):
         raise HTTPException(status_code=404, detail="Entity not found")
     file_content = await file.read()
     file_id = fs.put(file_content, filename=file.filename, metadata={"entity_id": entity_id})
+    db["entities"].update_one({"_id": ObjectId(entity_id)}, {
+                              "$set": {f"images.{file.filename}": str(file_id)}})
     return {"file_id": str(file_id), "entity_id": entity_id}
 
 
