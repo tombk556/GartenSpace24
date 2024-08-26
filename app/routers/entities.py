@@ -41,10 +41,23 @@ async def upload_image(file: UploadFile = File(...), fs: GridFS = Depends(get_fs
     return {"file_id": str(file_id)}
 
 
-@router.get("/download/{file_id}")
-async def download_image(file_id: str, fs: GridFS = Depends(get_fs)):
+@router.put("/upload/{entity_id}")
+async def upload_image(entity_id: str, file: UploadFile = File(...), fs: GridFS = Depends(get_fs)):
+    if not ObjectId.is_valid(entity_id):
+        raise HTTPException(status_code=404, detail="Entity not found")
+    file_content = await file.read()
+    file_id = fs.put(file_content, filename=file.filename, metadata={"entity_id": entity_id})
+    return {"file_id": str(file_id), "entity_id": entity_id}
+
+
+@router.get("/download/{entity_id}/{file_id}")
+async def download_image(entity_id: str, file_id: str, fs: GridFS = Depends(get_fs)):
     try:
         grid_out = fs.get(ObjectId(file_id))
+        
+        if grid_out.metadata.get("entity_id") != entity_id:
+            raise HTTPException(status_code=404, detail="File not found for the given entity")
+        
         return StreamingResponse(grid_out, media_type="image/jpeg")
     except Exception as e:
-        raise HTTPException(status_code=404, detail="File not found")
+        raise HTTPException(status_code=404, detail=f"File not found {e}")
