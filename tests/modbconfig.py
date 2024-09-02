@@ -9,6 +9,7 @@ from app.config import modb, psql
 from app.db import mongodb, postgres, postgrestables
 from app.oauth2 import create_access_token
 import json
+from bson import ObjectId
 import os
 
 MONGODB_URI = modb.mongodb_uri
@@ -100,10 +101,37 @@ def entities(authorized_client: TestClient):
     entities = load_json_data("data/entities.json")
     
     for entity in entities:
-        print(entity)
-        print("-"*100)
         response = authorized_client.post("/entities/create_entity", json=entity)
         assert response.status_code == 201
         
     return entities
+
+@pytest.fixture
+def entity(authorized_client: TestClient):
+    response = authorized_client.post(
+        url="entities/create_entity",
+        json={
+            "address": {
+                "country": "Muserland",
+                "city": "Musterstadt",
+                "plz": "12345",
+                "street": "Musterstraße"
+            },
+            "meta": {
+                "type": "house",
+                "size": "100m²",
+                "rooms": 4,
+                "price": "100000€",
+                "description": "This is a beautiful house"
+            },
+            "properties": {
+                "garden": True,
+                "garage": False
+            }
+        }
+    )
+    
+    assert response.status_code == 201
+    assert ObjectId(response.json())
+    return response.json()
     

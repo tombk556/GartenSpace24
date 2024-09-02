@@ -1,4 +1,5 @@
 from fastapi.testclient import TestClient
+from bson import ObjectId
 from .modbconfig import *
 
 
@@ -26,9 +27,20 @@ def test_create_entity(authorized_client: TestClient):
         }
     )
     assert response.status_code == 201
+    assert ObjectId(response.json())
     
 
 def test_get_all_entities(authorized_client: TestClient, entities):
     response = authorized_client.get(url="entities/get_all_entities")
     assert response.status_code == 200
     assert len(response.json()) == len(entities)
+    
+def test_upload_image(authorized_client: TestClient, entity):
+    response = authorized_client.put(
+        url=f"entities/upload/{entity}",
+        files={"file": ("test_image.png", 
+                        open("/Users/tom/Documents/ELTS/ELTS_backend/tests/data/test_image.png", "rb"), 
+                        "image/png")}
+    )
+    assert response.status_code == 200
+    assert "file_id" in response.json()

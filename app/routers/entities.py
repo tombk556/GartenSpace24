@@ -34,13 +34,6 @@ def get_entity(id: str, db: Collection = Depends(get_db)):
     return entity
 
 
-@router.post("/upload/")
-async def upload_image(file: UploadFile = File(...), fs: GridFS = Depends(get_fs)):
-    file_content = await file.read()
-    file_id = fs.put(file_content, filename=file.filename)
-    return {"file_id": str(file_id)}
-
-
 @router.put("/upload/{entity_id}")
 async def upload_image(entity_id: str, file: UploadFile = File(...), current_user: User = Depends(oauth2.get_current_user), 
                        fs: GridFS = Depends(get_fs), db: Collection = Depends(get_db)):
