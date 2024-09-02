@@ -26,7 +26,7 @@ def get_all_entities(db: Collection = Depends(get_db)):
 
     return entities
 
-@router.get("/get_entity/{id}", response_model=Entity)
+@router.get("/get_entity/{id}")
 def get_entity(id: str, db: Collection = Depends(get_db)):
     entity = db["entities"].find_one({'_id': ObjectId(id)})
     if entity:
@@ -60,6 +60,6 @@ async def download_image(entity_id: str, file_id: str, fs: GridFS = Depends(get_
         if grid_out.metadata.get("entity_id") != entity_id:
             raise HTTPException(status_code=404, detail="File not found for the given entity")
         
-        return StreamingResponse(grid_out, media_type="image/jpeg")
+        return StreamingResponse(grid_out, media_type="image/png")
     except Exception as e:
         raise HTTPException(status_code=404, detail=f"File not found {e}")
