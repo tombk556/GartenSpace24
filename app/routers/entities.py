@@ -26,7 +26,7 @@ def get_all_entities(db: Collection = Depends(get_db)):
 
     return entities
 
-@router.get("/get_entity/{id}")
+@router.get("/get_entity/{id}", response_model=Entity)
 def get_entity(id: str, db: Collection = Depends(get_db)):
     entity = db["entities"].find_one({'_id': ObjectId(id)})
     if entity:

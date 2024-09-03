@@ -1,8 +1,8 @@
-from pydantic import BaseModel, Field, field_validator, root_validator
+from pydantic import BaseModel, Field, field_validator, validator
 from fastapi import HTTPException, status
 from datetime import datetime
 from bson import ObjectId
-from typing import Optional, Dict
+from typing import Optional, Dict, List
 from enum import Enum
 from uuid import UUID
 
@@ -67,11 +67,19 @@ class Entity(BaseModel):
                 "garage": True
             }
         }
+class ImageFormats(BaseModel):
+    png: str
 
+class ImageItem(BaseModel):
+    image_id: str
+    formats: ImageFormats
+    
 class EntityResponse(BaseModel):
     id: str = Field(..., alias="_id")
     meta: Meta
-    
+    images: Optional[List[ImageItem]] = None
+
+
     @field_validator("id", mode="before")
     def validate_object_id(cls, value):
         try:
@@ -80,3 +88,16 @@ class EntityResponse(BaseModel):
         except ValueError:
             raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
                                 detail="Invalid ObjectId")
+            
+    @validator("images", pre=True, always=True)
+    def parse_images(cls, value):
+        if isinstance(value, dict):
+            images_list = [
+                {"image_id": image_id, "formats": formats}
+                for image_id, formats in value.items()
+            ]
+            return images_list
+        elif value is None or isinstance(value, list):
+            return value  # Allow None or an empty list
+        else:
+            raise ValueError("Images should be a dictionary or a list")
