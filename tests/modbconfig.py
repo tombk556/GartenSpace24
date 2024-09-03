@@ -134,4 +134,19 @@ def entity(authorized_client: TestClient):
     assert response.status_code == 201
     assert ObjectId(response.json())
     return response.json()
-    
+
+@pytest.fixture
+def entity_image(authorized_client: TestClient, entity):
+    response = authorized_client.put(
+        url=f"entities/upload/{entity}",
+        files={"file": ("test_image.png", 
+                        open("/Users/tom/Documents/ELTS/ELTS_backend/tests/data/test_image.png", "rb"), 
+                        "image/png")}
+    )
+    entity_id = response.json()["entity_id"]
+    image_id = response.json()["file_id"]
+    assert ObjectId(entity_id)
+    assert ObjectId(image_id)
+    assert response.status_code == 200
+    assert "file_id" in response.json()
+    return entity_id, image_id
