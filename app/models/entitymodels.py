@@ -2,9 +2,10 @@ from pydantic import BaseModel, Field, field_validator, validator
 from fastapi import HTTPException, status
 from datetime import datetime
 from bson import ObjectId
-from typing import Optional, Dict, List
+from typing import Optional, Dict
 from enum import Enum
 from uuid import UUID
+
 
 class Address(BaseModel):
     country: str
@@ -12,11 +13,13 @@ class Address(BaseModel):
     plz: str
     street: str
 
+
 class Type(str, Enum):
     house = "house"
     flat = "flat"
     office = "office"
     land = "land"
+
 
 class Meta(BaseModel):
     type: Type
@@ -25,13 +28,15 @@ class Meta(BaseModel):
     price: str = Field(..., pattern=r'^\d+€$')
     description: str
 
+
 class Entity(BaseModel):
     userId: Optional[str] = None
     date: datetime = Field(default_factory=datetime.now)
     address: Address
     meta: Meta
     properties: Optional[Dict] = None
-    
+    images: Optional[Dict[str, str]] = {}
+
     @field_validator("userId", mode="after")
     def validate_userId(cls, value):
         try:
@@ -40,12 +45,16 @@ class Entity(BaseModel):
             raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
                                 detail="userId must be a valid ObjectId")
         return value
-    
+
+    @validator("images", pre=True, always=True)
+    def validate_images(cls, value):
+        return parse_images(value)
+
     class Config:
         json_encoders = {
             ObjectId: lambda x: str(x)
         }
-        
+
         use_enum_values = True
 
         json_schema_extra = {
@@ -67,12 +76,12 @@ class Entity(BaseModel):
                 "garage": True
             }
         }
-    
+
+
 class EntityResponse(BaseModel):
     id: str = Field(..., alias="_id")
     meta: Meta
     images: Optional[Dict[str, str]] = {}
-
 
     @field_validator("id", mode="before")
     def validate_object_id(cls, value):
@@ -82,13 +91,18 @@ class EntityResponse(BaseModel):
         except ValueError:
             raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
                                 detail="Invalid ObjectId")
-            
+
     @validator("images", pre=True, always=True)
-    def parse_images(cls, value):
-            if isinstance(value, dict):
-                images_dict = {k: v["png"] for k, v in value.items() if "png" in v}
-                return images_dict
-            elif value is {}:
-                return value
-            else:
-                raise ValueError("Images should be a dictionary where keys are image IDs and values are image paths")
+    def validate_images(cls, value):
+        return parse_images(value)
+
+
+def parse_images(value: Optional[Dict]) -> Optional[Dict[str, str]]:
+    if isinstance(value, dict):
+        images_dict = {k: v["png"] for k, v in value.items() if "png" in v}
+        return images_dict
+    elif value == {}:
+        return value
+    else:
+        raise ValueError(
+            "Images should be a dictionary where keys are image IDs and values are image paths")
