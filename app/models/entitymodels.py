@@ -67,17 +67,11 @@ class Entity(BaseModel):
                 "garage": True
             }
         }
-class ImageFormats(BaseModel):
-    png: str
-
-class ImageItem(BaseModel):
-    image_id: str
-    formats: ImageFormats
     
 class EntityResponse(BaseModel):
     id: str = Field(..., alias="_id")
     meta: Meta
-    images: Optional[List[ImageItem]] = None
+    images: Optional[Dict[str, str]] = {}
 
 
     @field_validator("id", mode="before")
@@ -91,13 +85,10 @@ class EntityResponse(BaseModel):
             
     @validator("images", pre=True, always=True)
     def parse_images(cls, value):
-        if isinstance(value, dict):
-            images_list = [
-                {"image_id": image_id, "formats": formats}
-                for image_id, formats in value.items()
-            ]
-            return images_list
-        elif value is None or isinstance(value, list):
-            return value  # Allow None or an empty list
-        else:
-            raise ValueError("Images should be a dictionary or a list")
+            if isinstance(value, dict):
+                images_dict = {k: v["png"] for k, v in value.items() if "png" in v}
+                return images_dict
+            elif value is {}:
+                return value
+            else:
+                raise ValueError("Images should be a dictionary where keys are image IDs and values are image paths")
