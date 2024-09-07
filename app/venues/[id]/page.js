@@ -6,6 +6,7 @@ import PropertyCard from "../PropertyCard";
 const Page = () => {
   const [id, setId] = useState("");
   const [property, setProperty] = useState(null);
+  const [images, setImages] = useState([]);
 
   useEffect(() => {
     const id = window.location.pathname.split("/").pop();
@@ -16,6 +17,20 @@ const Page = () => {
         const response = await fetch('http://localhost:8000/entities/get_entity/' + id);
         const data = await response.json();
         setProperty(data);
+        
+        if (data.images) {
+          const imagePromises = Object.keys(data.images).map(async (key) => {
+            const fileId = data.images[key];
+            const imageResponse = await fetch(`http://localhost:8000/entities/download/${id}/${fileId}`);
+            const imageBlob = await imageResponse.blob();
+            const imageUrl = URL.createObjectURL(imageBlob);
+            return { name: key, url: imageUrl };
+          });
+          
+          const imageUrls = await Promise.all(imagePromises);
+          setImages(imageUrls);
+        }
+
       } catch (error) {
         console.error('Error fetching properties:', error);
       }
@@ -25,12 +40,29 @@ const Page = () => {
 
   }, []);
 
-
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">{id}</h1>
       {property && (
         <PropertyCard property={property} />
+      )}
+
+      {images.length > 0 && (
+        <div className="image-gallery mt-4">
+          <h2 className="text-xl font-bold">Property Images</h2>
+          <div className="grid grid-cols-3 gap-4">
+            {images.map((image, index) => (
+              <div key={index} className="image-item">
+                <img
+                  src={image.url}
+                  alt={`Property Image ${image.name}`}
+                  className="w-full h-auto rounded shadow"
+                />
+                <p className="text-center mt-2">{image.name}</p>
+              </div>
+            ))}
+          </div>
+        </div>
       )}
     </div>
   );
