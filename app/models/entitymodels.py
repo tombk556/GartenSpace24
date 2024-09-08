@@ -15,16 +15,14 @@ class Address(BaseModel):
 
 
 class Type(str, Enum):
-    house = "house"
-    flat = "flat"
-    office = "office"
-    land = "land"
+    Gütle = "Gütle"
+    Schrebergarten = "Schrebergarten"
+    Kleingarten = "Kleingarten"
 
 
 class Meta(BaseModel):
     type: Type
     size: str = Field(..., pattern=r'^\d+m²$')
-    rooms: Optional[int] = Field(None, description="Number of rooms")
     price: str = Field(..., pattern=r'^\d+€$')
     description: str
 

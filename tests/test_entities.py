@@ -6,25 +6,25 @@ from .modbconfig import *
 def test_create_entity(authorized_client: TestClient):
     response = authorized_client.post(
         url="entities/create_entity",
-        json={
-            "address": {
-                "country": "Muserland",
-                "city": "Musterstadt",
-                "plz": "12345",
-                "street": "Musterstraße"
-            },
-            "meta": {
-                "type": "house",
-                "size": "100m²",
-                "rooms": 4,
-                "price": "100000€",
-                "description": "This is a beautiful house"
-            },
-            "properties": {
-                "garden": True,
-                "garage": False
-            }
+        json=    {
+        "address": {
+            "country": "Deutschland",
+            "city": "Waldorferstraße 4",
+            "plz": "72124",
+            "street": "Pliezhausen"
+        },
+        "meta": {
+            "type": "Gütle",
+            "size": "245m²",
+            "price": "20000€",
+            "description": "Dieses schön gelegene Gütle in Pliezhausen ladet dich ein für deinen Geburstag. "
+        },
+        "properties": {
+            "Schuppen": True,
+            "Grillstelle": True,
+            "Parkplätze": True
         }
+    }
     )
     assert response.status_code == 201
     assert ObjectId(response.json())

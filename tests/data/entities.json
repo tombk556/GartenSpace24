@@ -1,69 +1,60 @@
 [
     {
         "address": {
-            "country": "Musterland",
-            "city": "Musterstadt",
-            "plz": "12345",
-            "street": "Musterstraße 1"
+            "country": "Deutschland",
+            "city": "Waldorferstraße 4",
+            "plz": "72124",
+            "street": "Pliezhausen"
         },
         "meta": {
-            "type": "house",
-            "size": "150m²",
-            "rooms": 5,
-            "price": "150000€",
-            "description": "Spacious family home with a large backyard"
+            "type": "Gütle",
+            "size": "245m²",
+            "price": "20000€",
+            "description": "Dieses schön gelegene Gütle in Pliezhausen ladet dich ein für deinen Geburstag. "
         },
         "properties": {
-            "garden": true,
-            "garage": true,
-            "pool": false,
-            "fireplace": false,
-            "basement": true,
-            "attic": false
+            "Schuppen": true,
+            "Grillstelle": true,
+            "Parkplätze": true
         }
     },
     {
         "address": {
-            "country": "Musterland",
-            "city": "Musterstadt",
-            "plz": "12345",
-            "street": "Musterstraße 2"
+            "country": "Deutschland",
+            "city": "Waldorferstraße 4",
+            "plz": "72124",
+            "street": "Pliezhausen"
         },
         "meta": {
-            "type": "house",
-            "size": "90m²",
-            "rooms": 3,
-            "price": "80000€",
-            "description": "Cozy cottage perfect for small families"
+            "type": "Gütle",
+            "size": "245m²",
+            "price": "20000€",
+            "description": "Dieses schön gelegene Gütle in Pliezhausen ladet dich ein für deinen Geburstag. "
         },
         "properties": {
-            "garden": true,
-            "garage": false,
-            "pool": true,
-            "fireplace": true
+            "Schuppen": true,
+            "Grillstelle": true,
+            "Parkplätze": true
         }
     },
     {
         "address": {
-            "country": "Musterland",
-            "city": "Musterstadt",
-            "plz": "12345",
-            "street": "Musterstraße 3"
+            "country": "Deutschland",
+            "city": "Waldorferstraße 4",
+            "plz": "72124",
+            "street": "Pliezhausen"
         },
         "meta": {
-            "type": "house",
-            "size": "120m²",
-            "rooms": 4,
-            "price": "110000€",
-            "description": "Well-maintained property with modern upgrades"
+            "type": "Gütle",
+            "size": "245m²",
+            "price": "20000€",
+            "description": "Dieses schön gelegene Gütle in Pliezhausen ladet dich ein für deinen Geburstag. "
         },
         "properties": {
-            "garden": false,
-            "garage": true,
-            "pool": false,
-            "fireplace": false,
-            "basement": true,
-            "attic": true
+            "Schuppen": true,
+            "Grillstelle": true,
+            "Parkplätze": true
         }
     }
+
 ]

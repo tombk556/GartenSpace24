@@ -14,6 +14,7 @@ import os
 
 MONGODB_URI = modb.mongodb_uri
 
+
 def load_json_data(filename):
     dir_path = os.path.dirname(os.path.realpath(__file__))
     full_path = os.path.join(dir_path, filename)
@@ -21,11 +22,13 @@ def load_json_data(filename):
         data = json.load(file)
     return data
 
+
 def create_test_app() -> FastAPI:
     test_app = FastAPI()
     for route in app.routes:
         test_app.router.routes.append(route)
     return test_app
+
 
 @pytest.fixture(scope="function")
 def mongo_session():
@@ -96,15 +99,18 @@ def authorized_client(client: TestClient, token):
     }
     return client
 
+
 @pytest.fixture
 def entities(authorized_client: TestClient):
     entities = load_json_data("data/entities.json")
-    
+
     for entity in entities:
-        response = authorized_client.post("/entities/create_entity", json=entity)
+        response = authorized_client.post(
+            "/entities/create_entity", json=entity)
         assert response.status_code == 201
-        
+
     return entities
+
 
 @pytest.fixture
 def entity(authorized_client: TestClient):
@@ -112,35 +118,37 @@ def entity(authorized_client: TestClient):
         url="entities/create_entity",
         json={
             "address": {
-                "country": "Muserland",
-                "city": "Musterstadt",
-                "plz": "12345",
-                "street": "Musterstraße"
+                "country": "Deutschland",
+                "city": "Waldorferstraße 4",
+                "plz": "72124",
+                "street": "Pliezhausen"
             },
             "meta": {
-                "type": "house",
-                "size": "100m²",
-                "rooms": 4,
-                "price": "100000€",
-                "description": "This is a beautiful house"
+                "type": "Gütle",
+                "size": "245m²",
+                "price": "20000€",
+                "description": "Dieses schön gelegene Gütle in Pliezhausen ladet dich ein für deinen Geburstag. "
             },
             "properties": {
-                "garden": True,
-                "garage": False
+                "Schuppen": True,
+                "Grillstelle": True,
+                "Parkplätze": True
             }
         }
     )
-    
+
     assert response.status_code == 201
     assert ObjectId(response.json())
     return response.json()
+
 
 @pytest.fixture
 def entity_image(authorized_client: TestClient, entity):
     response = authorized_client.put(
         url=f"entities/upload/{entity}",
-        files={"file": ("test_image.png", 
-                        open("/Users/tom/Documents/ELTS/ELTS_backend/tests/data/test_image.png", "rb"), 
+        files={"file": ("test_image.png",
+                        open(
+                            "/Users/tom/Documents/ELTS/ELTS_backend/tests/data/test_image.png", "rb"),
                         "image/png")}
     )
     entity_id = response.json()["entity_id"]
