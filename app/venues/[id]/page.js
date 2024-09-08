@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import PropertyCard from "../PropertyCard";
-import ImageCarousel from "../ImageCarousel"; // Import the ImageCarousel component
+import PropertyCard from "../components/PropertyCard";
+import ImageCarousel from "../components/ImageCarousel"; // Import the ImageCarousel component
 
 const Page = () => {
   const [id, setId] = useState("");
@@ -55,11 +55,6 @@ const Page = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">{id}</h1>
-      {property && (
-        <PropertyCard property={property} />
-      )}
-
       {images.length > 0 && (
         <div className="image-gallery mt-4">
           <h2 className="text-xl font-bold mb-4">Property Images</h2>
@@ -80,8 +75,9 @@ const Page = () => {
           </div>
         </div>
       )}
-
-      {/* Image Carousel Modal */}
+      {property && (
+        <PropertyCard property={property} />
+      )}
       {isModalOpen && (
         <ImageCarousel
           images={images}
