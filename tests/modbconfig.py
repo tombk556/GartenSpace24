@@ -10,6 +10,7 @@ from app.db import mongodb, postgres, postgrestables
 from app.oauth2 import create_access_token
 import json
 from bson import ObjectId
+from gridfs import GridFS
 import os
 
 MONGODB_URI = modb.mongodb_uri
@@ -37,6 +38,13 @@ def mongo_session():
     db = client["ELTS_test"]
     yield db
 
+@pytest.fixture(scope="function")
+def mongo_fs_session():
+    client = MongoClient(MONGODB_URI)
+    client.drop_database("ELTS_FS_test")
+    db = client["ELTS_FS_test"]
+    fs = GridFS(db)
+    yield fs
 
 PSQL_DB_URL = psql.test_database_url_psql
 engine = create_engine(PSQL_DB_URL.replace(
@@ -57,7 +65,10 @@ def postgres_session():
 
 
 @pytest.fixture(scope="function")
-def client(mongo_session, postgres_session):
+def client(mongo_session, postgres_session, mongo_fs_session):
+    def override_get_fs_mongo():
+        yield mongo_fs_session
+    
     def override_get_db_mongo():
         yield mongo_session
 
@@ -66,8 +77,10 @@ def client(mongo_session, postgres_session):
             yield postgres_session
         finally:
             postgres_session.close()
+            
     test_app = create_test_app()
     app.dependency_overrides[mongodb.get_db] = override_get_db_mongo
+    app.dependency_overrides[mongodb.get_fs] = override_get_fs_mongo
     app.dependency_overrides[postgres.get_db] = override_get_db_postgres
     yield TestClient(test_app)
 
