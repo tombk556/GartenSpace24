@@ -55,29 +55,33 @@ const Page = () => {
 
   return (
     <div className="container mx-auto p-4">
-      {images.length > 0 && (
-        <div className="image-gallery mt-4">
-          <h2 className="text-xl font-bold mb-4">Property Images</h2>
-          <div className="grid grid-cols-12 gap-4">
-            {images.slice(0, 6).map((image, index) => (
-              <div
-                key={index}
-                className={`col-span-6 md:col-span-4 lg:col-span-${index % 5 === 0 ? '6' : '3'} row-span-${index % 3 === 0 ? '2' : '1'} relative`}
-              >
-                <img
-                  src={image.url}
-                  alt={`Property Image ${image.name}`}
-                  className="w-full h-full object-cover rounded-lg shadow-lg cursor-pointer"
-                  onClick={() => openModal(index)}
-                />
-              </div>
-            ))}
+        <div className="grid grid-cols-1 lg:grid-cols-[2fr,1fr] gap-4">
+        {images.length > 0 && (
+          <div className="image-gallery">
+            <div className="grid grid-cols-12 gap-4">
+              {images.slice(0, 6).map((image, index) => (
+                <div
+                  key={index}
+                  className={`col-span-6 md:col-span-4 lg:col-span-${index % 5 === 0 ? '6' : '3'} row-span-${index % 3 === 0 ? '2' : '1'} relative`}
+                >
+                  <img
+                    src={image.url}
+                    alt={`Property Image ${image.name}`}
+                    className="w-full h-full object-cover rounded-lg shadow-lg cursor-pointer"
+                    onClick={() => openModal(index)}
+                  />
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
-      )}
-      {property && (
-        <PropertyCard property={property} />
-      )}
+        )}
+        {property && (
+          <div className="mt-4 lg:mt-0">
+            <PropertyCard property={property} />
+          </div>
+        )}
+      </div>
+  
       {isModalOpen && (
         <ImageCarousel
           images={images}
