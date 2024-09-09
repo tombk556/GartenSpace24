@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import PropertyCard from "../components/PropertyCard";
 import ImageCarousel from "../components/ImageCarousel"; // Import the ImageCarousel component
+import PropertyHeader from "../components/PropertyHeader";
 
 const Page = () => {
   const [id, setId] = useState("");
@@ -56,8 +57,12 @@ const Page = () => {
   return (
     <div className="container mx-auto p-4">
         <div className="grid grid-cols-1 lg:grid-cols-[2fr,1fr] gap-4">
+
         {images.length > 0 && (
           <div className="image-gallery">
+            {property && (
+                <PropertyHeader property={property} />
+            )}
             <div className="grid grid-cols-12 gap-4">
               {images.slice(0, 6).map((image, index) => (
                 <div
@@ -75,10 +80,9 @@ const Page = () => {
             </div>
           </div>
         )}
+  
         {property && (
-          <div className="mt-4 lg:mt-0">
             <PropertyCard property={property} />
-          </div>
         )}
       </div>
   
