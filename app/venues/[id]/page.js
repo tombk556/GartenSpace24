@@ -2,13 +2,14 @@
 
 import React, { useEffect, useState } from "react";
 import PropertyCard from "../components/PropertyCard";
-import ImageCarousel from "../components/ImageCarousel"; // Import the ImageCarousel component
+import ImageCarousel from "../components/ImageCarousel";
 import PropertyHeader from "../components/PropertyHeader";
-
+import ImagePlaceholder from "../components/ImagePlaceholder";
 const Page = () => {
   const [id, setId] = useState("");
   const [property, setProperty] = useState(null);
   const [images, setImages] = useState([]);
+  const [isLoadingImages, setIsLoadingImages] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
@@ -18,15 +19,18 @@ const Page = () => {
 
     const fetchProperty = async () => {
       try {
-        const response = await fetch('http://localhost:8000/entities/get_entity/' + id);
+        const response = await fetch(
+          "http://localhost:8000/entities/get_entity/" + id
+        );
         const data = await response.json();
         setProperty(data);
 
-        // Fetch images
         if (data.images) {
           const imagePromises = Object.keys(data.images).map(async (key) => {
             const fileId = data.images[key];
-            const imageResponse = await fetch(`http://localhost:8000/entities/download/${id}/${fileId}`);
+            const imageResponse = await fetch(
+              `http://localhost:8000/entities/download/${id}/${fileId}`
+            );
             const imageBlob = await imageResponse.blob();
             const imageUrl = URL.createObjectURL(imageBlob);
             return { name: key, url: imageUrl };
@@ -34,15 +38,14 @@ const Page = () => {
 
           const imageUrls = await Promise.all(imagePromises);
           setImages(imageUrls);
+          setIsLoadingImages(false);
         }
-
       } catch (error) {
-        console.error('Error fetching properties:', error);
+        console.error("Error fetching properties:", error);
       }
     };
 
     fetchProperty();
-
   }, []);
 
   const openModal = (index) => {
@@ -56,18 +59,19 @@ const Page = () => {
 
   return (
     <div className="container mx-auto p-4">
-        <div className="grid grid-cols-1 lg:grid-cols-[2fr,1fr] gap-4">
-
-        {images.length > 0 && (
+      {property && <PropertyHeader property={property} />}
+      <div className="grid grid-cols-1 lg:grid-cols-[2fr,1fr] gap-4">
+        {isLoadingImages ? (
+          <ImagePlaceholder />
+        ) : (
           <div className="image-gallery">
-            {property && (
-                <PropertyHeader property={property} />
-            )}
             <div className="grid grid-cols-12 gap-4">
               {images.slice(0, 6).map((image, index) => (
                 <div
                   key={index}
-                  className={`col-span-6 md:col-span-4 lg:col-span-${index % 5 === 0 ? '6' : '3'} row-span-${index % 3 === 0 ? '2' : '1'} relative`}
+                  className={`col-span-6 md:col-span-4 lg:col-span-${
+                    index % 5 === 0 ? "6" : "3"
+                  } row-span-${index % 3 === 0 ? "2" : "1"} relative`}
                 >
                   <img
                     src={image.url}
@@ -80,12 +84,8 @@ const Page = () => {
             </div>
           </div>
         )}
-  
-        {property && (
-            <PropertyCard property={property} />
-        )}
+        {property && <PropertyCard property={property} />}
       </div>
-  
       {isModalOpen && (
         <ImageCarousel
           images={images}
