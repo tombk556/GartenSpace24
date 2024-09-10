@@ -14,6 +14,7 @@ class Settings:
         self.model = os.getenv("MODEL")
         self.cred_path = os.getenv("CRED_PATH")
         self.frontend_url = os.getenv("FRONTEND_URL")
+        self.backend_url = os.getenv("BACKEND_URL")
 
 
 class PsqlCred:

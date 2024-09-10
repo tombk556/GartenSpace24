@@ -24,7 +24,7 @@ def get_google_oauth2_flow() -> Flow:
         scopes=['openid',
                 'https://www.googleapis.com/auth/userinfo.email',
                 'https://www.googleapis.com/auth/userinfo.profile'],
-        redirect_uri='http://localhost:8000/google/auth'
+        redirect_uri=f'{settings.backend_url}/google/auth'
     )
 
 
