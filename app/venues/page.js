@@ -8,7 +8,7 @@ const Page = () => {
   useEffect(() => {
     const fetchProperties = async () => {
       try {
-        const response = await fetch('http://localhost:8000/entities/get_all_entities');
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/entities/get_all_entities`);
         const data = await response.json();
         setProperties(data);
       } catch (error) {

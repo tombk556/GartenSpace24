@@ -20,7 +20,7 @@ const Page = () => {
     const fetchProperty = async () => {
       try {
         const response = await fetch(
-          "http://localhost:8000/entities/get_entity/" + id
+          `${process.env.NEXT_PUBLIC_API_URL}/entities/get_entity/${id}`
         );
         const data = await response.json();
         setProperty(data);
@@ -29,7 +29,7 @@ const Page = () => {
           const imagePromises = Object.keys(data.images).map(async (key) => {
             const fileId = data.images[key];
             const imageResponse = await fetch(
-              `http://localhost:8000/entities/download/${id}/${fileId}`
+              `${process.env.NEXT_PUBLIC_API_URL}/entities/download/${id}/${fileId}`
             );
             const imageBlob = await imageResponse.blob();
             const imageUrl = URL.createObjectURL(imageBlob);

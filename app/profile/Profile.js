@@ -11,7 +11,7 @@ export default function Profile() {
   useEffect(() => {
     const token = localStorage.getItem('access_token');
     axios
-      .get('http://localhost:8000/auth/users/me', {
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/auth/users/me`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -36,7 +36,7 @@ export default function Profile() {
 
     axios
       .put(
-        'http://localhost:8000/auth/update_user_infos',
+        `${process.env.NEXT_PUBLIC_API_URL}/auth/update_user_infos`,
         {
           email: user.email,
           username: user.username        },
@@ -59,7 +59,7 @@ export default function Profile() {
       const token = localStorage.getItem('access_token');
       
       axios
-      .delete('http://localhost:8000/auth/delete_user')
+      .delete(`${process.env.NEXT_PUBLIC_API_URL}/auth/delete_user`)
       .then(() => {
         localStorage.removeItem('access_token');
         window.location.href = '/';

@@ -24,7 +24,7 @@ export default function Page() {
     }
 
     try {
-      const response = await axios.post("http://localhost:8000/auth/sign_up", {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/sign_up`, {
         email,
         username,
         password,
@@ -136,7 +136,7 @@ export default function Page() {
             type="button"
             className="outline_btn w-full text-white text-sm font-semibold py-3.5 rounded-md"
             onClick={() =>
-              (window.location.href = "http://localhost:8000/login/google")
+              (window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/login/google`)
             }
           >
             <FcGoogle size={20} className="mr-2" />
