@@ -5,6 +5,7 @@ import PropertyCard from "../components/PropertyCard";
 import ImageCarousel from "../components/ImageCarousel";
 import PropertyHeader from "../components/PropertyHeader";
 import ImagePlaceholder from "../components/ImagePlaceholder";
+import UserMessage from "../components/UserMessage";
 const Page = () => {
   const [id, setId] = useState("");
   const [property, setProperty] = useState(null);
@@ -59,8 +60,7 @@ const Page = () => {
 
   return (
     <div className="container mx-auto p-4">
-      {property && <PropertyHeader property={property} />}
-      <div className="grid grid-cols-1 lg:grid-cols-[2fr,1fr] gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-[3fr,1fr] gap-4">
         {isLoadingImages ? (
           <ImagePlaceholder />
         ) : (
@@ -83,9 +83,12 @@ const Page = () => {
               ))}
             </div>
           </div>
+
         )}
-        {property && <PropertyCard property={property} />}
+        {property && <UserMessage property={property} />}
       </div>
+      {property && <PropertyHeader property={property} />}
+
       {isModalOpen && (
         <ImageCarousel
           images={images}
