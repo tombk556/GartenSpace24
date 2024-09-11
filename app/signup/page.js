@@ -62,7 +62,7 @@ export default function Page() {
               type="email"
               autoComplete="email"
               required
-              className="w-full text text-gray-800 px-4 py-3.5 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
+              className="w-full text-gray-800 px-4 py-3.5 rounded-md border-2 border-gray-800 focus:outline-none focus:transform focus:scale-105 transition-transform duration-200"
               placeholder="Email address"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -74,7 +74,7 @@ export default function Page() {
               type="username"
               autoComplete="username"
               required
-              className="w-full text text-gray-800 px-4 py-3.5 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
+              className="w-full text-gray-800 px-4 py-3.5 rounded-md border-2 border-gray-800 focus:outline-none focus:transform focus:scale-105 transition-transform duration-200"
               placeholder="Username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
@@ -86,7 +86,7 @@ export default function Page() {
               type="password"
               autoComplete="current-password"
               required
-              className="w-full text text-gray-800 px-4 py-3.5 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
+              className="w-full text-gray-800 px-4 py-3.5 rounded-md border-2 border-gray-800 focus:outline-none focus:transform focus:scale-105 transition-transform duration-200"
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
