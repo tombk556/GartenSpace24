@@ -14,7 +14,7 @@ const rootlayout = ({ children }) => {
       <html>
         <body className="flex flex-col min-h-screen">
           <div className="flex-grow">
-            <Nav />
+            <Nav/>
             <main className="w-full flex-center flex-col p-16 pt-28"> {/* Adjusted padding-top to pt-28 */}
               {children}
             </main>

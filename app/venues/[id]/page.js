@@ -1,11 +1,11 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import PropertyCard from "../components/PropertyCard";
 import ImageCarousel from "../components/ImageCarousel";
 import PropertyHeader from "../components/PropertyHeader";
 import ImagePlaceholder from "../components/ImagePlaceholder";
 import UserMessage from "../components/UserMessage";
+import PlacePriceCard from "../components/PlacePriceCard";
 const Page = () => {
   const [id, setId] = useState("");
   const [property, setProperty] = useState(null);
@@ -88,6 +88,8 @@ const Page = () => {
         {property && <UserMessage property={property} />}
       </div>
       {property && <PropertyHeader property={property} />}
+      <hr className="mt-2 mb-2"/>
+      {property && <PlacePriceCard property={property} />}
 
       {isModalOpen && (
         <ImageCarousel

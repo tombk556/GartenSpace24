@@ -19,7 +19,7 @@ const formatDate = (dateString) => {
 const UserMessage = ({ property }) => {
   return (
     <div className="p-4 w-full border-2 border-gray-300 rounded-lg max-w-md">
-      <div className="mt-10">
+      <div>
         <p className="text-gray-700">
           Veröffentlicht am {formatDate(property.date)} von Nutzer:
         </p>
@@ -32,8 +32,6 @@ const UserMessage = ({ property }) => {
         </p>
       </div>
       <hr className="border border-gray-700 mt-20" />
-      
-      {/* First Button: Nachricht */}
       <div className="flex justify-center mt-20">
         <button
           type="submit"
@@ -43,33 +41,24 @@ const UserMessage = ({ property }) => {
           Nachricht
         </button>
       </div>
-
-      {/* Second Button: Merken */}
       <div className="flex justify-center mt-5">
         <button
           type="submit"
           className="border-2 border-black py-2 px-10 w-48 rounded-lg flex items-center justify-center hover:bg-gray-200 transition duration-200"
         >
-          <FaHeart size={20} className="mr-2" />
+          <FaHeart size={20} className="mr-2" color="red"/>
           Merken
         </button>
       </div>
-
-      {/* Additional Buttons: Teilen, Drucken, Melden */}
-      <div className="text-s flex justify-around mt-10 space-x-4">
-        {/* Teilen Button */}
+      <div className="text-xs flex justify-around mt-10 space-x-4">
         <button className="flex items-center text-gray-900">
           <FaShareAlt className="mr-1" />
           <span className="hover:underline">Teilen</span>
         </button>
-
-        {/* Drucken Button */}
         <button className="flex items-center text-gray-900">
           <FaPrint className="mr-1" />
           <span className="hover:underline">Drucken</span>
         </button>
-
-        {/* Melden Button */}
         <button className="flex items-center text-gray-900">
           <FaExclamationTriangle className="mr-1" />
           <span className="hover:underline">Melden</span>

@@ -85,7 +85,7 @@ export default function Profile() {
                 name="email"
                 value={user.email}
                 onChange={handleChange}
-                className="w-full text text-gray-800 px-4 py-3.5 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
+                className="w-full text-gray-800 px-4 py-3.5 rounded-md border-2 border-gray-800 focus:outline-none focus:transform focus:scale-105 transition-transform duration-200"
 
               />
             </div>
@@ -96,8 +96,8 @@ export default function Profile() {
                 name="username"
                 value={user.username}
                 onChange={handleChange}
-                className="w-full text text-gray-800 px-4 py-3.5 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
-              />
+                className="w-full text-gray-800 px-4 py-3.5 rounded-md border-2 border-gray-800 focus:outline-none focus:transform focus:scale-105 transition-transform duration-200"
+                />
             </div>
           <ErrorMessage message={error} />
             <button
