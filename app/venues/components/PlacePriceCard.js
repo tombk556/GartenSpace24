@@ -1,30 +1,7 @@
 import React from "react";
 import { FaLocationDot } from "react-icons/fa6";
-
+import { formatCurrency, calculatePricePerSquareMeter, SquareMeter } from "../Hooks";
 const PlacePriceCard = ({ property }) => {
-  const formatCurrency = (value) => {
-    return new Intl.NumberFormat("de-DE", {
-      style: "currency",
-      currency: "EUR",
-      minimumFractionDigits: 0,
-    }).format(value);
-  };
-
-  const calculatePricePerSquareMeter = (totalPrice, size) => {
-    const pricePerSquareMeter = totalPrice / size;
-  
-    const formattedPricePerSquareMeter = new Intl.NumberFormat('de-DE', {
-      style: 'currency',
-      currency: 'EUR',
-      minimumFractionDigits: 0
-    }).format(pricePerSquareMeter);
-  
-    return `Kaufpreis: ${formattedPricePerSquareMeter}/m²`;
-  };
-  
-  const SquareMeter = (size) => {
-    return `${size} m²`
-  }    
 
   return (
     <div className="grid grid-cols-3">
