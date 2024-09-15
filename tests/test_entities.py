@@ -15,8 +15,8 @@ def test_create_entity(authorized_client: TestClient):
         },
         "meta": {
             "type": "Gütle",
-            "size": "245m²",
-            "price": "20000€",
+            "size": 245,
+            "price": 20000,
             "description": "Dieses schön gelegene Gütle in Pliezhausen ladet dich ein für deinen Geburstag. "
         },
         "properties": {

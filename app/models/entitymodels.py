@@ -22,8 +22,8 @@ class Type(str, Enum):
 
 class Meta(BaseModel):
     type: Type
-    size: str = Field(..., pattern=r'^\d+m²$')
-    price: str = Field(..., pattern=r'^\d+€$')
+    size: int
+    price: float
     description: str
 
 

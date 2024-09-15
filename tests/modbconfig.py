@@ -38,6 +38,7 @@ def mongo_session():
     db = client["ELTS_test"]
     yield db
 
+
 @pytest.fixture(scope="function")
 def mongo_fs_session():
     client = MongoClient(MONGODB_URI)
@@ -45,6 +46,7 @@ def mongo_fs_session():
     db = client["ELTS_FS_test"]
     fs = GridFS(db)
     yield fs
+
 
 PSQL_DB_URL = psql.test_database_url_psql
 engine = create_engine(PSQL_DB_URL.replace(
@@ -68,7 +70,7 @@ def postgres_session():
 def client(mongo_session, postgres_session, mongo_fs_session):
     def override_get_fs_mongo():
         yield mongo_fs_session
-    
+
     def override_get_db_mongo():
         yield mongo_session
 
@@ -77,7 +79,7 @@ def client(mongo_session, postgres_session, mongo_fs_session):
             yield postgres_session
         finally:
             postgres_session.close()
-            
+
     test_app = create_test_app()
     app.dependency_overrides[mongodb.get_db] = override_get_db_mongo
     app.dependency_overrides[mongodb.get_fs] = override_get_fs_mongo
@@ -138,8 +140,8 @@ def entity(authorized_client: TestClient):
             },
             "meta": {
                 "type": "Gütle",
-                "size": "245m²",
-                "price": "20000€",
+                "size": 245,
+                "price": 20000,
                 "description": "Dieses schön gelegene Gütle in Pliezhausen ladet dich ein für deinen Geburstag. "
             },
             "properties": {
