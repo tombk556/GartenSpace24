@@ -88,7 +88,7 @@ const Page = () => {
         {property && <UserMessage property={property} />}
       </div>
       {property && <PropertyHeader property={property} />}
-      <hr className="mt-2 mb-2"/>
+      <hr className="mb-2" />
       {property && <PlacePriceCard property={property} />}
 
       {isModalOpen && (

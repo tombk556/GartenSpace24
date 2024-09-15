@@ -38,8 +38,7 @@ const PlacePriceCard = ({ property }) => {
         </p>
         <div className="mt-1 text-xs">
           <p>*Die vollständige Adresse</p>
-          <p>der Immobilie erhalten</p>
-          <p>Sie vom Anbieter.</p>
+          <p>erhalten Sie vom Anbieter</p>
         </div>
       </div>
       <div>
