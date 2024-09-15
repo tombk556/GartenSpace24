@@ -31,7 +31,9 @@ def get_entity(id: str, db: Collection = Depends(get_db)):
     entity = db["entities"].find_one({'_id': ObjectId(id)})
     if entity:
         entity['_id'] = str(entity['_id'])
-    return entity
+        return entity
+    else:
+        raise HTTPException(status_code=404, detail=f"The entity with the id {id} can not be found")
 
 
 @router.put("/upload/{entity_id}")
