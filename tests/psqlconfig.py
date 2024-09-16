@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.testclient import TestClient
 from app.db import PostgresDB
 from sqlalchemy import create_engine
-from app import postgrestables
+from app import models
 from app.config import psql
 from app.main import app
 from sqlalchemy.orm import sessionmaker
@@ -26,8 +26,8 @@ def create_test_app() -> FastAPI:
 
 @pytest.fixture(scope="function")
 def session():
-    postgrestables.Base.metadata.drop_all(bind=engine)
-    postgrestables.Base.metadata.create_all(bind=engine)
+    models.Base.metadata.drop_all(bind=engine)
+    models.Base.metadata.create_all(bind=engine)
     db = TestingSessionLocal()
     try:
         yield db

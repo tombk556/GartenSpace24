@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from fastapi.responses import RedirectResponse
 from google.oauth2.credentials import Credentials
 from ..oauth2 import get_google_oauth2_flow
-from .. import postgrestables
+from .. import models
 from ..db import PostgresDB
 from . import schemas
 from ..config import settings
@@ -60,9 +60,9 @@ async def logout_google(request: Request):
 
 def check_user_and_create_token(user_info, db: Session) -> str:
     user_name = user_info["email"].split("@")[0]
-    existing_user = db.query(postgrestables.User).filter(
-        (postgrestables.User.email == user_info['email'])
-        | (postgrestables.User.username == user_name)
+    existing_user = db.query(models.User).filter(
+        (models.User.email == user_info['email'])
+        | (models.User.username == user_name)
         ).first()
 
     if existing_user and existing_user.google_account:
@@ -70,7 +70,7 @@ def check_user_and_create_token(user_info, db: Session) -> str:
     elif not existing_user:
         user = schemas.GoogleUserCreate(**user_info)
         user.password = utils.hash(user.password)
-        new_user = postgrestables.User(**user.model_dump())
+        new_user = models.User(**user.model_dump())
         db.add(new_user)
         db.commit()
         db.refresh(new_user)

@@ -3,7 +3,7 @@ from fastapi.security.oauth2 import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from . import schemas
 from ..db import PostgresDB
-from .. import postgrestables, utils, oauth2
+from .. import models, utils, oauth2
 from ..db import PostgresDB
 from ..oauth2 import oauth2_scheme
 
@@ -14,8 +14,8 @@ auth = APIRouter(
 
 @auth.post("/sign_up", status_code=status.HTTP_201_CREATED, response_model=schemas.User)
 def create_user(user: schemas.UserCreate, db: Session = Depends(PostgresDB.get_db)):
-    existing_user = db.query(postgrestables.User).filter(
-        (postgrestables.User.email == user.email) | (postgrestables.User.username == user.username)).first()
+    existing_user = db.query(models.User).filter(
+        (models.User.email == user.email) | (models.User.username == user.username)).first()
     if existing_user:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
@@ -23,7 +23,7 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(PostgresDB.get_d
         )
 
     user.password = utils.hash(user.password)
-    new_user = postgrestables.User(**user.model_dump())
+    new_user = models.User(**user.model_dump())
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
@@ -35,12 +35,12 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(PostgresDB.get_d
 def delte_user(current_user: schemas.User = Depends(oauth2.get_current_user), db: Session = Depends(PostgresDB.get_db),
                token: str = Depends(oauth2_scheme)):
 
-    existing_user = db.query(postgrestables.User).filter(
-        postgrestables.User.id == current_user.id)
+    existing_user = db.query(models.User).filter(
+        models.User.id == current_user.id)
     existing_user.delete(synchronize_session=False)
     db.commit()
 
-    banned_token = postgrestables.BannedTokens(token=token)
+    banned_token = models.BannedTokens(token=token)
     db.add(banned_token)
     db.commit()
     return 204
@@ -48,18 +48,18 @@ def delte_user(current_user: schemas.User = Depends(oauth2.get_current_user), db
 
 @auth.put("/update_user_infos", response_model=schemas.User)
 def update_user(update_user: schemas.UserUpdate, current_user: schemas.User = Depends(oauth2.get_current_user), db: Session = Depends(PostgresDB.get_db)):
-    existing_user = db.query(postgrestables.User).filter(
-        ((postgrestables.User.email == update_user.email)
-         & (postgrestables.User.id != current_user.id))
-        | ((postgrestables.User.username == update_user.username) & (postgrestables.User.id != current_user.id))).first()
+    existing_user = db.query(models.User).filter(
+        ((models.User.email == update_user.email)
+         & (models.User.id != current_user.id))
+        | ((models.User.username == update_user.username) & (models.User.id != current_user.id))).first()
     if existing_user:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
             detail="Email and/or Username is/are already taken"
         )
 
-    user = db.query(postgrestables.User).filter(
-        postgrestables.User.id == current_user.id)
+    user = db.query(models.User).filter(
+        models.User.id == current_user.id)
     user.update(update_user.model_dump(), synchronize_session=False)
     db.commit()
 
@@ -69,9 +69,9 @@ def update_user(update_user: schemas.UserUpdate, current_user: schemas.User = De
 @auth.post("/login", response_model=schemas.Token)
 def login(user_credentials: OAuth2PasswordRequestForm = Depends(),
           db: Session = Depends(PostgresDB.get_db)):
-    user = db.query(postgrestables.User).filter(
-        (postgrestables.User.email == user_credentials.username) |
-        (postgrestables.User.username == user_credentials.username)).first()
+    user = db.query(models.User).filter(
+        (models.User.email == user_credentials.username) |
+        (models.User.username == user_credentials.username)).first()
     if not user:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN, detail="User does not exist")

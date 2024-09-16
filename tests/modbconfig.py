@@ -13,7 +13,7 @@ from bson import ObjectId
 from gridfs import GridFS
 import os
 
-from app import postgrestables
+from app import models
 
 MONGODB_URI = modb.mongodb_uri
 
@@ -59,8 +59,8 @@ TestingSessionLocal = sessionmaker(
 
 @pytest.fixture(scope="function")
 def postgres_session():
-    postgrestables.Base.metadata.drop_all(bind=engine)
-    postgrestables.Base.metadata.create_all(bind=engine)
+    models.Base.metadata.drop_all(bind=engine)
+    models.Base.metadata.create_all(bind=engine)
     db = TestingSessionLocal()
     try:
         yield db

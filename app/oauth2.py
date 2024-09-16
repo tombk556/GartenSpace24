@@ -1,7 +1,7 @@
 from jose import JWTError, jwt
 from datetime import datetime, timedelta
 from .auth import schemas
-from . import postgrestables
+from . import models
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
@@ -38,8 +38,8 @@ def create_access_token(data: Dict[str, any]):
 
 
 def verify_access_token(token: str, credential_exception, db: Session):
-    is_banned = db.query(postgrestables.BannedTokens).filter(
-        postgrestables.BannedTokens.token == token).first() is not None
+    is_banned = db.query(models.BannedTokens).filter(
+        models.BannedTokens.token == token).first() is not None
     if is_banned:
         raise credential_exception
     try:
@@ -62,8 +62,8 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
         headers={"WWW-Authenticate": "Bearer"}
     )
     token_data = verify_access_token(token, credentials_exception, db)
-    user = db.query(postgrestables.User).filter(
-        postgrestables.User.id == token_data.id).first()
+    user = db.query(models.User).filter(
+        models.User.id == token_data.id).first()
     if not user:
         raise credentials_exception
     return user

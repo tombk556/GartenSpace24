@@ -5,12 +5,12 @@ from .entities.router import entities
 from .auth.router import auth
 from .google.router import google
 
-from . import postgrestables
+from . import models
 from .db import engine
 from starlette.middleware.sessions import SessionMiddleware
 from .config import settings
 
-postgrestables.Base.metadata.create_all(bind=engine)
+models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
