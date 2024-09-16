@@ -11,11 +11,13 @@ from ..config import settings
 import os
 from .. import utils, oauth2
 
-router = APIRouter()
+google = APIRouter(
+    tags=["Google"])
+
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
 
-@router.get("/login/google")
+@google.get("/login/google")
 async def login_google(request: Request):
     flow = get_google_oauth2_flow()
     authorization_url, state = flow.authorization_url(prompt='select_account')
@@ -23,7 +25,7 @@ async def login_google(request: Request):
     return RedirectResponse(authorization_url)
 
 
-@router.get("/google/auth", response_model=usermodels.Token)
+@google.get("/google/auth", response_model=usermodels.Token)
 async def auth_google(request: Request, db: Session = Depends(get_db)):
     flow = get_google_oauth2_flow()
     flow.fetch_token(authorization_response=request.url._url)
@@ -50,7 +52,7 @@ async def auth_google(request: Request, db: Session = Depends(get_db)):
         else:
             raise e
 
-@router.get("/logout/google")
+@google.get("/logout/google")
 async def logout_google(request: Request):
     request.session.clear()
     return RedirectResponse(url="/")

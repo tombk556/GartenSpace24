@@ -7,12 +7,12 @@ from .. import utils, oauth2
 from ..db.postgres import get_db
 from ..oauth2 import oauth2_scheme
 
-router = APIRouter(
+auth = APIRouter(
     prefix="/auth",
     tags=["Authentication"])
 
 
-@router.post("/sign_up", status_code=status.HTTP_201_CREATED, response_model=usermodels.User)
+@auth.post("/sign_up", status_code=status.HTTP_201_CREATED, response_model=usermodels.User)
 def create_user(user: usermodels.UserCreate, db: Session = Depends(get_db)):
     existing_user = db.query(postgrestables.User).filter(
         (postgrestables.User.email == user.email) | (postgrestables.User.username == user.username)).first()
@@ -31,7 +31,7 @@ def create_user(user: usermodels.UserCreate, db: Session = Depends(get_db)):
     return new_user
 
 
-@router.delete("/delete_user", status_code=status.HTTP_204_NO_CONTENT)
+@auth.delete("/delete_user", status_code=status.HTTP_204_NO_CONTENT)
 def delte_user(current_user: usermodels.User = Depends(oauth2.get_current_user), db: Session = Depends(get_db),
                token: str = Depends(oauth2_scheme)):
 
@@ -46,7 +46,7 @@ def delte_user(current_user: usermodels.User = Depends(oauth2.get_current_user),
     return 204
 
 
-@router.put("/update_user_infos", response_model=usermodels.User)
+@auth.put("/update_user_infos", response_model=usermodels.User)
 def update_user(update_user: usermodels.UserUpdate, current_user: usermodels.User = Depends(oauth2.get_current_user), db: Session = Depends(get_db)):
     existing_user = db.query(postgrestables.User).filter(
         ((postgrestables.User.email == update_user.email)
@@ -66,7 +66,7 @@ def update_user(update_user: usermodels.UserUpdate, current_user: usermodels.Use
     return user.first()
 
 
-@router.post("/login", response_model=usermodels.Token)
+@auth.post("/login", response_model=usermodels.Token)
 def login(user_credentials: OAuth2PasswordRequestForm = Depends(),
           db: Session = Depends(postgres.get_db)):
     user = db.query(postgrestables.User).filter(
@@ -85,6 +85,6 @@ def login(user_credentials: OAuth2PasswordRequestForm = Depends(),
     return {"access_token": access_token, "token_type": "bearer"}
 
 
-@router.get("/users/me", response_model=usermodels.User)
+@auth.get("/users/me", response_model=usermodels.User)
 async def get_user(current_user: usermodels.User = Depends(oauth2.get_current_user)):
     return current_user

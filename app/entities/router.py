@@ -8,25 +8,25 @@ from bson import ObjectId
 from gridfs import GridFS
 from .. import oauth2
 
-router = APIRouter(
+entities = APIRouter(
     prefix="/entities",
     tags=["Entities"])
 
 
-@router.post("/create_entity", status_code=status.HTTP_201_CREATED)
+@entities.post("/create_entity", status_code=status.HTTP_201_CREATED)
 def create_entity(entity: Entity, current_user: User = Depends(oauth2.get_current_user), db: Collection = Depends(get_db)):
     entity.userId = str(current_user.id)
     result = db["entities"].insert_one(entity.model_dump())
     return str(result.inserted_id)
 
 
-@router.get("/get_all_entities", response_model=list[EntityResponse])
+@entities.get("/get_all_entities", response_model=list[EntityResponse])
 def get_all_entities(db: Collection = Depends(get_db)):
     entities = db["entities"].find({"address": {"$exists": True}})
 
     return entities
 
-@router.get("/get_entity/{id}", response_model=Entity)
+@entities.get("/get_entity/{id}", response_model=Entity)
 def get_entity(id: str, db: Collection = Depends(get_db)):
     entity = db["entities"].find_one({'_id': ObjectId(id)})
     if entity:
@@ -36,7 +36,7 @@ def get_entity(id: str, db: Collection = Depends(get_db)):
         raise HTTPException(status_code=404, detail=f"The entity with the id {id} can not be found")
 
 
-@router.put("/upload/{entity_id}")
+@entities.put("/upload/{entity_id}")
 async def upload_image(entity_id: str, file: UploadFile = File(...), current_user: User = Depends(oauth2.get_current_user), 
                        fs: GridFS = Depends(get_fs), db: Collection = Depends(get_db)):
     
@@ -54,7 +54,7 @@ async def upload_image(entity_id: str, file: UploadFile = File(...), current_use
     return {"file_id": str(file_id), "entity_id": entity_id}
 
 
-@router.get("/download/{entity_id}/{file_id}")
+@entities.get("/download/{entity_id}/{file_id}")
 async def download_image(entity_id: str, file_id: str, fs: GridFS = Depends(get_fs)):
     try:
         grid_out = fs.get(ObjectId(file_id))

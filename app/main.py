@@ -1,7 +1,11 @@
-from fastapi import FastAPI, Cookie
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+
+from .entities.router import entities
+from .auth.router import auth
+from .google.router import google
+
 from .db import postgrestables
-from .routers import auth, entities, googleauth
 from .db.postgres import engine
 from starlette.middleware.sessions import SessionMiddleware
 from .config import settings
@@ -24,10 +28,6 @@ def root():
     return {"message": "Server is Running"}
 
 
-@app.get("/check-token")
-def get_token(access_token: str = Cookie(None)):
-    return {"token": access_token}
-
-app.include_router(auth.router)
-app.include_router(entities.router)
-app.include_router(googleauth.router)
+app.include_router(auth)
+app.include_router(entities)
+app.include_router(google)
