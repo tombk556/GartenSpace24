@@ -9,7 +9,7 @@ from sqlalchemy.orm import sessionmaker
 from starlette.middleware.sessions import SessionMiddleware
 from sqlalchemy.ext.declarative import declarative_base
 import pytest
-from app.oauth2 import create_access_token
+from app.auth.oauth2 import create_access_token
 
 PSQL_DB_URL = psql.test_database_url_psql
 engine = create_engine(PSQL_DB_URL.replace("postgres", "postgresql"))

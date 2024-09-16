@@ -1,11 +1,11 @@
 from fastapi import APIRouter, Depends, status, HTTPException
 from fastapi.security.oauth2 import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
-from . import schemas
+from . import oauth2, schemas
 from ..db import PostgresDB
-from .. import models, utils, oauth2
+from .. import models
 from ..db import PostgresDB
-from ..oauth2 import oauth2_scheme
+from .oauth2 import oauth2_scheme
 
 auth = APIRouter(
     prefix="/auth",
@@ -22,7 +22,7 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(PostgresDB.get_d
             detail="User already exist"
         )
 
-    user.password = utils.hash(user.password)
+    user.password = oauth2.hash(user.password)
     new_user = models.User(**user.model_dump())
     db.add(new_user)
     db.commit()
@@ -76,7 +76,7 @@ def login(user_credentials: OAuth2PasswordRequestForm = Depends(),
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN, detail="User does not exist")
 
-    if not utils.verify(user_credentials.password, user.password):
+    if not oauth2.verify(user_credentials.password, user.password):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN, detail="Invalid Credentials")
 

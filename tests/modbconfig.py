@@ -7,7 +7,7 @@ from app.main import app
 from fastapi import FastAPI
 from app.config import modb, psql
 from app.db import PostgresDB, MongoDB
-from app.oauth2 import create_access_token
+from app.auth.oauth2 import create_access_token
 import json
 from bson import ObjectId
 from gridfs import GridFS

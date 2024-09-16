@@ -1,16 +1,18 @@
 from jose import JWTError, jwt
 from datetime import datetime, timedelta
-from .auth import schemas
-from . import models
+from . import schemas
+from .. import models
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
-from .config import settings
-from .db import PostgresDB
+from ..config import settings
+from ..db import PostgresDB
 from google_auth_oauthlib.flow import Flow
 from typing import Dict
+from passlib.context import CryptContext
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
+pwd_context = CryptContext(schemes=["pbkdf2_sha256"], deprecated="auto")
 
 SECRET_KEY = settings.secret_key
 ALGORITHM = settings.algorithm
@@ -27,6 +29,11 @@ def get_google_oauth2_flow() -> Flow:
         redirect_uri=f'{settings.backend_url}/google/auth'
     )
 
+def hash(password: str):
+    return pwd_context.hash(password)
+
+def verify(plain_password, hashed_password):
+    return pwd_context.verify(plain_password, hashed_password)
 
 def create_access_token(data: Dict[str, any]):
     to_encode = data.copy()
@@ -35,7 +42,6 @@ def create_access_token(data: Dict[str, any]):
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
     return encoded_jwt
-
 
 def verify_access_token(token: str, credential_exception, db: Session):
     is_banned = db.query(models.BannedTokens).filter(
@@ -53,7 +59,6 @@ def verify_access_token(token: str, credential_exception, db: Session):
         raise credential_exception
 
     return token_data
-
 
 def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(PostgresDB.get_db)):
     credentials_exception = HTTPException(

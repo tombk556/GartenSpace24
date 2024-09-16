@@ -6,7 +6,7 @@ from .schemas import Entity, EntityResponse
 from pymongo.collection import Collection
 from bson import ObjectId
 from gridfs import GridFS
-from .. import oauth2
+from ..auth import oauth2
 
 entities = APIRouter(
     prefix="/entities",

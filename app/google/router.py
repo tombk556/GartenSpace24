@@ -3,13 +3,13 @@ from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 from fastapi.responses import RedirectResponse
 from google.oauth2.credentials import Credentials
-from ..oauth2 import get_google_oauth2_flow
+from ..auth.oauth2 import get_google_oauth2_flow
 from .. import models
 from ..db import PostgresDB
 from . import schemas
 from ..config import settings
 import os
-from .. import utils, oauth2
+from ..auth import oauth2
 
 google = APIRouter(
     tags=["Google"])
@@ -69,7 +69,7 @@ def check_user_and_create_token(user_info, db: Session) -> str:
         user_id = existing_user.id
     elif not existing_user:
         user = schemas.GoogleUserCreate(**user_info)
-        user.password = utils.hash(user.password)
+        user.password = oauth2.hash(user.password)
         new_user = models.User(**user.model_dump())
         db.add(new_user)
         db.commit()
