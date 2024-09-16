@@ -19,11 +19,11 @@ def test_create_entity(authorized_client: TestClient):
             "price": 20000,
             "description": "Dieses schön gelegene Gütle in Pliezhausen ladet dich ein für deinen Geburstag. "
         },
-        "properties": {
-            "Schuppen": True,
-            "Grillstelle": True,
-            "Parkplätze": True
-        }
+        "properties": [
+            "Schuppen",
+            "Grillstelle",
+            "Parkplätze"
+        ]
     }
     )
     assert response.status_code == 201

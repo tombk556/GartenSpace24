@@ -32,7 +32,7 @@ class Entity(BaseModel):
     date: datetime = Field(default_factory=datetime.now)
     address: Address
     meta: Meta
-    properties: Optional[Dict] = None
+    properties: Optional[list[str]] = []
     images: Optional[Dict[str, str]] = {}
 
     @field_validator("userId", mode="after")
