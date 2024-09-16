@@ -1,14 +1,13 @@
+from app import models
+from app.db import engine
+from app.config import settings
+from app.auth.router import auth
+from app.google.router import google
+from app.entities.router import entities
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-
-from .entities.router import entities
-from .auth.router import auth
-from .google.router import google
-
-from . import models
-from .db import engine
 from starlette.middleware.sessions import SessionMiddleware
-from .config import settings
 
 models.Base.metadata.create_all(bind=engine)
 

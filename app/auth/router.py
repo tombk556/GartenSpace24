@@ -1,11 +1,10 @@
+from app import models
+from app.db import PostgresDB
+from app.auth import oauth2, schemas
+
 from fastapi import APIRouter, Depends, status, HTTPException
 from fastapi.security.oauth2 import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
-from . import oauth2, schemas
-from ..db import PostgresDB
-from .. import models
-from ..db import PostgresDB
-from .oauth2 import oauth2_scheme
 
 auth = APIRouter(
     prefix="/auth",
@@ -33,7 +32,7 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(PostgresDB.get_d
 
 @auth.delete("/delete_user", status_code=status.HTTP_204_NO_CONTENT)
 def delte_user(current_user: schemas.User = Depends(oauth2.get_current_user), db: Session = Depends(PostgresDB.get_db),
-               token: str = Depends(oauth2_scheme)):
+               token: str = Depends(oauth2.oauth2_scheme)):
 
     existing_user = db.query(models.User).filter(
         models.User.id == current_user.id)

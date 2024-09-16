@@ -1,15 +1,16 @@
-from jose import JWTError, jwt
-from datetime import datetime, timedelta
-from . import schemas
-from .. import models
-from fastapi import Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordBearer
-from sqlalchemy.orm import Session
-from ..config import settings
-from ..db import PostgresDB
-from google_auth_oauthlib.flow import Flow
+from app import models
+from app.auth import schemas
+from app.db import PostgresDB
+from app.config import settings
+
 from typing import Dict
+from jose import JWTError, jwt
+from sqlalchemy.orm import Session
 from passlib.context import CryptContext
+from datetime import datetime, timedelta
+from google_auth_oauthlib.flow import Flow
+from fastapi.security import OAuth2PasswordBearer
+from fastapi import Depends, HTTPException, status
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 pwd_context = CryptContext(schemes=["pbkdf2_sha256"], deprecated="auto")

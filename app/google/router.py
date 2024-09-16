@@ -1,15 +1,15 @@
-from fastapi import APIRouter, Request, HTTPException, Depends, status
-from fastapi.responses import JSONResponse
+from app import models
+from app.auth import oauth2
+from app.db import PostgresDB
+from app.google import schemas
+from app.config import settings
+from app.auth.oauth2 import get_google_oauth2_flow
+
+import os
 from sqlalchemy.orm import Session
 from fastapi.responses import RedirectResponse
 from google.oauth2.credentials import Credentials
-from ..auth.oauth2 import get_google_oauth2_flow
-from .. import models
-from ..db import PostgresDB
-from . import schemas
-from ..config import settings
-import os
-from ..auth import oauth2
+from fastapi import APIRouter, Request, HTTPException, Depends, status
 
 google = APIRouter(
     tags=["Google"])

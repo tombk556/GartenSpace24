@@ -1,10 +1,10 @@
-from pydantic import BaseModel, Field, field_validator, validator
-from fastapi import HTTPException, status
-from datetime import datetime
-from bson import ObjectId
-from typing import Optional, Dict
 from enum import Enum
 from uuid import UUID
+from bson import ObjectId
+from datetime import datetime
+from typing import Optional, Dict
+from fastapi import HTTPException, status
+from pydantic import BaseModel, Field, field_validator, validator
 
 
 class Address(BaseModel):

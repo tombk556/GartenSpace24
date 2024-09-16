@@ -1,8 +1,7 @@
-from uuid import UUID
-from pydantic import BaseModel, EmailStr, Field, computed_field
-from typing import Optional
 import random
 import string
+from typing import Optional
+from pydantic import BaseModel, EmailStr, Field, computed_field
 
 def random_password(n: int = 30) -> str:
     return ''.join(random.choice(string.digits + string.ascii_letters) for _ in range(n))
