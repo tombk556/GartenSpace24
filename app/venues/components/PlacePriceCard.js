@@ -1,10 +1,10 @@
 import React from "react";
-import { FaLocationDot } from "react-icons/fa6";
+import { FaLocationDot, FaHouseChimney } from "react-icons/fa6";
 import { formatCurrency, calculatePricePerSquareMeter, SquareMeter } from "../Hooks";
 const PlacePriceCard = ({ property }) => {
 
   return (
-    <div className="grid grid-cols-3">
+    <div className="grid grid-cols-4">
       <div>
         <div className="text-xl flex items-center">
           <FaLocationDot className="mr-2" />
@@ -38,6 +38,16 @@ const PlacePriceCard = ({ property }) => {
         <p className="text-s">
             Grundstücksfläche
         </p>
+      </div>
+
+      <div>
+        <div className="text-xl flex items-center">
+            <FaHouseChimney className="mr-2" />
+            <p className="font-semibold">Eigenschaften</p>
+          </div>
+        <span className="text-xs text-gray-700">
+          {property.properties.join(', ')}
+        </span>
       </div>
     </div>
   );

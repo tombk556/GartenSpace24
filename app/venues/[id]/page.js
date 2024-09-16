@@ -6,6 +6,7 @@ import PropertyHeader from "../components/PropertyHeader";
 import ImagePlaceholder from "../components/ImagePlaceholder";
 import UserMessage from "../components/UserMessage";
 import PlacePriceCard from "../components/PlacePriceCard";
+
 const Page = () => {
   const [id, setId] = useState("");
   const [property, setProperty] = useState(null);
@@ -83,14 +84,14 @@ const Page = () => {
               ))}
             </div>
           </div>
-
         )}
         {property && <UserMessage property={property} />}
       </div>
+      <hr className="mt-2" />
       {property && <PropertyHeader property={property} />}
       <hr className="mb-2" />
       {property && <PlacePriceCard property={property} />}
-
+      <hr className="mt-2" />
       {isModalOpen && (
         <ImageCarousel
           images={images}
