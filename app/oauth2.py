@@ -1,12 +1,12 @@
 from jose import JWTError, jwt
 from datetime import datetime, timedelta
 from .auth import schemas
-from .db import postgrestables
+from . import postgrestables
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 from .config import settings
-from .db.postgres import get_db
+from .db import PostgresDB
 from google_auth_oauthlib.flow import Flow
 from typing import Dict
 
@@ -55,7 +55,7 @@ def verify_access_token(token: str, credential_exception, db: Session):
     return token_data
 
 
-def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
+def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(PostgresDB.get_db)):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",

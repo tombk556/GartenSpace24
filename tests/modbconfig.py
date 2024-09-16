@@ -6,12 +6,14 @@ from sqlalchemy.orm import sessionmaker
 from app.main import app
 from fastapi import FastAPI
 from app.config import modb, psql
-from app.db import mongodb, postgres, postgrestables
+from app.db import PostgresDB, MongoDB
 from app.oauth2 import create_access_token
 import json
 from bson import ObjectId
 from gridfs import GridFS
 import os
+
+from app import postgrestables
 
 MONGODB_URI = modb.mongodb_uri
 
@@ -81,9 +83,9 @@ def client(mongo_session, postgres_session, mongo_fs_session):
             postgres_session.close()
 
     test_app = create_test_app()
-    app.dependency_overrides[mongodb.get_db] = override_get_db_mongo
-    app.dependency_overrides[mongodb.get_fs] = override_get_fs_mongo
-    app.dependency_overrides[postgres.get_db] = override_get_db_postgres
+    app.dependency_overrides[MongoDB.get_db] = override_get_db_mongo
+    app.dependency_overrides[MongoDB.get_fs] = override_get_fs_mongo
+    app.dependency_overrides[PostgresDB.get_db] = override_get_db_postgres
     yield TestClient(test_app)
 
 

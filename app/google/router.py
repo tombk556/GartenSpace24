@@ -4,8 +4,8 @@ from sqlalchemy.orm import Session
 from fastapi.responses import RedirectResponse
 from google.oauth2.credentials import Credentials
 from ..oauth2 import get_google_oauth2_flow
-from ..db import postgrestables
-from ..db.postgres import get_db
+from .. import postgrestables
+from ..db import PostgresDB
 from . import schemas
 from ..config import settings
 import os
@@ -26,7 +26,7 @@ async def login_google(request: Request):
 
 
 @google.get("/google/auth", response_model=schemas.Token)
-async def auth_google(request: Request, db: Session = Depends(get_db)):
+async def auth_google(request: Request, db: Session = Depends(PostgresDB.get_db)):
     flow = get_google_oauth2_flow()
     flow.fetch_token(authorization_response=request.url._url)
 

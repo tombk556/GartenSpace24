@@ -5,8 +5,8 @@ from .entities.router import entities
 from .auth.router import auth
 from .google.router import google
 
-from .db import postgrestables
-from .db.postgres import engine
+from . import postgrestables
+from .db import engine
 from starlette.middleware.sessions import SessionMiddleware
 from .config import settings
 

@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, status, UploadFile, File, HTTPException, Form
 from fastapi.responses import StreamingResponse
-from ..db.mongodb import get_db, get_fs
+from ..db import MongoDB
 from ..auth.schemas import User
 from .schemas import Entity, EntityResponse
 from pymongo.collection import Collection
@@ -14,20 +14,20 @@ entities = APIRouter(
 
 
 @entities.post("/create_entity", status_code=status.HTTP_201_CREATED)
-def create_entity(entity: Entity, current_user: User = Depends(oauth2.get_current_user), db: Collection = Depends(get_db)):
+def create_entity(entity: Entity, current_user: User = Depends(oauth2.get_current_user), db: Collection = Depends(MongoDB.get_db)):
     entity.userId = str(current_user.id)
     result = db["entities"].insert_one(entity.model_dump())
     return str(result.inserted_id)
 
 
 @entities.get("/get_all_entities", response_model=list[EntityResponse])
-def get_all_entities(db: Collection = Depends(get_db)):
+def get_all_entities(db: Collection = Depends(MongoDB.get_db)):
     entities = db["entities"].find({"address": {"$exists": True}})
 
     return entities
 
 @entities.get("/get_entity/{id}", response_model=Entity)
-def get_entity(id: str, db: Collection = Depends(get_db)):
+def get_entity(id: str, db: Collection = Depends(MongoDB.get_db)):
     entity = db["entities"].find_one({'_id': ObjectId(id)})
     if entity:
         entity['_id'] = str(entity['_id'])
@@ -38,7 +38,7 @@ def get_entity(id: str, db: Collection = Depends(get_db)):
 
 @entities.put("/upload/{entity_id}")
 async def upload_image(entity_id: str, file: UploadFile = File(...), current_user: User = Depends(oauth2.get_current_user), 
-                       fs: GridFS = Depends(get_fs), db: Collection = Depends(get_db)):
+                       fs: GridFS = Depends(MongoDB.get_fs), db: Collection = Depends(MongoDB.get_db)):
     
     user_id = db["entities"].find_one({"_id": ObjectId(entity_id)})["userId"]
     
@@ -55,7 +55,7 @@ async def upload_image(entity_id: str, file: UploadFile = File(...), current_use
 
 
 @entities.get("/download/{entity_id}/{file_id}")
-async def download_image(entity_id: str, file_id: str, fs: GridFS = Depends(get_fs)):
+async def download_image(entity_id: str, file_id: str, fs: GridFS = Depends(MongoDB.get_fs)):
     try:
         grid_out = fs.get(ObjectId(file_id))
         

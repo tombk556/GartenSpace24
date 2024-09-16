@@ -3,7 +3,7 @@ from sqlalchemy.sql.expression import text
 from sqlalchemy.sql.sqltypes import TIMESTAMP
 from sqlalchemy.dialects.postgresql import UUID  
 import uuid 
-from .postgres import Base
+from .db import Base
 
 class User(Base):
     __tablename__ = "users"

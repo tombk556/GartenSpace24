@@ -1,8 +1,8 @@
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
-from app.db.postgres import get_db
+from app.db import PostgresDB
 from sqlalchemy import create_engine
-from app.db import postgrestables
+from app import postgrestables
 from app.config import psql
 from app.main import app
 from sqlalchemy.orm import sessionmaker
@@ -43,7 +43,7 @@ def client(session):
             session.close()
     test_app = create_test_app()
     test_app.add_middleware(SessionMiddleware, secret_key="secret_key")
-    app.dependency_overrides[get_db] = override_get_db
+    app.dependency_overrides[PostgresDB.get_db] = override_get_db
     yield TestClient(test_app)
 
 
