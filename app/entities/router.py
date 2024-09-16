@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, status, UploadFile, File, HTTPException, Form
 from fastapi.responses import StreamingResponse
 from ..db.mongodb import get_db, get_fs
-from ..models.usermodels import User
-from ..models.entitymodels import Entity, EntityResponse
+from ..auth.schemas import User
+from .schemas import Entity, EntityResponse
 from pymongo.collection import Collection
 from bson import ObjectId
 from gridfs import GridFS

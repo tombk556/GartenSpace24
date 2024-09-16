@@ -6,7 +6,7 @@ from google.oauth2.credentials import Credentials
 from ..oauth2 import get_google_oauth2_flow
 from ..db import postgrestables
 from ..db.postgres import get_db
-from ..models import usermodels
+from . import schemas
 from ..config import settings
 import os
 from .. import utils, oauth2
@@ -25,7 +25,7 @@ async def login_google(request: Request):
     return RedirectResponse(authorization_url)
 
 
-@google.get("/google/auth", response_model=usermodels.Token)
+@google.get("/google/auth", response_model=schemas.Token)
 async def auth_google(request: Request, db: Session = Depends(get_db)):
     flow = get_google_oauth2_flow()
     flow.fetch_token(authorization_response=request.url._url)
@@ -68,7 +68,7 @@ def check_user_and_create_token(user_info, db: Session) -> str:
     if existing_user and existing_user.google_account:
         user_id = existing_user.id
     elif not existing_user:
-        user = usermodels.GoogleUserCreate(**user_info)
+        user = schemas.GoogleUserCreate(**user_info)
         user.password = utils.hash(user.password)
         new_user = postgrestables.User(**user.model_dump())
         db.add(new_user)

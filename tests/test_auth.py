@@ -1,4 +1,4 @@
-from app.models import usermodels
+from app.auth import schemas
 from fastapi.testclient import TestClient
 from app.config import settings
 from jose import jwt
@@ -13,7 +13,7 @@ def test_create_user(client: TestClient):
         json={"email": "testuser@gmail.com", "username": "testuser",
               "password": "Password123!", "name": "Tom der Tester", "age": 99}
     )
-    new_user = usermodels.User(**response.json())
+    new_user = schemas.User(**response.json())
     assert new_user.email == "testuser@gmail.com"
     assert isinstance(new_user.id, UUID)
     assert response.status_code == 201
@@ -24,7 +24,7 @@ def test_create_user2(client: TestClient):
         json={"email": "testuser@gmail.com", "username": "testuser",
               "password": "Password123!"}
     )
-    new_user = usermodels.User(**response.json())
+    new_user = schemas.User(**response.json())
     assert new_user.email == "testuser@gmail.com"
     assert isinstance(new_user.id, UUID)
     assert response.status_code == 201
@@ -35,7 +35,7 @@ def test_create_user3(client: TestClient):
         json={"email": "testuser@gmail.com", "username": "testuser",
               "password": "Password123!", "google_account": True}
     )
-    new_user = usermodels.User(**response.json())
+    new_user = schemas.User(**response.json())
     assert new_user.email == "testuser@gmail.com"
     assert isinstance(new_user.id, UUID)
     assert response.status_code == 201
@@ -63,7 +63,7 @@ def test_login(client: TestClient, test_user):
     response = client.post(
         url="/auth/login",
         data={"username": test_user["email"], "password": test_user["password"]})
-    login_response = usermodels.Token(**response.json())
+    login_response = schemas.Token(**response.json())
     payload = jwt.decode(login_response.access_token,
                          settings.secret_key, algorithms=[settings.algorithm])
     id = payload.get("user_id")

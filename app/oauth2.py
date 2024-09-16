@@ -1,6 +1,6 @@
 from jose import JWTError, jwt
 from datetime import datetime, timedelta
-from .models import usermodels
+from .auth import schemas
 from .db import postgrestables
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
@@ -47,7 +47,7 @@ def verify_access_token(token: str, credential_exception, db: Session):
         id = payload.get("user_id")
         if id is None:
             raise credential_exception
-        token_data = usermodels.TokenData(id=id)
+        token_data = schemas.TokenData(id=id)
 
     except JWTError:
         raise credential_exception

@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, status, HTTPException
 from fastapi.security.oauth2 import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
-from ..models import usermodels
+from . import schemas
 from ..db import postgres, postgrestables
 from .. import utils, oauth2
 from ..db.postgres import get_db
@@ -12,8 +12,8 @@ auth = APIRouter(
     tags=["Authentication"])
 
 
-@auth.post("/sign_up", status_code=status.HTTP_201_CREATED, response_model=usermodels.User)
-def create_user(user: usermodels.UserCreate, db: Session = Depends(get_db)):
+@auth.post("/sign_up", status_code=status.HTTP_201_CREATED, response_model=schemas.User)
+def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     existing_user = db.query(postgrestables.User).filter(
         (postgrestables.User.email == user.email) | (postgrestables.User.username == user.username)).first()
     if existing_user:
@@ -32,7 +32,7 @@ def create_user(user: usermodels.UserCreate, db: Session = Depends(get_db)):
 
 
 @auth.delete("/delete_user", status_code=status.HTTP_204_NO_CONTENT)
-def delte_user(current_user: usermodels.User = Depends(oauth2.get_current_user), db: Session = Depends(get_db),
+def delte_user(current_user: schemas.User = Depends(oauth2.get_current_user), db: Session = Depends(get_db),
                token: str = Depends(oauth2_scheme)):
 
     existing_user = db.query(postgrestables.User).filter(
@@ -46,8 +46,8 @@ def delte_user(current_user: usermodels.User = Depends(oauth2.get_current_user),
     return 204
 
 
-@auth.put("/update_user_infos", response_model=usermodels.User)
-def update_user(update_user: usermodels.UserUpdate, current_user: usermodels.User = Depends(oauth2.get_current_user), db: Session = Depends(get_db)):
+@auth.put("/update_user_infos", response_model=schemas.User)
+def update_user(update_user: schemas.UserUpdate, current_user: schemas.User = Depends(oauth2.get_current_user), db: Session = Depends(get_db)):
     existing_user = db.query(postgrestables.User).filter(
         ((postgrestables.User.email == update_user.email)
          & (postgrestables.User.id != current_user.id))
@@ -66,7 +66,7 @@ def update_user(update_user: usermodels.UserUpdate, current_user: usermodels.Use
     return user.first()
 
 
-@auth.post("/login", response_model=usermodels.Token)
+@auth.post("/login", response_model=schemas.Token)
 def login(user_credentials: OAuth2PasswordRequestForm = Depends(),
           db: Session = Depends(postgres.get_db)):
     user = db.query(postgrestables.User).filter(
@@ -85,6 +85,6 @@ def login(user_credentials: OAuth2PasswordRequestForm = Depends(),
     return {"access_token": access_token, "token_type": "bearer"}
 
 
-@auth.get("/users/me", response_model=usermodels.User)
-async def get_user(current_user: usermodels.User = Depends(oauth2.get_current_user)):
+@auth.get("/users/me", response_model=schemas.User)
+async def get_user(current_user: schemas.User = Depends(oauth2.get_current_user)):
     return current_user
