@@ -79,6 +79,7 @@ class Entity(BaseModel):
 class EntityResponse(BaseModel):
     id: str = Field(..., alias="_id")
     meta: Meta
+    address: Address
     images: Optional[Dict[str, str]] = {}
 
     @field_validator("id", mode="before")
