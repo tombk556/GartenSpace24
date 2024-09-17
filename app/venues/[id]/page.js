@@ -61,31 +61,29 @@ const Page = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <div className="grid grid-cols-1 lg:grid-cols-[3fr,1fr] gap-4">
+      <div className="flex flex-col lg:flex-row gap-6">
         {isLoadingImages ? (
-          <ImagePlaceholder />
+          <ImagePlaceholder className="flex-grow lg:w-1/4" />
         ) : (
-          <div className="image-gallery">
-            <div className="grid grid-cols-12 gap-4">
-              {images.slice(0, 6).map((image, index) => (
-                <div
-                  key={index}
-                  className={`col-span-6 md:col-span-4 lg:col-span-${
-                    index % 5 === 0 ? "6" : "3"
-                  } row-span-${index % 3 === 0 ? "2" : "1"} relative`}
-                >
-                  <img
-                    src={image.url}
-                    alt={`Property Image ${image.name}`}
-                    className="w-full h-full object-cover rounded-lg shadow-lg cursor-pointer"
-                    onClick={() => openModal(index)}
-                  />
-                </div>
-              ))}
-            </div>
+          <div className="grid grid-cols-3 gap-4 h-510px] overflow-auto flex-grow lg:w-4/5">
+            {images.slice(0, 6).map((image, index) => (
+              <div key={index} className="w-full h-[240px]">
+                <img
+                  src={image.url}
+                  alt={`Property Image ${image.name}`}
+                  className="object-cover w-full h-full rounded-lg shadow-lg cursor-pointer"
+                  onClick={() => openModal(index)}
+                />
+              </div>
+            ))}
           </div>
         )}
-        {property && <UserMessage property={property} />}
+        {property && (
+          <UserMessage
+            property={property}
+            className="h-[500px] flex-shrink-0 lg:w-1/5"
+          />
+        )}
       </div>
       <hr className="mt-2" />
       {property && <PropertyHeader property={property} />}

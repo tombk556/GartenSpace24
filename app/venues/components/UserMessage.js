@@ -16,9 +16,12 @@ const formatDate = (dateString) => {
   }).format(date);
 };
 
-const UserMessage = ({ property }) => {
+const UserMessage = ({ property, className }) => {
   return (
-    <div className="p-4 w-full border-2 border-gray-300 rounded-lg max-w-md">
+    <div 
+          className={`p-4 w-full border-2 border-gray-300 rounded-lg max-w-md ${className}`}
+
+    >
       <div>
         <p className="text-gray-700">
           Veröffentlicht am {formatDate(property.date)} von Nutzer:
