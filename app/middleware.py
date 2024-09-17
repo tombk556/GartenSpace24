@@ -1,9 +1,8 @@
 import time
-from starlette.middleware.base import BaseHTTPMiddleware
-from time import time
-from collections import defaultdict
-from fastapi import Response
 from typing import Dict
+from fastapi import Response
+from collections import defaultdict
+from starlette.middleware.base import BaseHTTPMiddleware
 
 
 class SecurityHeadersMiddleware(BaseHTTPMiddleware):

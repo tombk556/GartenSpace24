@@ -1,21 +1,23 @@
-from fastapi import APIRouter, Request, HTTPException, Depends, status
-from fastapi.responses import JSONResponse
+from app import models
+from app.auth import oauth2
+from app.db import PostgresDB
+from app.google import schemas
+from app.config import settings
+from app.auth.oauth2 import get_google_oauth2_flow
+
+import os
 from sqlalchemy.orm import Session
 from fastapi.responses import RedirectResponse
 from google.oauth2.credentials import Credentials
-from ..oauth2 import get_google_oauth2_flow
-from ..db import postgrestables
-from ..db.postgres import get_db
-from ..models import usermodels
-from ..config import settings
-import os
-from .. import utils, oauth2
+from fastapi import APIRouter, Request, HTTPException, Depends, status
 
-router = APIRouter()
+google = APIRouter(
+    tags=["Google"])
+
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
 
-@router.get("/login/google")
+@google.get("/login/google")
 async def login_google(request: Request):
     flow = get_google_oauth2_flow()
     authorization_url, state = flow.authorization_url(prompt='select_account')
@@ -23,8 +25,8 @@ async def login_google(request: Request):
     return RedirectResponse(authorization_url)
 
 
-@router.get("/google/auth", response_model=usermodels.Token)
-async def auth_google(request: Request, db: Session = Depends(get_db)):
+@google.get("/google/auth", response_model=schemas.Token)
+async def auth_google(request: Request, db: Session = Depends(PostgresDB.get_db)):
     flow = get_google_oauth2_flow()
     flow.fetch_token(authorization_response=request.url._url)
 
@@ -50,7 +52,7 @@ async def auth_google(request: Request, db: Session = Depends(get_db)):
         else:
             raise e
 
-@router.get("/logout/google")
+@google.get("/logout/google")
 async def logout_google(request: Request):
     request.session.clear()
     return RedirectResponse(url="/")
@@ -58,17 +60,17 @@ async def logout_google(request: Request):
 
 def check_user_and_create_token(user_info, db: Session) -> str:
     user_name = user_info["email"].split("@")[0]
-    existing_user = db.query(postgrestables.User).filter(
-        (postgrestables.User.email == user_info['email'])
-        | (postgrestables.User.username == user_name)
+    existing_user = db.query(models.User).filter(
+        (models.User.email == user_info['email'])
+        | (models.User.username == user_name)
         ).first()
 
     if existing_user and existing_user.google_account:
         user_id = existing_user.id
     elif not existing_user:
-        user = usermodels.GoogleUserCreate(**user_info)
-        user.password = utils.hash(user.password)
-        new_user = postgrestables.User(**user.model_dump())
+        user = schemas.GoogleUserCreate(**user_info)
+        user.password = oauth2.hash(user.password)
+        new_user = models.User(**user.model_dump())
         db.add(new_user)
         db.commit()
         db.refresh(new_user)

@@ -1,15 +1,15 @@
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
-from app.db.postgres import get_db
+from app.db import PostgresDB
 from sqlalchemy import create_engine
-from app.db import postgrestables
+from app import models
 from app.config import psql
 from app.main import app
 from sqlalchemy.orm import sessionmaker
 from starlette.middleware.sessions import SessionMiddleware
 from sqlalchemy.ext.declarative import declarative_base
 import pytest
-from app.oauth2 import create_access_token
+from app.auth.oauth2 import create_access_token
 
 PSQL_DB_URL = psql.test_database_url_psql
 engine = create_engine(PSQL_DB_URL.replace("postgres", "postgresql"))
@@ -26,8 +26,8 @@ def create_test_app() -> FastAPI:
 
 @pytest.fixture(scope="function")
 def session():
-    postgrestables.Base.metadata.drop_all(bind=engine)
-    postgrestables.Base.metadata.create_all(bind=engine)
+    models.Base.metadata.drop_all(bind=engine)
+    models.Base.metadata.create_all(bind=engine)
     db = TestingSessionLocal()
     try:
         yield db
@@ -43,7 +43,7 @@ def client(session):
             session.close()
     test_app = create_test_app()
     test_app.add_middleware(SessionMiddleware, secret_key="secret_key")
-    app.dependency_overrides[get_db] = override_get_db
+    app.dependency_overrides[PostgresDB.get_db] = override_get_db
     yield TestClient(test_app)
 
 

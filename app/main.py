@@ -1,12 +1,15 @@
-from fastapi import FastAPI, Cookie
-from fastapi.middleware.cors import CORSMiddleware
-from .db import postgrestables
-from .routers import auth, entities, googleauth
-from .db.postgres import engine
-from starlette.middleware.sessions import SessionMiddleware
-from .config import settings
+from app import models
+from app.db import engine
+from app.config import settings
+from app.auth.router import auth
+from app.google.router import google
+from app.entities.router import entities
 
-postgrestables.Base.metadata.create_all(bind=engine)
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from starlette.middleware.sessions import SessionMiddleware
+
+models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
@@ -24,10 +27,6 @@ def root():
     return {"message": "Server is Running"}
 
 
-@app.get("/check-token")
-def get_token(access_token: str = Cookie(None)):
-    return {"token": access_token}
-
-app.include_router(auth.router)
-app.include_router(entities.router)
-app.include_router(googleauth.router)
+app.include_router(auth)
+app.include_router(entities)
+app.include_router(google)

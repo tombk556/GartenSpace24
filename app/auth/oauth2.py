@@ -1,16 +1,19 @@
-from jose import JWTError, jwt
-from datetime import datetime, timedelta
-from .models import usermodels
-from .db import postgrestables
-from fastapi import Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordBearer
-from sqlalchemy.orm import Session
-from .config import settings
-from .db.postgres import get_db
-from google_auth_oauthlib.flow import Flow
+from app import models
+from app.auth import schemas
+from app.db import PostgresDB
+from app.config import settings
+
 from typing import Dict
+from jose import JWTError, jwt
+from sqlalchemy.orm import Session
+from passlib.context import CryptContext
+from datetime import datetime, timedelta
+from google_auth_oauthlib.flow import Flow
+from fastapi.security import OAuth2PasswordBearer
+from fastapi import Depends, HTTPException, status
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
+pwd_context = CryptContext(schemes=["pbkdf2_sha256"], deprecated="auto")
 
 SECRET_KEY = settings.secret_key
 ALGORITHM = settings.algorithm
@@ -27,6 +30,11 @@ def get_google_oauth2_flow() -> Flow:
         redirect_uri=f'{settings.backend_url}/google/auth'
     )
 
+def hash(password: str):
+    return pwd_context.hash(password)
+
+def verify(plain_password, hashed_password):
+    return pwd_context.verify(plain_password, hashed_password)
 
 def create_access_token(data: Dict[str, any]):
     to_encode = data.copy()
@@ -36,10 +44,9 @@ def create_access_token(data: Dict[str, any]):
 
     return encoded_jwt
 
-
 def verify_access_token(token: str, credential_exception, db: Session):
-    is_banned = db.query(postgrestables.BannedTokens).filter(
-        postgrestables.BannedTokens.token == token).first() is not None
+    is_banned = db.query(models.BannedTokens).filter(
+        models.BannedTokens.token == token).first() is not None
     if is_banned:
         raise credential_exception
     try:
@@ -47,23 +54,22 @@ def verify_access_token(token: str, credential_exception, db: Session):
         id = payload.get("user_id")
         if id is None:
             raise credential_exception
-        token_data = usermodels.TokenData(id=id)
+        token_data = schemas.TokenData(id=id)
 
     except JWTError:
         raise credential_exception
 
     return token_data
 
-
-def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
+def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(PostgresDB.get_db)):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
         headers={"WWW-Authenticate": "Bearer"}
     )
     token_data = verify_access_token(token, credentials_exception, db)
-    user = db.query(postgrestables.User).filter(
-        postgrestables.User.id == token_data.id).first()
+    user = db.query(models.User).filter(
+        models.User.id == token_data.id).first()
     if not user:
         raise credentials_exception
     return user
