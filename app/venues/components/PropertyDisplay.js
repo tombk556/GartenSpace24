@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { truncateText } from "../Hooks";
-import { FaLocationDot, FaHouseChimney } from "react-icons/fa6";
+import { FaLocationDot } from "react-icons/fa6";
 import {
   formatCurrency,
   calculatePricePerSquareMeter,
@@ -14,22 +14,32 @@ export default function PropertyDisplay({ property }) {
 
       <div className="w-full md:w-1/3 md:pl-4">
         <Link href={`/venues/${property._id}`}>
-          <div className="text-xl text-gray-700 p-4 mb-4 font-bold">
+          <div className="text-l text-gray-700 p-4 mb-4 font-bold">
             <p>{truncateText(property.meta.description, 50)}</p>
           </div>
-          <div className="text-l text-gray-700 p-4 mb-4 font-semibold flex">
-            <FaLocationDot className="mr-2" /> 
+          <div className="text-s text-gray-700 p-4 mb-4 font-thin inline-flex items-center">
+            <FaLocationDot className="mr-2" />
             <p>
-              {property.address.city}
+              {property.address.city} - {property.address.plz}
             </p>
           </div>
-          <div className="bg-blue-800 text-white p-4 mb-4">
-            <p>Price Information</p>
+
+          <div className="flex justify-around space-x-4">
+            <div>
+              <p className="text-l font-bold">
+                {formatCurrency(property.meta.price)}
+              </p>
+              <p className="text-xs">Kaufpreis</p>
+            </div>
+            <div>
+              <p className="text-l font-bold">
+                {SquareMeter(property.meta.size)}
+              </p>
+              <p className="text-xs">Grundstücksfläche</p>
+            </div>
           </div>
         </Link>
       </div>
-
-      <div className="w-full h-10 bg-blue-800 text-white flex items-center justify-center mt-4"></div>
     </div>
   );
 }
