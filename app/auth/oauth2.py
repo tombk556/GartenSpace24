@@ -3,6 +3,7 @@ from app.auth import schemas
 from app.db import PostgresDB
 from app.config import settings
 
+import os
 from typing import Dict
 from jose import JWTError, jwt
 from sqlalchemy.orm import Session
@@ -18,8 +19,10 @@ pwd_context = CryptContext(schemes=["pbkdf2_sha256"], deprecated="auto")
 SECRET_KEY = settings.secret_key
 ALGORITHM = settings.algorithm
 ACCESS_TOKEN_EXPIRE_MINUTES = settings.access_token_expire_minutes
-CRED_PATH = settings.cred_path
-
+CRED_FILE = settings.cred_file
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+PROJECT_ROOT = os.path.dirname(BASE_DIR)
+CRED_PATH = os.path.join(PROJECT_ROOT, "google-credentials.json")
 
 def get_google_oauth2_flow() -> Flow:
     return Flow.from_client_secrets_file(
