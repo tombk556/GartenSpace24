@@ -22,7 +22,7 @@ const Page = () => {
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-3xl font-bold text-center mb-8">Available Properties</h1>
-      <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-4">
         <div className="space-y-4">
           {properties.map((property) => (
              <PropertyDisplay key={property._id} property={property}/>
