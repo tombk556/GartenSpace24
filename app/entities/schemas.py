@@ -4,7 +4,7 @@ from bson import ObjectId
 from datetime import datetime
 from typing import Optional, Dict
 from fastapi import HTTPException, status
-from pydantic import BaseModel, Field, field_validator, validator
+from pydantic import BaseModel, Field, field_validator, validator, EmailStr
 
 
 class Address(BaseModel):
@@ -29,6 +29,8 @@ class Meta(BaseModel):
 
 class Entity(BaseModel):
     userId: Optional[str] = None
+    email: Optional[EmailStr] = None
+    username: Optional[str] = None
     date: datetime = Field(default_factory=datetime.now)
     address: Address
     meta: Meta

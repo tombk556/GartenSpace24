@@ -17,6 +17,8 @@ entities = APIRouter(
 @entities.post("/create_entity", status_code=status.HTTP_201_CREATED)
 def create_entity(entity: Entity, current_user: User = Depends(oauth2.get_current_user), db: Collection = Depends(MongoDB.get_db)):
     entity.userId = str(current_user.id)
+    entity.email = current_user.email
+    entity.username = current_user.username
     result = db["entities"].insert_one(entity.model_dump())
     return str(result.inserted_id)
 
