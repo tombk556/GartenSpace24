@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 import { FaUserCheck } from "react-icons/fa";
 import { FaEnvelope } from "react-icons/fa";
 import { FaHeart } from "react-icons/fa";
@@ -27,7 +28,7 @@ const UserMessage = ({ property, className }) => {
           Veröffentlicht am {formatDate(property.date)} von Nutzer:
         </p>
         <h2 className="font-semibold text-gray-900">
-          {property.userId}
+          {property.username}
         </h2>
         <p className="text-gray-700 flex items-center">
           Identität verifiziert{" "}
@@ -36,13 +37,14 @@ const UserMessage = ({ property, className }) => {
       </div>
       <hr className="border border-gray-700 mt-20" />
       <div className="flex justify-center mt-20">
-        <button
+        <Link
           type="submit"
+          href={`mailto:${property.email}`}
           className="border-2 border-black py-2 px-10 w-48 rounded-lg flex items-center justify-center hover:bg-gray-200 transition duration-200"
         >
           <FaEnvelope size={20} className="mr-2" />
           Nachricht
-        </button>
+        </Link>
       </div>
       <div className="flex justify-center mt-5">
         <button
