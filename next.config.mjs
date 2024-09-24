@@ -1,5 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+    reactStrictMode: false, // Disable React Strict Mode to prevent multiple renders in development
+
     experimental: {
       serverComponentsExternalPackages: ["mongoose"],
     },
@@ -14,6 +16,5 @@ const nextConfig = {
       return config
     }
   }
-  
   export default nextConfig
   
