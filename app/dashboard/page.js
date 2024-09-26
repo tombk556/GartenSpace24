@@ -1,11 +1,12 @@
 import React from 'react'
 import ProtectedRoute from '@components/ProtectedRoute'
+import ProfileForm from './components/ProfileForm'
 
 const page = () => {
   return (
     <ProtectedRoute>
       <div>
-          <h1>Dashboard</h1>
+          <ProfileForm />
       </div>
     </ProtectedRoute>
   )

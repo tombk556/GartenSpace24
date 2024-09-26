@@ -8,7 +8,7 @@ const Page = () => {
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [isFirstLoad, setIsFirstLoad] = useState(true);
-  const propertiesPerPage = 2;
+  const propertiesPerPage = 4;
 
   useEffect(() => {
     const fetchProperties = async () => {
