@@ -1,12 +1,12 @@
 import React from 'react'
 import ProtectedRoute from '@components/ProtectedRoute'
-import ProfileForm from './components/ProfileForm'
+import EntityForm from './components/EntityForm'
 
 const page = () => {
   return (
     <ProtectedRoute>
       <div>
-          <ProfileForm />
+          <EntityForm />
       </div>
     </ProtectedRoute>
   )

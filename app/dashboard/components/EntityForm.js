@@ -2,7 +2,7 @@ import React from 'react';
 
 import { FaCamera } from "react-icons/fa";
 
-export default function ProfileForm() {
+export default function EntityForm() {
   return (
     <form>
       <div className="space-y-12">
