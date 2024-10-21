@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { truncateText } from "../Hooks";
 import { FaLocationDot } from "react-icons/fa6";
 import { formatCurrency, SquareMeter } from "../Hooks";
 
