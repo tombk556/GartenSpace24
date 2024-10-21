@@ -53,7 +53,6 @@ export default function PropertyDisplay({ property }) {
         <Link href={`/venues/${property._id}`}>
           <div className="text-l text-gray-700 p-4 mb-4 font-bold">
             <p>{property.meta.description}</p>
-            <p>{property._id}</p>
           </div>
           <div className="text-s text-gray-700 p-4 mb-4 font-thin inline-flex items-center">
             <FaLocationDot className="mr-2" />
