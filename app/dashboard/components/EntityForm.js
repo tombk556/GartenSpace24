@@ -10,6 +10,20 @@ export default function EntityForm() {
   const [selectedImages, setSelectedImages] = useState([]);
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [error, setError] = useState("");
+  const checkboxItems = [
+    "Schuppen",
+    "Grillstelle",
+    "Garage",
+    "Garten",
+    "Balkon",
+    "Swimmingpool",
+    "Sauna",
+    "Carport",
+    "Fitnessraum",
+    "Terrasse",
+    "Kamin",
+    "Spielplatz",
+  ];
 
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
@@ -263,6 +277,33 @@ export default function EntityForm() {
                 </select>
               </div>
             </div>
+          </div>
+        </div>
+        {/* Checkboxes */}
+        <div className="border-b border-gray-900/10 pb-12">
+          <label
+            htmlFor="longDesc"
+            className="text-l font-semibold text-gray-700"
+          >
+            Eigenschaften:
+          </label>
+          <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+            {checkboxItems.map((item, index) => (
+              <div className="flex items-center mb-4" key={index}>
+                <input
+                  id={`checkbox-${index}`}
+                  type="checkbox"
+                  value={item}
+                  className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                />
+                <label
+                  htmlFor={`checkbox-${index}`}
+                  className="ms-2 text-sm font-medium text-gray-700"
+                >
+                  {item}
+                </label>
+              </div>
+            ))}
           </div>
         </div>
       </div>
