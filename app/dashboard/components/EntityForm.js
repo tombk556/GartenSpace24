@@ -10,8 +10,8 @@ import PriceOfferSection from "./PriceOfferSection";
 import PropertiesSection from "./PropertiesSection";
 
 export default function EntityForm() {
-  const [selectedImages, setSelectedImages] = useState([]);
-  const [selectedProperties, setSelectedProperties] = useState([]);
+  const [images, setImages] = useState([]);
+  const [properties, setProperties] = useState([]);
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [error, setError] = useState("");
   const checkboxItems = [
@@ -30,14 +30,14 @@ export default function EntityForm() {
   ];
 
   const [formData, setFormData] = useState({
-    shortDesc: "",
-    longDesc: "",
-    streetAddress: "",
+    size: 0,
+    description: "",
+    street: "",
     city: "",
-    region: "",
-    postalCode: "",
+    country: "",
+    plz: 0,
     price: "",
-    offer: "Vermieten (Tage)",
+    type: "Gütle",
   });
 
   const handleSubmit = async (e) => {
@@ -52,8 +52,8 @@ export default function EntityForm() {
     // Log out all the data of the form
     const data = {
       ...formData,
-      selectedImages,
-      selectedProperties,
+      images,
+      properties,
     };
     console.log("Form Data Submitted:", data);
   };
@@ -66,8 +66,8 @@ export default function EntityForm() {
 
         {/* Image Uploader */}
         <ImageUploader
-          selectedImages={selectedImages}
-          setSelectedImages={setSelectedImages}
+          selectedImages={images}
+          setSelectedImages={setImages}
         />
 
         {/* Address Section */}
@@ -79,8 +79,8 @@ export default function EntityForm() {
         {/* Properties Section */}
         <PropertiesSection
           checkboxItems={checkboxItems}
-          selectedProperties={selectedProperties}
-          setSelectedProperties={setSelectedProperties}
+          selectedProperties={properties}
+          setSelectedProperties={setProperties}
         />
       </div>
       {/* Form Actions */}

@@ -21,6 +21,7 @@ export default function PriceOfferSection({ formData, setFormData }) {
               type="text"
               name="price"
               id="price"
+              placeholder="10.000,00"
               className="w-full text-gray-800 px-4 py-1.5 rounded-md border-2 border-gray-800 focus:outline-none"
               value={formData.price}
               onChange={handleChange}
@@ -29,22 +30,22 @@ export default function PriceOfferSection({ formData, setFormData }) {
         </div>
         <div className="sm:col-span-2">
           <label
-            htmlFor="offer"
+            htmlFor="type"
             className="text-l font-semibold text-gray-700"
           >
             Angebot:
           </label>
           <div className="mt-2">
             <select
-              id="offer"
-              name="offer"
+              id="type"
+              name="type"
               className="w-full text-gray-800 px-4 py-1.5 rounded-md border-2 border-gray-800 focus:outline-none"
               value={formData.offer}
               onChange={handleChange}
             >
-              <option value="Vermieten (Tage)">Vermieten (Tage)</option>
-              <option value="Kaufen">Kaufen</option>
-              <option value="Verpachten">Verpachten</option>
+              <option value="Gütle">Gütle</option>
+              <option value="Kleingarten">Kleingarten</option>
+              <option value="Schrebergarten">Schrebergarten</option>
             </select>
           </div>
         </div>

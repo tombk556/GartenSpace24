@@ -11,7 +11,7 @@ export default function AddressSection({ formData, setFormData }) {
       <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
         <div className="col-span-full">
           <label
-            htmlFor="streetAddress"
+            htmlFor="street"
             className="text-l font-semibold text-gray-700"
           >
             Adresse:
@@ -23,9 +23,8 @@ export default function AddressSection({ formData, setFormData }) {
           <div className="mt-2">
             <input
               type="text"
-              name="streetAddress"
-              id="streetAddress"
-              autoComplete="street-address"
+              name="street"
+              id="street"
               placeholder="Musterstraße 123"
               className="w-full text-gray-800 px-4 py-1.5 rounded-md border-2 border-gray-800 focus:outline-none"
               value={formData.streetAddress}
@@ -45,7 +44,6 @@ export default function AddressSection({ formData, setFormData }) {
               type="text"
               name="city"
               id="city"
-              autoComplete="address-level2"
               placeholder="Musterstadt"
               className="w-full text-gray-800 px-4 py-1.5 rounded-md border-2 border-gray-800 focus:outline-none"
               value={formData.city}
@@ -55,7 +53,7 @@ export default function AddressSection({ formData, setFormData }) {
         </div>
         <div className="sm:col-span-2">
           <label
-            htmlFor="region"
+            htmlFor="country"
             className="text-l font-semibold text-gray-700"
           >
             Bundesland:
@@ -63,8 +61,8 @@ export default function AddressSection({ formData, setFormData }) {
           <div className="mt-2">
             <input
               type="text"
-              name="region"
-              id="region"
+              name="country"
+              id="country"
               autoComplete="address-level1"
               placeholder="Baden-Württemberg"
               className="w-full text-gray-800 px-4 py-1.5 rounded-md border-2 border-gray-800 focus:outline-none"
@@ -75,7 +73,7 @@ export default function AddressSection({ formData, setFormData }) {
         </div>
         <div className="sm:col-span-2">
           <label
-            htmlFor="postalCode"
+            htmlFor="plz"
             className="text-l font-semibold text-gray-700"
           >
             PLZ:
@@ -83,8 +81,8 @@ export default function AddressSection({ formData, setFormData }) {
           <div className="mt-2">
             <input
               type="text"
-              name="postalCode"
-              id="postalCode"
+              name="plz"
+              id="plz"
               autoComplete="postal-code"
               placeholder="12345"
               className="w-full text-gray-800 px-4 py-1.5 rounded-md border-2 border-gray-800 focus:outline-none"
