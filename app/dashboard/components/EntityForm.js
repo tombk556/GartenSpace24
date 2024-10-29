@@ -30,17 +30,19 @@ export default function EntityForm() {
   ];
 
   const [formData, setFormData] = useState({
-    size: 0,
-    description: "",
-    street: "",
-    city: "",
-    country: "",
-    plz: 0,
-    price: "",
+    size: NaN,
+    description: null,
+    street: null,
+    city: null,
+    country: null,
+    plz: NaN,
+    price: 10000,
     type: "Gütle",
   });
+  
 
   const handleSubmit = async (e) => {
+    const token = localStorage.getItem('access_token');
     e.preventDefault();
     setError("");
 
@@ -49,13 +51,41 @@ export default function EntityForm() {
       return;
     }
 
-    // Log out all the data of the form
     const data = {
-      ...formData,
-      images,
+      address: {
+        country: formData.country,
+        city: formData.city,
+        plz: formData.plz.toString(),
+        street: formData.street,
+      },
+      meta: {
+        type: formData.type,
+        size: formData.size,
+        price: formData.price,
+        description: formData.description,
+      },
       properties,
     };
-    console.log("Form Data Submitted:", data);
+
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/entities/create_entity`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        throw new Error("Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut.");
+      }
+
+      const result = await response.json();
+      console.log("Form Data Submitted:", result);
+    } catch (error) {
+      setError(error.message);
+    }
   };
 
   return (

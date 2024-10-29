@@ -21,7 +21,8 @@ export default function PriceOfferSection({ formData, setFormData }) {
               type="text"
               name="price"
               id="price"
-              placeholder="10.000,00"
+              autoComplete='postal-code'
+              placeholder="10.0000"
               className="w-full text-gray-800 px-4 py-1.5 rounded-md border-2 border-gray-800 focus:outline-none"
               value={formData.price}
               onChange={handleChange}
