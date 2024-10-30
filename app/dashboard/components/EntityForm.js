@@ -101,7 +101,7 @@ export default function EntityForm() {
 
       try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/entities/upload/${entityId}`, {
-          method: "POST", // Changed from PUT to POST
+          method: "PUT", // Changed from PUT to POST
           headers: {
             Authorization: `Bearer ${token}`, // No Content-Type; let FormData set it
           },
