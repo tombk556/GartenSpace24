@@ -36,7 +36,7 @@ export default function EntityForm() {
     city: null,
     country: null,
     plz: NaN,
-    price: 10000,
+    price: null,
     type: "Gütle",
   });
   
