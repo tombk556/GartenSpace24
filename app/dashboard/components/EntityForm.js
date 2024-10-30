@@ -39,12 +39,11 @@ export default function EntityForm() {
     price: null,
     type: "Gütle",
   });
-  
 
   const handleSubmit = async (e) => {
-    const token = localStorage.getItem('access_token');
     e.preventDefault();
     setError("");
+    const token = localStorage.getItem('access_token');
 
     if (!termsAccepted) {
       setError("Sie müssen die Nutzungsbedingungen akzeptieren.");
@@ -82,9 +81,46 @@ export default function EntityForm() {
       }
 
       const result = await response.json();
+      const entityId = result; // Assuming the API response includes the created entity's ID
       console.log("Form Data Submitted:", result);
+
+      // Upload each image with the entity_id
+      await uploadImages(entityId);
+
     } catch (error) {
       setError(error.message);
+    }
+  };
+
+  const uploadImages = async (entityId) => {
+    const token = localStorage.getItem('access_token');
+
+    for (const image of images) {
+      const formData = new FormData();
+      formData.append("file", image.file); // Use the File object
+
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/entities/upload/${entityId}`, {
+          method: "POST", // Changed from PUT to POST
+          headers: {
+            Authorization: `Bearer ${token}`, // No Content-Type; let FormData set it
+          },
+          body: formData,
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          console.error("Error response:", errorData);
+          throw new Error(`Fehler beim Hochladen des Bildes: ${errorData.detail || "Unbekannter Fehler"}`);
+        }
+
+        const result = await response.json();
+        console.log("Image Uploaded:", result);
+
+      } catch (error) {
+        console.error("Image upload error:", error);
+        setError(error.message);
+      }
     }
   };
 

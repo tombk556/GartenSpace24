@@ -4,32 +4,37 @@ import { FaTimes } from 'react-icons/fa';
 export default function ImageUploader({ selectedImages, setSelectedImages }) {
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
-    const imagePreviews = files.map((file) => URL.createObjectURL(file));
-    setSelectedImages((prevImages) => [...prevImages, ...imagePreviews]);
+    const imagesWithPreviews = files.map((file) => ({
+      file,
+      preview: URL.createObjectURL(file),
+    }));
+    setSelectedImages((prevImages) => [...prevImages, ...imagesWithPreviews]);
   };
 
   const handleImageDrop = (e) => {
     e.preventDefault();
     const files = Array.from(e.dataTransfer.files);
-    const imagePreviews = files.map((file) => URL.createObjectURL(file));
-    setSelectedImages((prevImages) => [...prevImages, ...imagePreviews]);
+    const imagesWithPreviews = files.map((file) => ({
+      file,
+      preview: URL.createObjectURL(file),
+    }));
+    setSelectedImages((prevImages) => [...prevImages, ...imagesWithPreviews]);
   };
 
   const handleDragOver = (e) => {
     e.preventDefault();
   };
 
-  const handleRemoveImage = (e, image) => {
+  const handleRemoveImage = (e, imageToRemove) => {
     e.preventDefault();
-    setSelectedImages(selectedImages.filter((img) => img !== image));
+    // Revoke the object URL to avoid memory leaks
+    URL.revokeObjectURL(imageToRemove.preview);
+    setSelectedImages(selectedImages.filter((image) => image !== imageToRemove));
   };
 
   return (
     <div className="col-span-full">
-      <label
-        htmlFor="images"
-        className="text-l font-semibold text-gray-700"
-      >
+      <label htmlFor="images" className="text-l font-semibold text-gray-700">
         Fotos:
       </label>
       <div
@@ -51,6 +56,7 @@ export default function ImageUploader({ selectedImages, setSelectedImages }) {
                 id="image-upload"
                 name="image-upload"
                 type="file"
+                accept="image/*"
                 className="sr-only"
                 onChange={handleImageChange}
                 multiple
@@ -61,7 +67,7 @@ export default function ImageUploader({ selectedImages, setSelectedImages }) {
             {selectedImages.map((image, index) => (
               <div key={index} className="relative">
                 <img
-                  src={image}
+                  src={image.preview}
                   alt={`Uploaded preview ${index}`}
                   className="w-24 h-24 object-cover rounded-md"
                 />
