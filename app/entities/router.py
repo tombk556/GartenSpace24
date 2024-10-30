@@ -58,7 +58,7 @@ def get_entity(id: str, db: Collection = Depends(MongoDB.get_db)):
             status_code=404, detail=f"The entity with the id {id} can not be found")
 
 
-@entities.post("/upload/{entity_id}")
+@entities.put("/upload/{entity_id}")
 async def upload_image(entity_id: str, file: UploadFile = File(...), current_user: User = Depends(oauth2.get_current_user),
                        fs: GridFS = Depends(MongoDB.get_fs), db: Collection = Depends(MongoDB.get_db)):
     if not ObjectId.is_valid(entity_id):
