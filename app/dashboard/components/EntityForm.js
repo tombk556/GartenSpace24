@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation"; // Updated import
 import Link from "next/link";
 import ErrorMessage from "@components/ErrorMessage";
 import DescriptionSection from "./DescriptionSection";
@@ -8,12 +9,15 @@ import ImageUploader from "./ImageUploader";
 import AddressSection from "./AddressSection";
 import PriceOfferSection from "./PriceOfferSection";
 import PropertiesSection from "./PropertiesSection";
+import LoadingModal from "./LoadingModal"; // Import the LoadingModal component
 
 export default function EntityForm() {
+  const router = useRouter(); // Initialize the router
   const [images, setImages] = useState([]);
   const [properties, setProperties] = useState([]);
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false); // State for loading modal
   const checkboxItems = [
     "Schuppen",
     "Grillstelle",
@@ -30,23 +34,25 @@ export default function EntityForm() {
   ];
 
   const [formData, setFormData] = useState({
-    size: NaN,
-    description: null,
-    street: null,
-    city: null,
-    country: null,
-    plz: NaN,
-    price: null,
+    size: "",
+    description: "",
+    street: "",
+    city: "",
+    country: "",
+    plz: "",
+    price: "",
     type: "Gütle",
   });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-    const token = localStorage.getItem('access_token');
+    setIsLoading(true); // Show loading modal
+    const token = localStorage.getItem("access_token");
 
     if (!termsAccepted) {
       setError("Sie müssen die Nutzungsbedingungen akzeptieren.");
+      setIsLoading(false); // Hide loading modal
       return;
     }
 
@@ -67,17 +73,22 @@ export default function EntityForm() {
     };
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/entities/create_entity`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(data),
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/entities/create_entity`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(data),
+        }
+      );
 
       if (!response.ok) {
-        throw new Error("Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut.");
+        throw new Error(
+          "Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut."
+        );
       }
 
       const result = await response.json();
@@ -87,36 +98,50 @@ export default function EntityForm() {
       // Upload each image with the entity_id
       await uploadImages(entityId);
 
+      // Hide loading modal
+      setIsLoading(false);
+
+      // Redirect to the desired URL
+      router.push(`/venues/${entityId}`); // Update with your desired URL
+
     } catch (error) {
+      console.error("Submission error:", error);
       setError(error.message);
+      setIsLoading(false); // Hide loading modal
     }
   };
 
   const uploadImages = async (entityId) => {
-    const token = localStorage.getItem('access_token');
+    const token = localStorage.getItem("access_token");
 
     for (const image of images) {
       const formData = new FormData();
       formData.append("file", image.file); // Use the File object
 
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/entities/upload/${entityId}`, {
-          method: "PUT", // Changed from PUT to POST
-          headers: {
-            Authorization: `Bearer ${token}`, // No Content-Type; let FormData set it
-          },
-          body: formData,
-        });
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/entities/upload/${entityId}`,
+          {
+            method: "PUT",
+            headers: {
+              Authorization: `Bearer ${token}`, // No Content-Type; let FormData set it
+            },
+            body: formData,
+          }
+        );
 
         if (!response.ok) {
           const errorData = await response.json();
           console.error("Error response:", errorData);
-          throw new Error(`Fehler beim Hochladen des Bildes: ${errorData.detail || "Unbekannter Fehler"}`);
+          throw new Error(
+            `Fehler beim Hochladen des Bildes: ${
+              errorData.detail || "Unbekannter Fehler"
+            }`
+          );
         }
 
         const result = await response.json();
         console.log("Image Uploaded:", result);
-
       } catch (error) {
         console.error("Image upload error:", error);
         setError(error.message);
@@ -126,15 +151,15 @@ export default function EntityForm() {
 
   return (
     <form onSubmit={handleSubmit}>
+      {/* Loading Modal */}
+      <LoadingModal isLoading={isLoading} />
+
       <div className="space-y-12">
         {/* Description Section */}
         <DescriptionSection formData={formData} setFormData={setFormData} />
 
         {/* Image Uploader */}
-        <ImageUploader
-          selectedImages={images}
-          setSelectedImages={setImages}
-        />
+        <ImageUploader selectedImages={images} setSelectedImages={setImages} />
 
         {/* Address Section */}
         <AddressSection formData={formData} setFormData={setFormData} />
