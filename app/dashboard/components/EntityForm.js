@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { useRouter } from "next/navigation"; // Updated import
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import ErrorMessage from "@components/ErrorMessage";
 import DescriptionSection from "./DescriptionSection";
@@ -9,15 +9,15 @@ import ImageUploader from "./ImageUploader";
 import AddressSection from "./AddressSection";
 import PriceOfferSection from "./PriceOfferSection";
 import PropertiesSection from "./PropertiesSection";
-import LoadingModal from "./LoadingModal"; // Import the LoadingModal component
+import LoadingModal from "./LoadingModal";
 
 export default function EntityForm() {
-  const router = useRouter(); // Initialize the router
+  const router = useRouter();
   const [images, setImages] = useState([]);
   const [properties, setProperties] = useState([]);
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [error, setError] = useState("");
-  const [isLoading, setIsLoading] = useState(false); // State for loading modal
+  const [isLoading, setIsLoading] = useState(false);
   const checkboxItems = [
     "Schuppen",
     "Grillstelle",
@@ -47,12 +47,12 @@ export default function EntityForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-    setIsLoading(true); // Show loading modal
+    setIsLoading(true); 
     const token = localStorage.getItem("access_token");
 
     if (!termsAccepted) {
       setError("Sie müssen die Nutzungsbedingungen akzeptieren.");
-      setIsLoading(false); // Hide loading modal
+      setIsLoading(false); 
       return;
     }
 
@@ -92,22 +92,19 @@ export default function EntityForm() {
       }
 
       const result = await response.json();
-      const entityId = result; // Assuming the API response includes the created entity's ID
+      const entityId = result;
       console.log("Form Data Submitted:", result);
 
-      // Upload each image with the entity_id
       await uploadImages(entityId);
 
-      // Hide loading modal
       setIsLoading(false);
 
-      // Redirect to the desired URL
-      router.push(`/venues/${entityId}`); // Update with your desired URL
+      router.push(`/venues/${entityId}`);
 
     } catch (error) {
       console.error("Submission error:", error);
       setError(error.message);
-      setIsLoading(false); // Hide loading modal
+      setIsLoading(false);
     }
   };
 
@@ -116,15 +113,14 @@ export default function EntityForm() {
 
     for (const image of images) {
       const formData = new FormData();
-      formData.append("file", image.file); // Use the File object
-
+      formData.append("file", image.file);
       try {
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/entities/upload/${entityId}`,
           {
             method: "PUT",
             headers: {
-              Authorization: `Bearer ${token}`, // No Content-Type; let FormData set it
+              Authorization: `Bearer ${token}`,
             },
             body: formData,
           }
@@ -151,30 +147,23 @@ export default function EntityForm() {
 
   return (
     <form onSubmit={handleSubmit}>
-      {/* Loading Modal */}
       <LoadingModal isLoading={isLoading} />
 
       <div className="space-y-12">
-        {/* Description Section */}
         <DescriptionSection formData={formData} setFormData={setFormData} />
 
-        {/* Image Uploader */}
         <ImageUploader selectedImages={images} setSelectedImages={setImages} />
 
-        {/* Address Section */}
         <AddressSection formData={formData} setFormData={setFormData} />
 
-        {/* Price and Offer Section */}
         <PriceOfferSection formData={formData} setFormData={setFormData} />
 
-        {/* Properties Section */}
         <PropertiesSection
           checkboxItems={checkboxItems}
           selectedProperties={properties}
           setSelectedProperties={setProperties}
         />
       </div>
-      {/* Form Actions */}
       <div className="mt-6">
         <div className="flex items-center">
           <input
