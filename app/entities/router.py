@@ -24,13 +24,6 @@ def create_entity(entity: Entity, current_user: User = Depends(oauth2.get_curren
     return str(result.inserted_id)
 
 
-# @entities.get("/get_all_entities", response_model=list[EntityResponse])
-# def get_all_entities(db: Collection = Depends(MongoDB.get_db)):
-#     entities = db["entities"].find({"address": {"$exists": True}})
-
-#     return entities
-
-
 @entities.get("/get_all_entities", response_model=list[EntityResponse])
 def get_all_entities(
     db: Collection = Depends(MongoDB.get_db),
@@ -92,3 +85,31 @@ async def download_image(entity_id: str, file_id: str, fs: GridFS = Depends(Mong
         return StreamingResponse(grid_out, media_type="image/png")
     except Exception:
         raise HTTPException(status_code=404, detail="File not found")
+
+@entities.delete("/delete/{entity_id}")
+async def delete_entity(entity_id: str, current_user: User = Depends(oauth2.get_current_user), 
+                        fs: GridFS = Depends(MongoDB.get_fs), db: Collection = Depends(MongoDB.get_db)):
+    
+    if not ObjectId.is_valid(entity_id):
+        raise HTTPException(status_code=422, detail=f"The id {entity_id} is not a valid ObjectId")
+    
+    try: 
+        user_id = db["entities"].find_one({"_id": ObjectId(entity_id)})["userId"]
+
+        if str(current_user.id) != user_id:
+            raise HTTPException(
+                status_code=403, detail="You are not authorized to delete this entity")
+    
+        entity: dict = db["entities"].find_one({"_id": ObjectId(entity_id)})["images"]
+        
+        img_ids = [list(img.values())[0] for img in entity.values()]
+        
+        for img_id in img_ids:
+            fs.delete(img_id)
+        
+        db["entities"].delete_one({"_id": ObjectId(entity_id)})  
+        return f"successfully deleted entity {entity_id}"
+
+    except Exception as e:
+        print(e)
+        raise HTTPException(404, f"The entity {entity_id} could not be found")
