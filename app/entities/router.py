@@ -25,11 +25,8 @@ def create_entity(entity: Entity, current_user: User = Depends(oauth2.get_curren
 
 
 @entities.get("/get_all_entities", response_model=list[EntityResponse])
-def get_all_entities(
-    db: Collection = Depends(MongoDB.get_db),
-    skip: int = Query(0, ge=0),
-    limit: int = Query(10, ge=1)
-):
+def get_all_entities(db: Collection = Depends(MongoDB.get_db), skip: int = Query(0, ge=0),
+                     limit: int = Query(10, ge=1)):
     entities_cursor = db["entities"].find({"address": {"$exists": True}}).sort("_id").skip(skip).limit(limit)
     entities = list(entities_cursor)
     return entities
@@ -43,34 +40,37 @@ def get_entity(id: str, db: Collection = Depends(MongoDB.get_db)):
             status_code=422, detail=f"The id {id} is not a valid ObjectId")
 
     entity = db["entities"].find_one({'_id': ObjectId(id)})
-    if entity:
-        entity['_id'] = str(entity['_id'])
-        return entity
-    else:
+    
+    if not entity:
+        raise HTTPException(
+            status_code=404, detail=f"The entity with the id {id} can not be found")
+        
+    return entity
+
+
+@entities.put("/upload/{id}")
+async def upload_image(id: str, file: UploadFile = File(...), current_user: User = Depends(oauth2.get_current_user),
+                       fs: GridFS = Depends(MongoDB.get_fs), db: Collection = Depends(MongoDB.get_db)):
+    if not ObjectId.is_valid(id):
+        raise HTTPException(
+            status_code=422, detail=f"The id {id} is not a valid ObjectId")
+
+    entity: dict = db["entities"].find_one({"_id": ObjectId(id)})
+    
+    if not entity:
         raise HTTPException(
             status_code=404, detail=f"The entity with the id {id} can not be found")
 
-
-@entities.put("/upload/{entity_id}")
-async def upload_image(entity_id: str, file: UploadFile = File(...), current_user: User = Depends(oauth2.get_current_user),
-                       fs: GridFS = Depends(MongoDB.get_fs), db: Collection = Depends(MongoDB.get_db)):
-    if not ObjectId.is_valid(entity_id):
+    if str(current_user.id) != entity.get("userId"):
         raise HTTPException(
-            status_code=422, detail=f"The id {entity_id} is not a valid ObjectId")
-
-
-    user_id = db["entities"].find_one({"_id": ObjectId(entity_id)})["userId"]
-
-    if str(current_user.id) != user_id:
-        raise HTTPException(
-            status_code=403, detail="You are not authorized to upload image for this entity")
+            status_code=403, detail="You are not authorized to delete this entity")
 
     file_content = await file.read()
     file_id = fs.put(file_content, filename=file.filename,
-                     metadata={"entity_id": entity_id})
-    db["entities"].update_one({"_id": ObjectId(entity_id)}, {
+                     metadata={"entity_id": id})
+    db["entities"].update_one({"_id": ObjectId(id)}, {
                               "$set": {f"images.{file.filename}": str(file_id)}})
-    return {"file_id": str(file_id), "entity_id": entity_id}
+    return {"file_id": str(file_id), "id": id}
 
 
 @entities.get("/download/{entity_id}/{file_id}")
@@ -86,30 +86,34 @@ async def download_image(entity_id: str, file_id: str, fs: GridFS = Depends(Mong
     except Exception:
         raise HTTPException(status_code=404, detail="File not found")
 
-@entities.delete("/delete/{entity_id}")
-async def delete_entity(entity_id: str, current_user: User = Depends(oauth2.get_current_user), 
+@entities.delete("/delete/{id}")
+async def delete_entity(id: str, current_user: User = Depends(oauth2.get_current_user), 
                         fs: GridFS = Depends(MongoDB.get_fs), db: Collection = Depends(MongoDB.get_db)):
+    if not ObjectId.is_valid(id):
+        raise HTTPException(
+            status_code=422, detail=f"The id {id} is not a valid ObjectId")
     
-    if not ObjectId.is_valid(entity_id):
-        raise HTTPException(status_code=422, detail=f"The id {entity_id} is not a valid ObjectId")
+    entity: dict = db["entities"].find_one({"_id": ObjectId(id)})
     
-    try: 
-        user_id = db["entities"].find_one({"_id": ObjectId(entity_id)})["userId"]
+    if not entity:
+        raise HTTPException(
+            status_code=404, detail=f"The entity with the id {id} can not be found or has been already deleted")
+    
 
-        if str(current_user.id) != user_id:
-            raise HTTPException(
-                status_code=403, detail="You are not authorized to delete this entity")
+    if str(current_user.id) != entity.get("userId"):
+        raise HTTPException(
+            status_code=403, detail="You are not authorized to delete this entity")
+
+
+    imgs: dict = entity.get("images")
     
-        entity: dict = db["entities"].find_one({"_id": ObjectId(entity_id)})["images"]
-        
-        img_ids = [list(img.values())[0] for img in entity.values()]
-        
+    img_ids = [details["png"] for details in imgs.values()]
+
+    
+    if img_ids:
         for img_id in img_ids:
             fs.delete(img_id)
-        
-        db["entities"].delete_one({"_id": ObjectId(entity_id)})  
-        return f"successfully deleted entity {entity_id}"
-
-    except Exception as e:
-        print(e)
-        raise HTTPException(404, f"The entity {entity_id} could not be found")
+    
+    db["entities"].delete_one({"_id": entity.get("_id")})
+    
+    return "Entity and associated images deleted successfully"
