@@ -168,7 +168,7 @@ def entity_image(authorized_client: TestClient, entity):
                             "/Users/tom/Documents/ELTS/ELTS_backend/tests/data/test_image.png", "rb"),
                         "image/png")}
     )
-    entity_id = response.json()["entity_id"]
+    entity_id = response.json()["id"]
     image_id = response.json()["file_id"]
     assert ObjectId(entity_id)
     assert ObjectId(image_id)

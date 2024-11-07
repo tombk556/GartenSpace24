@@ -86,7 +86,7 @@ async def download_image(entity_id: str, file_id: str, fs: GridFS = Depends(Mong
     except Exception:
         raise HTTPException(status_code=404, detail="File not found")
 
-@entities.delete("/delete/{id}")
+@entities.delete("/delete/{id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_entity(id: str, current_user: User = Depends(oauth2.get_current_user), 
                         fs: GridFS = Depends(MongoDB.get_fs), db: Collection = Depends(MongoDB.get_db)):
     if not ObjectId.is_valid(id):

@@ -42,7 +42,7 @@ def test_upload_image(authorized_client: TestClient, entity):
                         open("/Users/tom/Documents/ELTS/ELTS_backend/tests/data/test_image.png", "rb"), 
                         "image/png")}
     )
-    entity_id = response.json()["entity_id"]
+    entity_id = response.json()["id"]
     image_id = response.json()["file_id"]
     assert ObjectId(entity_id)
     assert ObjectId(image_id)
@@ -56,4 +56,10 @@ def test_download_image(authorized_client: TestClient, entity_image):
     )
     assert response.status_code == 200
     
+def test_delete_entity(authorized_client: TestClient, entity_image):
+    entity, _ = entity_image
+    response = authorized_client.delete(
+        url=f"entities/delete/{entity}"
+    )
+    assert response.status_code == 204
     
