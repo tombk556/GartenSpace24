@@ -1,10 +1,12 @@
 from app import models
-from app.db import PostgresDB
+from app.db import PostgresDB, MongoDB
 from app.auth import oauth2, schemas
 
+from gridfs import GridFS
+from sqlalchemy.orm import Session
+from pymongo.collection import Collection
 from fastapi import APIRouter, Depends, status, HTTPException
 from fastapi.security.oauth2 import OAuth2PasswordRequestForm
-from sqlalchemy.orm import Session
 
 auth = APIRouter(
     prefix="/auth",
@@ -30,12 +32,28 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(PostgresDB.get_d
     return new_user
 
 
-@auth.delete("/delete_user", status_code=status.HTTP_204_NO_CONTENT)
+@auth.delete("/delete_user")
 def delte_user(current_user: schemas.User = Depends(oauth2.get_current_user), db: Session = Depends(PostgresDB.get_db),
-               token: str = Depends(oauth2.oauth2_scheme)):
+               token: str = Depends(oauth2.oauth2_scheme), mdb: Collection = Depends(MongoDB.get_db), 
+               fs: GridFS = Depends(MongoDB.get_fs)):
 
     existing_user = db.query(models.User).filter(
         models.User.id == current_user.id)
+    
+    if existing_user.first():
+        entities = mdb["entities"].find({"userId" : str(current_user.id)})
+        images = [entity["images"] for entity in entities]
+
+    if entities:
+        mdb["entities"].delete_many({"userId" : str(current_user.id)})
+    
+    if images:    
+        img_ids = [item['png'] for group in images for item in group.values() if 'png' in item]
+        
+        if img_ids:
+            for img_id in img_ids:
+                fs.delete(img_id)
+        
     existing_user.delete(synchronize_session=False)
     db.commit()
 
