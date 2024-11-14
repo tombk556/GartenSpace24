@@ -2,6 +2,7 @@ from app import models
 from app.db import PostgresDB, MongoDB
 from app.auth import oauth2, schemas
 
+from bson import ObjectId
 from gridfs import GridFS
 from sqlalchemy.orm import Session
 from pymongo.collection import Collection
@@ -32,7 +33,7 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(PostgresDB.get_d
     return new_user
 
 
-@auth.delete("/delete_user")
+@auth.delete("/delete_user", status_code=status.HTTP_204_NO_CONTENT)
 def delte_user(current_user: schemas.User = Depends(oauth2.get_current_user), db: Session = Depends(PostgresDB.get_db),
                token: str = Depends(oauth2.oauth2_scheme), mdb: Collection = Depends(MongoDB.get_db), 
                fs: GridFS = Depends(MongoDB.get_fs)):
@@ -52,7 +53,7 @@ def delte_user(current_user: schemas.User = Depends(oauth2.get_current_user), db
         
         if img_ids:
             for img_id in img_ids:
-                fs.delete(img_id)
+                fs.delete(ObjectId(img_id))
         
     existing_user.delete(synchronize_session=False)
     db.commit()

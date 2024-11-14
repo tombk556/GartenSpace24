@@ -112,7 +112,7 @@ async def delete_entity(id: str, current_user: User = Depends(oauth2.get_current
     
     if img_ids:
         for img_id in img_ids:
-            fs.delete(img_id)
+            fs.delete(ObjectId(img_id))
     
     db["entities"].delete_one({"_id": entity.get("_id")})
     
