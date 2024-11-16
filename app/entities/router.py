@@ -27,10 +27,10 @@ def create_entity(entity: Entity, current_user: User = Depends(oauth2.get_curren
 @entities.get("/get_all_entities", response_model=list[EntityResponse])
 def get_all_entities(db: Collection = Depends(MongoDB.get_db), skip: int = Query(0, ge=0),
                      limit: int = Query(10, ge=1)):
-    entities_cursor = db["entities"].find({"address": {"$exists": True}}).sort("_id").skip(skip).limit(limit)
+    entities_cursor = db["entities"].find(
+        {"address": {"$exists": True}}).sort("_id").skip(skip).limit(limit)
     entities = list(entities_cursor)
     return entities
-
 
 
 @entities.get("/get_entity/{id}", response_model=Entity)
@@ -40,11 +40,11 @@ def get_entity(id: str, db: Collection = Depends(MongoDB.get_db)):
             status_code=422, detail=f"The id {id} is not a valid ObjectId")
 
     entity = db["entities"].find_one({'_id': ObjectId(id)})
-    
+
     if not entity:
         raise HTTPException(
             status_code=404, detail=f"The entity with the id {id} can not be found")
-        
+
     return entity
 
 
@@ -56,7 +56,7 @@ async def upload_image(id: str, file: UploadFile = File(...), current_user: User
             status_code=422, detail=f"The id {id} is not a valid ObjectId")
 
     entity: dict = db["entities"].find_one({"_id": ObjectId(id)})
-    
+
     if not entity:
         raise HTTPException(
             status_code=404, detail=f"The entity with the id {id} can not be found")
@@ -86,34 +86,42 @@ async def download_image(entity_id: str, file_id: str, fs: GridFS = Depends(Mong
     except Exception:
         raise HTTPException(status_code=404, detail="File not found")
 
+
+
 @entities.delete("/delete/{id}", status_code=status.HTTP_204_NO_CONTENT)
-async def delete_entity(id: str, current_user: User = Depends(oauth2.get_current_user), 
+async def delete_entity(id: str, current_user: User = Depends(oauth2.get_current_user),
                         fs: GridFS = Depends(MongoDB.get_fs), db: Collection = Depends(MongoDB.get_db)):
     if not ObjectId.is_valid(id):
         raise HTTPException(
             status_code=422, detail=f"The id {id} is not a valid ObjectId")
-    
+
     entity: dict = db["entities"].find_one({"_id": ObjectId(id)})
-    
+
     if not entity:
         raise HTTPException(
             status_code=404, detail=f"The entity with the id {id} can not be found or has been already deleted")
-    
 
     if str(current_user.id) != entity.get("userId"):
         raise HTTPException(
             status_code=403, detail="You are not authorized to delete this entity")
 
-
     imgs: dict = entity.get("images")
-    
+
     img_ids = [details["png"] for details in imgs.values()]
 
-    
     if img_ids:
         for img_id in img_ids:
             fs.delete(ObjectId(img_id))
-    
+
     db["entities"].delete_one({"_id": entity.get("_id")})
-    
+
     return "Entity and associated images deleted successfully"
+
+
+
+@entities.get("/get_user_entities", response_model=list[EntityResponse])
+def get_user_entities(current_user: User = Depends(oauth2.get_current_user),
+                      db: Collection = Depends(MongoDB.get_db)):
+    entities_cursor = db["entities"].find({"userId": str(current_user.id)})
+    entities = list(entities_cursor)
+    return entities

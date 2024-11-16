@@ -1,6 +1,6 @@
 from app import models
-from app.db import PostgresDB, MongoDB
 from app.auth import oauth2, schemas
+from app.db import PostgresDB, MongoDB
 
 from bson import ObjectId
 from gridfs import GridFS
