@@ -17,7 +17,7 @@ export default function Page() {
   useEffect(() => {
     const token = localStorage.getItem('access_token');
     if (token) {
-      router.push('/dashboard');
+      router.push('/');
     } else {
       const queryParams = new URLSearchParams(window.location.search);
       const errorParam = queryParams.get("error");

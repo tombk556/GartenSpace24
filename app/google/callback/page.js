@@ -13,7 +13,7 @@ export default function Page() {
 
     if (token) {
       localStorage.setItem("access_token", token);
-      router.push('/dashboard');
+      router.push('/');
     } else if (error) {
       setErrorMessage(error);
     } else {
