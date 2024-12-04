@@ -69,3 +69,23 @@ class EntityModel(BaseModel):
             "description": self.meta.description,
         }
 
+class EntityResponse(BaseModel):
+    meta: Meta
+    address: Address
+
+    @classmethod
+    def from_orm(cls, entity):
+        return cls(
+            meta=Meta(
+                type=entity.type,
+                size=entity.size,
+                price=entity.price,
+                description=entity.description,
+            ),
+            address=Address(
+                country=entity.country,
+                city=entity.city,
+                plz=entity.plz,
+                street=entity.street,
+            ),
+        )

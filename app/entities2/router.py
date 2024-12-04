@@ -1,7 +1,7 @@
 from app.auth import oauth2
 from app.db import PostgresDB
 from app.auth.schemas import User
-from app.entities2.schemas import EntityModel
+from app.entities2.schemas import EntityModel, EntityResponse
 from app.models import Entity
 
 from fastapi import Query
@@ -29,3 +29,11 @@ def create_entity(entity: EntityModel, current_user: User = Depends(oauth2.get_c
     db.refresh(new_entity)
     
     return new_entity.id
+
+@entities2.get("/get_all_entities", response_model=list[EntityResponse])
+def get_all_entities(db: Session = Depends(PostgresDB.get_db)):
+    entities = db.query(Entity).all()
+    response_data = [EntityResponse.from_orm(entity) for entity in entities]
+    return response_data
+    
+    
