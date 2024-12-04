@@ -20,10 +20,12 @@ entities2 = APIRouter(
 @entities2.post("/create_entity", status_code=status.HTTP_201_CREATED)
 def create_entity(entity: EntityModel, current_user: User = Depends(oauth2.get_current_user), 
                   db: Session = Depends(PostgresDB.get_db)):
-    entity.owner_id=current_user.id
-    new_entity = Entity(**entity.model_dump())
+    data = entity.to_flat_dict(owner_id=current_user.id)
+    
+    new_entity = Entity(**data)
+
     db.add(new_entity)
     db.commit()
     db.refresh(new_entity)
     
-    return new_entity
+    return new_entity.id
