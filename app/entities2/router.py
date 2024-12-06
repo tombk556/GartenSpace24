@@ -18,22 +18,18 @@ entities2 = APIRouter(
 
 
 @entities2.post("/create_entity", status_code=status.HTTP_201_CREATED)
-def create_entity(entity: EntityModel, current_user: User = Depends(oauth2.get_current_user), 
+def create_entity(entity: EntityModel, current_user: User = Depends(oauth2.get_current_user),
                   db: Session = Depends(PostgresDB.get_db)):
-    data = entity.to_flat_dict(owner_id=current_user.id)
-    
-    new_entity = Entity(**data)
+    entity = Entity(**entity.to_flat_dict(owner_id=current_user.id))
 
-    db.add(new_entity)
+    db.add(entity)
     db.commit()
-    db.refresh(new_entity)
-    
-    return new_entity.id
+    db.refresh(entity)
 
-@entities2.get("/get_all_entities", response_model=list[EntityResponse])
+    return entity.id
+
+
+@entities2.get("/get_all_entities", status_code=status.HTTP_200_OK, response_model=list[EntityResponse])
 def get_all_entities(db: Session = Depends(PostgresDB.get_db)):
     entities = db.query(Entity).all()
-    response_data = [EntityResponse.from_orm(entity) for entity in entities]
-    return response_data
-    
-    
+    return [EntityResponse.from_orm(entity) for entity in entities]

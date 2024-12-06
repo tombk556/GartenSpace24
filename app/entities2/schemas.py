@@ -44,7 +44,7 @@ class Meta(BaseModel):
     type: Type
     size: int
     price: float
-    offer: Offer = Offer.Mieten
+    offer: Offer
     description: Optional[str] = Field(..., max_length=100)
 
 
@@ -70,22 +70,29 @@ class EntityModel(BaseModel):
         }
 
 class EntityResponse(BaseModel):
+    id: UUID4
     meta: Meta
     address: Address
-
+    
+    class Config:
+        from_attributes = True
+        
+        
     @classmethod
     def from_orm(cls, entity):
         return cls(
+            id=str(entity.id),
             meta=Meta(
                 type=entity.type,
                 size=entity.size,
                 price=entity.price,
-                description=entity.description,
+                offer=entity.offer,
+                description=entity.description
             ),
             address=Address(
                 country=entity.country,
                 city=entity.city,
                 plz=entity.plz,
-                street=entity.street,
-            ),
+                street=entity.street
+            )
         )
