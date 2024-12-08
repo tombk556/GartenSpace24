@@ -1,3 +1,4 @@
+from app import models
 from enum import Enum
 from typing import List, Optional
 from pydantic import BaseModel, Field, UUID4, validator
@@ -15,17 +16,19 @@ class Address(BaseModel):
             raise ValueError("PLZ must be exactly 5 digits long.")
         return value
 
+
 class Type(str, Enum):
     Gütle = "Gütle"
     Schrebergarten = "Schrebergarten"
     Kleingarten = "Kleingarten"
-    
+
+
 class Offer(str, Enum):
     Mieten = "Mieten"
     Kaufen = "Kaufen"
     Pachten = "Pachten"
-    
-    
+
+
 class Property(str, Enum):
     Schuppen = "Schuppen"
     Grillstelle = "Grillstelle"
@@ -69,17 +72,40 @@ class EntityModel(BaseModel):
             "description": self.meta.description,
         }
 
+    @classmethod
+    def from_orm(cls, entity: models.Entity, user: models.User):
+        return {
+            "userId": user.id,
+            "email": user.email,
+            "username": user.username,
+            "date": entity.created_at,
+            "address": Address(
+                country=entity.country,
+                city=entity.city,
+                plz=entity.plz,
+                street=entity.street,
+            ).model_dump(),
+            "meta": Meta(
+                type=Type(entity.type),
+                size=entity.size,
+                price=entity.price,
+                offer=Offer(entity.offer),
+                description=entity.description 
+            ).model_dump(),
+            "attributes": list(entity.attributes)
+        }
+
+
 class EntityResponse(BaseModel):
     id: UUID4
     meta: Meta
     address: Address
-    
+
     class Config:
         from_attributes = True
-        
-        
+
     @classmethod
-    def from_orm(cls, entity):
+    def from_orm(cls, entity: models.Entity):
         return cls(
             id=str(entity.id),
             meta=Meta(
