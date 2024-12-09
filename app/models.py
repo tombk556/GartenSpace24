@@ -4,7 +4,7 @@ import uuid
 from sqlalchemy.sql.expression import text
 from sqlalchemy.sql.sqltypes import TIMESTAMP
 from sqlalchemy.dialects.postgresql import UUID, ARRAY
-from sqlalchemy import Column, String, Integer, Boolean, Float,ForeignKey
+from sqlalchemy import Column, String, Integer, Boolean, Float, ForeignKey, LargeBinary
 
 
 class User(Base):
@@ -41,3 +41,12 @@ class Entity(Base):
     attributes = Column(ARRAY(String), nullable=False)
     description = Column(String, nullable=True)
     
+    
+class Image(Base):
+    __tablename__ = "images"
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, unique=True, nullable=False)
+    entity_id = Column(UUID(as_uuid=True), ForeignKey("entities.id", ondelete="CASCADE"), nullable=False)
+    created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text("now()"))
+    filename = Column(String, nullable=False)
+    content = Column(LargeBinary, nullable=False)
+

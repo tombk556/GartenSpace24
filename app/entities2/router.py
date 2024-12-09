@@ -54,4 +54,37 @@ def get_entity(id: str, db: Session = Depends(PostgresDB.get_db)):
     return EntityModel.from_orm(entity, user)
 
 
+@entities2.get("/get_user_entities", status_code=status.HTTP_200_OK, response_model=list[EntityResponse])
+def get_user_entities(current_user: User = Depends(oauth2.get_current_user),
+                      db: Session = Depends(PostgresDB.get_db)):
+    entities = db.query(models.Entity).filter(models.Entity.owner_id == current_user.id).all()
+    return [EntityResponse.from_orm(entity) for entity in entities]
 
+
+@entities2.put("/upload/{id}")
+async def upload_image(id: str, file: UploadFile = File(...), current_user: User = Depends(oauth2.get_current_user),
+                       db: Session = Depends(PostgresDB.get_db)):
+    try:
+        UUID(id, version=4)
+    except ValueError:
+        raise HTTPException(status_code=422, detail=f"The id {id} is not a valid UUID")
+    
+    entity = db.query(models.Entity).filter(models.Entity.id == id, 
+                                            models.Entity.owner_id == current_user.id).first()
+    
+    if not entity:
+        raise HTTPException(status_code=404, detail=f"The entity with the id {id} can not be found")
+
+    
+    if file.content_type not in ["image/png", "image/jpeg"]:
+        raise HTTPException(status_code=422, detail="File must be PNG or JPEG")
+    
+    file_content = await file.read()
+    
+    image = models.Image(filename=file.filename, content=file_content, entity_id=entity.id)
+
+    db.add(image)
+    db.commit()
+    db.refresh(image)
+    
+    return "asdf"
