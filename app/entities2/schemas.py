@@ -73,7 +73,8 @@ class EntityModel(BaseModel):
         }
 
     @classmethod
-    def from_orm(cls, entity: models.Entity, user: models.User):
+    def from_orm(cls, entity: models.Entity, user: models.User, images: List[models.Image]):
+        print(images)
         return {
             "userId": user.id,
             "email": user.email,
@@ -92,7 +93,8 @@ class EntityModel(BaseModel):
                 offer=Offer(entity.offer),
                 description=entity.description 
             ).model_dump(),
-            "attributes": list(entity.attributes)
+            "attributes": list(entity.attributes),
+            "images": {image.filename: image.id for image in images}
         }
 
 
