@@ -73,8 +73,11 @@ class EntityModel(BaseModel):
         }
 
     @classmethod
-    def from_orm(cls, entity: models.Entity, user: models.User, images: List[models.Image]):
-        print(images)
+    def from_orm(cls, query):
+        entity: models.Entity = query[0][0]
+        user: models.User = query[0][1]
+        images: List[models.Image] = [row[2] for row in query if row[2] is not None]
+        
         return {
             "userId": user.id,
             "email": user.email,
