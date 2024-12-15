@@ -105,12 +105,17 @@ class EntityResponse(BaseModel):
     id: UUID4
     meta: Meta
     address: Address
+    images: dict[str, UUID4]  # A dictionary with filename as key and image id as value
 
     class Config:
         from_attributes = True
 
     @classmethod
     def from_orm(cls, entity: models.Entity):
+        images_dict = {
+            image.filename: str(image.id)
+            for image in entity.images
+        }
         return cls(
             id=str(entity.id),
             meta=Meta(
@@ -125,5 +130,7 @@ class EntityResponse(BaseModel):
                 city=entity.city,
                 plz=entity.plz,
                 street=entity.street
-            )
+            ),
+            images=images_dict
         )
+

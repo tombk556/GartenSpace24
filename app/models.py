@@ -1,6 +1,7 @@
 from app.db import Base
 
 import uuid 
+from sqlalchemy.orm import relationship
 from sqlalchemy.sql.expression import text
 from sqlalchemy.sql.sqltypes import TIMESTAMP
 from sqlalchemy.dialects.postgresql import UUID, ARRAY
@@ -41,7 +42,8 @@ class Entity(Base):
     attributes = Column(ARRAY(String), nullable=False)
     description = Column(String, nullable=True)
     
-    
+    images = relationship("Image", backref="entity", cascade="all, delete-orphan", lazy="joined")
+
 class Image(Base):
     __tablename__ = "images"
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, unique=True, nullable=False)
