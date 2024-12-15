@@ -105,7 +105,7 @@ class EntityResponse(BaseModel):
     id: UUID4
     meta: Meta
     address: Address
-    images: dict[str, UUID4]  # A dictionary with filename as key and image id as value
+    images: dict[str, UUID4]
 
     class Config:
         from_attributes = True
