@@ -4,7 +4,7 @@ import { FaLocationDot } from "react-icons/fa6";
 import { formatCurrency, SquareMeter } from "../Hooks";
 
 export default function PropertyDisplay({ property }) {
-  const id = property._id;
+  const id = property.id;
   const fileId = Object.values(property.images)[0];
   const [isLoadingImages, setIsLoadingImages] = useState(true);
   const [imageSrc, setImageSrc] = useState(null);
@@ -49,7 +49,7 @@ export default function PropertyDisplay({ property }) {
         </div>
       )}
       <div className="w-full md:w-1/2 md:pl-4">
-        <Link href={`/venues/${property._id}`}>
+        <Link href={`/venues/${property.id}`}>
           <div className="text-l text-gray-700 p-4 mb-4 font-bold">
             <p>{property.meta.description}</p>
           </div>

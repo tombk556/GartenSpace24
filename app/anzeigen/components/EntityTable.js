@@ -30,10 +30,10 @@ function EntityTable({ entities, onDelete }) {
       </thead>
       <tbody className="bg-white divide-y divide-gray-200">
         {entities.map(entity => (
-          <tr key={entity._id}>
+          <tr key={entity.id}>
             <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-700 hover:underline">
-              <Link href={`/venues/${entity._id}`}>
-                {entity._id}
+              <Link href={`/venues/${entity.id}`}>
+                {entity.id}
               </Link>
             </td>
             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
@@ -50,7 +50,7 @@ function EntityTable({ entities, onDelete }) {
             </td>
             <td className="px-6 py-4 whitespace-normal text-sm text-gray-700">
               <button
-                onClick={() => onDelete(entity._id)}
+                onClick={() => onDelete(entity.id)}
                 className="text-red-700 hover:text-red-800 font-medium"
               >
                 Löschen

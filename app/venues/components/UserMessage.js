@@ -9,13 +9,15 @@ import { FaExclamationTriangle } from "react-icons/fa";
 
 
 const formatDate = (dateString) => {
-  const date = new Date(dateString);
+  const normalizedDateString = dateString.replace(/(\.\d{3})\d+/, '$1');
+  const date = new Date(normalizedDateString);
   return new Intl.DateTimeFormat("de-DE", {
     day: "numeric",
     month: "long",
     year: "numeric",
   }).format(date);
 };
+
 
 const UserMessage = ({ property, className }) => {
   return (
