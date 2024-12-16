@@ -11,7 +11,7 @@ from fastapi.responses import StreamingResponse
 from fastapi import APIRouter, Depends, status, UploadFile, File, HTTPException
 
 entities = APIRouter(
-    prefix="/entities",
+    prefix="/entities2",
     tags=["Entities"])
 
 

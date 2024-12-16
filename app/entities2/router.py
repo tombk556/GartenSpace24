@@ -14,7 +14,7 @@ from fastapi.responses import StreamingResponse
 from fastapi import APIRouter, Depends, status, UploadFile, File, HTTPException
 
 entities2 = APIRouter(
-    prefix="/entities2",
+    prefix="/entities",
     tags=["Entities"])
 
 
@@ -31,8 +31,9 @@ def create_entity(entity: EntityModel, current_user: User = Depends(oauth2.get_c
 
 
 @entities2.get("/get_all_entities", status_code=status.HTTP_200_OK, response_model=list[EntityResponse])
-def get_all_entities(db: Session = Depends(PostgresDB.get_db)):
-    entities = db.query(models.Entity).all()
+def get_all_entities(db: Session = Depends(PostgresDB.get_db), skip: int = Query(0, ge=0),
+                     limit: int = Query(10, ge=1)):
+    entities = (db.query(models.Entity).offset(skip).limit(limit).all())
     return [EntityResponse.from_orm(entity) for entity in entities]
 
 
