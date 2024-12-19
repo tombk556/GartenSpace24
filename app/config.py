@@ -27,11 +27,6 @@ class PsqlCred:
         self.user_psql = os.getenv("USER_PSQL")
 
 
-class MdbCred:
-    def __init__(self):
-        self.mongodb_uri = os.getenv("MONGODB_URI")
-
 
 settings = Settings()
 psql = PsqlCred()
-modb = MdbCred()

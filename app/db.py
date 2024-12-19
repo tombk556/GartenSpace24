@@ -1,24 +1,7 @@
-from gridfs import GridFS
-from typing import Generator
-from .config import modb, psql
-from pymongo import MongoClient
+from .config import psql
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
-
-MONGODB_URI = modb.mongodb_uri
-client = MongoClient(MONGODB_URI)
-
-class MongoDB:
-    def get_db() -> Generator:
-        db = client["ELTS"]
-        yield db
-        
-    def get_fs() -> Generator:
-        db = client["ELTS_FS"]
-        fs = GridFS(db)
-        yield fs
-        
 
 PSQL_DB_URL = psql.database_url_psql
 engine = create_engine(PSQL_DB_URL.replace("postgres", "postgresql"))
