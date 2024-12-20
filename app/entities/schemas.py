@@ -7,12 +7,12 @@ from pydantic import BaseModel, Field, UUID4, validator
 class Address(BaseModel):
     country: str
     city: str
-    plz: int
+    plz: str
     street: str
 
     @validator("plz")
     def validate_plz_length(cls, value):
-        if value is not None and (len(str(value)) != 5):
+        if value is not None and (len(value) != 5):
             raise ValueError("PLZ must be exactly 5 digits long.")
         return value
 

@@ -14,8 +14,6 @@ class User(Base):
     email = Column(String, nullable=False, unique=True)
     username = Column(String, nullable=False)
     password = Column(String, nullable=False)
-    name = Column(String, nullable=True)
-    age = Column(Integer, nullable=True)
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text("now()"))
     google_account = Column(Boolean, nullable=False, server_default=text("false"))
 
@@ -33,7 +31,7 @@ class Entity(Base):
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text("now()"))
     country = Column(String, nullable=False)
     city = Column(String, nullable=False)
-    plz = Column(Integer, nullable=False)
+    plz = Column(String, nullable=False)
     street = Column(String, nullable=False)
     type = Column(String, nullable=False)
     size = Column(Integer, nullable=False)

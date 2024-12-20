@@ -11,7 +11,7 @@ def test_create_user(client: TestClient):
     response = client.post(
         url="/auth/sign_up",
         json={"email": "testuser@gmail.com", "username": "testuser",
-              "password": "Password123!", "name": "Tom der Tester", "age": 99}
+              "password": "Password123!"}
     )
     new_user = schemas.User(**response.json())
     assert new_user.email == "testuser@gmail.com"
@@ -45,7 +45,7 @@ def test_wrong_password_creation(client: TestClient):
     response = client.post(
         url="/auth/sign_up",
         json={"email": "testuser@gmail.com", "username": "testuser",
-              "password": "1234", "name": "Tom der Tester", "age": 99}
+              "password": "1234"}
     )
     assert response.status_code == 422
 
@@ -54,7 +54,7 @@ def test_duplicating_user(client: TestClient, test_user):
     response = client.post(
         url="/auth/sign_up",
         json={"email": "testuser@gmail.com", "username": "testuser",
-              "password": "Password123!", "name": "Tom der Tester", "age": 99}
+              "password": "Password123!"}
     )
     assert response.status_code == 409
 
@@ -103,7 +103,5 @@ def test_update_user(authorized_client: TestClient):
     response = authorized_client.put(
         url="/auth/update_user_infos",
         json={"email": "testuser@gmail.com",
-              "username": "tombk556",
-              "name": "Tom", 
-              "age": 50})
+              "username": "tombk556"})
     assert response.status_code == 200
