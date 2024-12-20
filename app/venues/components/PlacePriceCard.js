@@ -23,6 +23,9 @@ const PlacePriceCard = ({ property }) => {
           {formatCurrency(property.meta.price)}
         </p>
         <p className="text-s">
+          Angebot: {property.meta.offer}
+        </p>
+        <p className="text-s">
           {calculatePricePerSquareMeter(
             property.meta.price,
             property.meta.size

@@ -65,7 +65,7 @@ export default function PropertyDisplay({ property }) {
               <p className="text-l font-bold">
                 {formatCurrency(property.meta.price)}
               </p>
-              <p className="text-xs">Kaufpreis</p>
+              <p className="text-xs">{property.meta.offer}</p>
             </div>
             <div>
               <p className="text-l font-bold">
