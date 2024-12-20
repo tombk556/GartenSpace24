@@ -38,7 +38,7 @@ class Property(str, Enum):
     Balkon = "Balkon"
     Carport = "Carport"
     Fitnessraum = "Fitnessraum"
-    Terasse = "Terasse"
+    Terrasse = "Terrasse"
     Kamin = "Kamin"
     Spielplatz = "Spielplatz"
 
