@@ -104,13 +104,41 @@ def test_get_entities(client: TestClient, entities):
 
 def test_upload_image(authorized_client: TestClient, entity):
     response = authorized_client.put(
-        url = f"/entities/upload/{entity}",
-        files={"file": ("bild1.png", 
-                        open("/Users/tom/Documents/ELTS/ELTS_backend/tests/data/bild1.png", "rb"),
+        url=f"/entities/upload/{entity}",
+        files={"file": ("bild1.png",
+                        open(
+                            "/Users/tom/Documents/ELTS/ELTS_backend/tests/data/bild1.png", "rb"),
                         "image/png")}
     )
-    
+
     assert response.status_code == 200
+
+
+def test_upload_images(authorized_client: TestClient, entity):
+    images = ["bild1.png", "bild2.png", "bild3.png",
+              "bild4.png", "bild5.png", "bild6.png"]
+
+    for image in images:
+        response = authorized_client.put(
+            url=f"/entities/upload/{entity}",
+            files=[
+                ("file", (image,
+                          open(
+                              f"/Users/tom/Documents/ELTS/ELTS_backend/tests/data/{image}", "rb"),
+                          "image/png"))])
+
+        assert response.status_code == 200
+
+
+def test_get_entity(client: TestClient, entity):
+    response = client.get(
+        url=f"/entities/get_entity/{entity}"
+    )
+
+    assert response.status_code == 200
+    assert not response.json()["images"]
+    assert UUID(response.json()["id"])
+
 
 def test_get_entity_with_image(client: TestClient, entity_image):
     response = client.get(
@@ -120,28 +148,23 @@ def test_get_entity_with_image(client: TestClient, entity_image):
     assert response.status_code == 200
     assert response.json()["images"]
     assert UUID(response.json()["id"])
-    
-def test_get_entity(client: TestClient, entity):
-    response = client.get(
-        url=f"/entities/get_entity/{entity}"
-    )
-    
-    assert response.status_code == 200
-    assert not response.json()["images"]
-    assert UUID(response.json()["id"])
-    
-    
-def test_upload_images(authorized_client: TestClient, entity):
-    images = ["bild1.png", "bild2.png", "bild3.png", 
-              "bild4.png", "bild5.png", "bild6.png"]
 
-    for image in images:
-        response = authorized_client.put(
-            url = f"/entities/upload/{entity}",
-            files=[
-                ("file", (image, 
-                          open(f"/Users/tom/Documents/ELTS/ELTS_backend/tests/data/{image}", "rb"),
-                          "image/png"))])
-        
-        assert response.status_code == 200
-        
+
+def test_download_image(authorized_client: TestClient, entity):
+    response = authorized_client.put(
+        url=f"/entities/upload/{entity}",
+        files={"file": ("bild1.png",
+                        open(
+                            "/Users/tom/Documents/ELTS/ELTS_backend/tests/data/bild1.png", "rb"),
+                        "image/png")}
+    )
+    assert response.status_code == 200
+
+    image_id = response.json()
+
+    response = authorized_client.get(
+        url=f"/entities/download/{entity}/{image_id}"
+    )
+
+    assert response.headers.get("content-type") == "image/png"
+    assert response.status_code == 200

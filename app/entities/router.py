@@ -38,15 +38,13 @@ def get_all_entities(db: Session = Depends(PostgresDB.get_db), skip: int = Query
 @entities.get("/get_entity/{id}", status_code=status.HTTP_200_OK)
 def get_entity(id: UUID, db: Session = Depends(PostgresDB.get_db)):
     entity = db.query(models.Entity).filter(models.Entity.id == id).first()
-    
+
     if not entity:
         raise HTTPException(
             status_code=404, detail=f"The entity with the id {id} cannot be found"
         )
-        
-    return EntityResponse.from_orm(entity)
-    
 
+    return EntityResponse.from_orm(entity)
 
 
 @entities.get("/get_user_entities", status_code=status.HTTP_200_OK, response_model=list[EntityResponse])
@@ -104,5 +102,5 @@ async def delete_entity(id: UUID, current_user: User = Depends(oauth2.get_curren
             status_code=404, detail=f"The entity with the id {id} can not be found")
 
     entity.delete(synchronize_session=False)
-    db.commit()    
+    db.commit()
     return "Entity deleted successfully"
