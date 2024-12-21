@@ -37,20 +37,14 @@ def get_all_entities(db: Session = Depends(PostgresDB.get_db), skip: int = Query
 
 @entities.get("/get_entity/{id}", status_code=status.HTTP_200_OK)
 def get_entity(id: UUID, db: Session = Depends(PostgresDB.get_db)):
-    query = (
-        db.query(models.Entity, models.User, models.Image)
-        .join(models.User, models.User.id == models.Entity.owner_id)
-        .join(models.Image, models.Image.entity_id == id)
-        .filter(models.Entity.id == id)
-        .all()
-    )
+    entity = db.query(models.Entity).filter(models.Entity.id == id).first()
     
-    if not query:
+    if not entity:
         raise HTTPException(
             status_code=404, detail=f"The entity with the id {id} cannot be found"
         )
-    
-    return EntityModel.from_orm(query)
+        
+    return EntityResponse.from_orm(entity)
     
 
 

@@ -112,9 +112,36 @@ def test_upload_image(authorized_client: TestClient, entity):
     
     assert response.status_code == 200
 
-def test_get_entity(client: TestClient, entity_image):
+def test_get_entity_with_image(client: TestClient, entity_image):
     response = client.get(
         url=f"/entities/get_entity/{entity_image}"
     )
 
     assert response.status_code == 200
+    assert response.json()["images"]
+    assert UUID(response.json()["id"])
+    
+def test_get_entity(client: TestClient, entity):
+    response = client.get(
+        url=f"/entities/get_entity/{entity}"
+    )
+    
+    assert response.status_code == 200
+    assert not response.json()["images"]
+    assert UUID(response.json()["id"])
+    
+    
+def test_upload_images(authorized_client: TestClient, entity):
+    images = ["bild1.png", "bild2.png", "bild3.png", 
+              "bild4.png", "bild5.png", "bild6.png"]
+
+    for image in images:
+        response = authorized_client.put(
+            url = f"/entities/upload/{entity}",
+            files=[
+                ("file", (image, 
+                          open(f"/Users/tom/Documents/ELTS/ELTS_backend/tests/data/{image}", "rb"),
+                          "image/png"))])
+        
+        assert response.status_code == 200
+        

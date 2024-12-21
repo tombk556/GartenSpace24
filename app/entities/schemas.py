@@ -72,40 +72,12 @@ class EntityModel(BaseModel):
             "description": self.meta.description,
         }
 
-    @classmethod
-    def from_orm(cls, query):
-        entity: models.Entity = query[0][0]
-        user: models.User = query[0][1]
-        images: List[models.Image] = [row[2] for row in query if row[2] is not None]
-        
-        return {
-            "userId": user.id,
-            "email": user.email,
-            "username": user.username,
-            "date": entity.created_at,
-            "address": Address(
-                country=entity.country,
-                city=entity.city,
-                plz=entity.plz,
-                street=entity.street,
-            ).model_dump(),
-            "meta": Meta(
-                type=Type(entity.type),
-                size=entity.size,
-                price=entity.price,
-                offer=Offer(entity.offer),
-                description=entity.description 
-            ).model_dump(),
-            "attributes": list(entity.attributes),
-            "images": {image.filename: image.id for image in images}
-        }
-
-
 class EntityResponse(BaseModel):
     id: UUID4
     meta: Meta
     address: Address
     images: dict[str, UUID4]
+    attributes: List[str]
 
     class Config:
         from_attributes = True
@@ -116,6 +88,9 @@ class EntityResponse(BaseModel):
             image.filename: str(image.id)
             for image in entity.images
         }
+        
+        attribute_list = [prop for prop in entity.attributes]
+        
         return cls(
             id=str(entity.id),
             meta=Meta(
@@ -131,6 +106,7 @@ class EntityResponse(BaseModel):
                 plz=entity.plz,
                 street=entity.street
             ),
-            images=images_dict
+            images=images_dict,
+            attributes=attribute_list
         )
 
