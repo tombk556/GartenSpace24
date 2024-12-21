@@ -103,3 +103,43 @@ def entities(authorized_client: TestClient):
 
     return ids
 
+@pytest.fixture
+def entity(authorized_client: TestClient):
+    response = authorized_client.post(
+        url="/entities/create_entity",
+        json={
+            "address": {
+                "country": "Deutschland",
+                "city": "Waldorferstraße 4",
+                "plz": "72124",
+                "street": "Pliezhausen"
+            },
+            "meta": {
+                "type": "Gütle",
+                "size": 245,
+                "price": 20000,
+                "offer": "Mieten",
+                "description": "Dieses schön gelegene Gütle in Pliezhausen ladet dich ein für deinen Geburstag ein."
+            },
+            "properties": [
+                "Schuppen",
+                "Grillstelle",
+                "Kamin"
+            ]
+        },
+    )
+
+    assert response.status_code == 201
+    return response.json()["id"]
+
+@pytest.fixture
+def entity_image(authorized_client: TestClient, entity):
+    response = authorized_client.put(
+        url = f"/entities/upload/{entity}",
+        files={"file": ("bild1.png", 
+                        open("/Users/tom/Documents/ELTS/ELTS_backend/tests/data/bild1.png", "rb"),
+                        "image/png")}
+    )
+    
+    assert response.status_code == 200
+    return entity

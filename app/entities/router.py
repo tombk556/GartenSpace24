@@ -25,7 +25,7 @@ def create_entity(entity: EntityModel, current_user: User = Depends(oauth2.get_c
     db.commit()
     db.refresh(entity)
 
-    return entity.id
+    return {"id": entity.id}
 
 
 @entities.get("/get_all_entities", status_code=status.HTTP_200_OK, response_model=list[EntityResponse])

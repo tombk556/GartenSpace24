@@ -3,7 +3,7 @@ from fastapi.testclient import TestClient
 from app.config import settings
 from jose import jwt
 from uuid import UUID
-from .psqlconfig import client, session, test_user, authorized_client, token, entities
+from .psqlconfig import client, session, test_user, authorized_client, token, entities, entity_image, entity
 import pytest
 
 
@@ -87,7 +87,7 @@ def test_create_entity_422_2(authorized_client: TestClient):
                 "Kamin",
                 "Bierpong"
             ]
-        },
+        }
     )
 
     assert response.status_code == 422
@@ -101,3 +101,20 @@ def test_get_entities(client: TestClient, entities):
     assert response.status_code == 200
     assert len(response.json()) == 3
 
+
+def test_upload_image(authorized_client: TestClient, entity):
+    response = authorized_client.put(
+        url = f"/entities/upload/{entity}",
+        files={"file": ("bild1.png", 
+                        open("/Users/tom/Documents/ELTS/ELTS_backend/tests/data/bild1.png", "rb"),
+                        "image/png")}
+    )
+    
+    assert response.status_code == 200
+
+def test_get_entity(client: TestClient, entity_image):
+    response = client.get(
+        url=f"/entities/get_entity/{entity_image}"
+    )
+
+    assert response.status_code == 200
