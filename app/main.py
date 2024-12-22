@@ -6,6 +6,7 @@ from app.google.router import google
 from app.entities.router import entities
 
 from fastapi import FastAPI
+from app.middleware import RateLimitMiddleware
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.sessions import SessionMiddleware
 
@@ -13,6 +14,7 @@ models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
+app.add_middleware(RateLimitMiddleware, max_requests=10, time_window=60)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:3000"],
