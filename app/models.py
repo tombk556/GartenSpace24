@@ -41,6 +41,7 @@ class Entity(Base):
     description = Column(String, nullable=True)
     
     images = relationship("Image", backref="entity", cascade="all, delete-orphan", lazy="joined")
+    user = relationship("User", backref="entities", lazy="joined")
 
 class Image(Base):
     __tablename__ = "images"

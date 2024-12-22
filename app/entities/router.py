@@ -43,7 +43,6 @@ def get_entity(id: UUID, db: Session = Depends(PostgresDB.get_db)):
         raise HTTPException(
             status_code=404, detail=f"The entity with the id {id} cannot be found"
         )
-
     return EntityResponse.from_orm(entity)
 
 

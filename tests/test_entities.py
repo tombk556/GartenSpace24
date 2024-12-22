@@ -1,10 +1,7 @@
-from app.auth import schemas
-from fastapi.testclient import TestClient
-from app.config import settings
-from jose import jwt
 from uuid import UUID
-from .psqlconfig import client, session, test_user, authorized_client, token, entities, entity_image, entity
-import pytest
+from fastapi.testclient import TestClient
+from .psqlconfig import token, entities, entity_image, entity
+from .psqlconfig import client, session, test_user, authorized_client
 
 
 def test_create_entity_201(authorized_client: TestClient):

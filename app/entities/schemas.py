@@ -74,6 +74,9 @@ class EntityModel(BaseModel):
 
 class EntityResponse(BaseModel):
     id: UUID4
+    date: str
+    username: str
+    email: str
     meta: Meta
     address: Address
     images: dict[str, UUID4]
@@ -93,6 +96,9 @@ class EntityResponse(BaseModel):
         
         return cls(
             id=str(entity.id),
+            date=str(entity.created_at),
+            username=entity.user.username,
+            email=entity.user.email,
             meta=Meta(
                 type=entity.type,
                 size=entity.size,
