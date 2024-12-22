@@ -93,7 +93,7 @@ export default function EntityForm() {
       }
 
       const result = await response.json();
-      const entityId = result;
+      const entityId = result.id;
       console.log("Form Data Submitted:", result);
 
       await uploadImages(entityId);

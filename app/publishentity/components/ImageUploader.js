@@ -27,7 +27,6 @@ export default function ImageUploader({ selectedImages, setSelectedImages }) {
 
   const handleRemoveImage = (e, imageToRemove) => {
     e.preventDefault();
-    // Revoke the object URL to avoid memory leaks
     URL.revokeObjectURL(imageToRemove.preview);
     setSelectedImages(selectedImages.filter((image) => image !== imageToRemove));
   };
