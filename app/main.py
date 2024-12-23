@@ -14,7 +14,6 @@ models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
-app.add_middleware(RateLimitMiddleware, max_requests=10, time_window=60)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:3000"],
@@ -23,6 +22,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 app.add_middleware(SessionMiddleware, secret_key=settings.secret_key)
+app.add_middleware(RateLimitMiddleware, max_requests=60, time_window=60)
 
 @app.get("/")
 def root():
