@@ -15,7 +15,7 @@ export const calculatePricePerSquareMeter = (totalPrice, size) => {
     minimumFractionDigits: 0,
   }).format(pricePerSquareMeter);
 
-  return `Kaufpreis: ${formattedPricePerSquareMeter}/m²`;
+  return `Preis: ${formattedPricePerSquareMeter}/m²`;
 };
 
 export const SquareMeter = (size) => {

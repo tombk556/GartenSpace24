@@ -53,7 +53,7 @@ function useEntities() {
           .then(response => {
             if (response.ok) {
               setEntities(prevEntities =>
-                prevEntities.filter(entity => entity._id !== id)
+                prevEntities.filter(entity => entity.id !== id)
               );
               console.log("Anzeige erfolgreich gelöscht");
             } else {

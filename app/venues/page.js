@@ -22,7 +22,7 @@ const Page = () => {
           console.log("Fetched properties:", data);
 
           const newProperties = data.filter(
-            (newProp) => !properties.some((existingProp) => existingProp._id === newProp._id)
+            (newProp) => !properties.some((existingProp) => existingProp.id === newProp.id)
           );
 
           if (newProperties.length === 0 || newProperties.length < propertiesPerPage) {
@@ -51,7 +51,7 @@ const Page = () => {
       <h1 className="text-3xl font-bold text-center mb-8">Available Properties</h1>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {properties.map((property) => (
-          <PropertyDisplay key={property._id} property={property} />
+          <PropertyDisplay key={property.id} property={property} />
         ))}
       </div>
 

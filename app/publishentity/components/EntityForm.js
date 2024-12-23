@@ -23,9 +23,8 @@ export default function EntityForm() {
     "Grillstelle",
     "Garage",
     "Garten",
-    "Balkon",
     "Swimmingpool",
-    "Sauna",
+    "Balkon",
     "Carport",
     "Fitnessraum",
     "Terrasse",
@@ -42,6 +41,7 @@ export default function EntityForm() {
     plz: "",
     price: "",
     type: "Gütle",
+    offer: "Pachten"
   });
 
   const handleSubmit = async (e) => {
@@ -67,6 +67,7 @@ export default function EntityForm() {
         type: formData.type,
         size: formData.size,
         price: formData.price,
+        offer: formData.offer,
         description: formData.description,
       },
       properties,
@@ -86,13 +87,13 @@ export default function EntityForm() {
       );
 
       if (!response.ok) {
-        throw new Error(
-          "Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut."
-        );
+        const errorData = await response.json();
+        console.error("Backend Error:", errorData);
+        throw new Error(errorData.message || "Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut.");
       }
 
       const result = await response.json();
-      const entityId = result;
+      const entityId = result.id;
       console.log("Form Data Submitted:", result);
 
       await uploadImages(entityId);
