@@ -9,6 +9,8 @@ from sqlalchemy.orm import sessionmaker
 from starlette.middleware.sessions import SessionMiddleware
 from sqlalchemy.ext.declarative import declarative_base
 import pytest
+import json
+import os
 from app.auth.oauth2 import create_access_token
 
 PSQL_DB_URL = psql.test_database_url_psql
@@ -18,11 +20,21 @@ TestingSessionLocal = sessionmaker(
 
 Base = declarative_base()
 
+
+def load_json_data(filename):
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    full_path = os.path.join(dir_path, filename)
+    with open(full_path, 'r') as file:
+        data = json.load(file)
+    return data
+
+
 def create_test_app() -> FastAPI:
     test_app = FastAPI()
     for route in app.routes:
         test_app.router.routes.append(route)
     return test_app
+
 
 @pytest.fixture(scope="function")
 def session():
@@ -33,6 +45,7 @@ def session():
         yield db
     finally:
         db.close()
+
 
 @pytest.fixture(scope="function")
 def client(session):
@@ -65,6 +78,7 @@ def test_user(client: TestClient):
 def token(test_user):
     return create_access_token(data={"user_id": str(test_user["id"])})
 
+
 @pytest.fixture
 def authorized_client(client: TestClient, token):
     client.headers = {
@@ -72,3 +86,60 @@ def authorized_client(client: TestClient, token):
         "Authorization": f"Bearer {token}"
     }
     return client
+
+
+@pytest.fixture
+def entities(authorized_client: TestClient):
+    entities = load_json_data("./data/entities.json")
+    ids = []
+    for entity in entities:
+        response = authorized_client.post(
+            url="/entities/create_entity",
+            json=entity
+        )
+
+        assert response.status_code == 201
+        ids.append(response.json())
+
+    return ids
+
+@pytest.fixture
+def entity(authorized_client: TestClient):
+    response = authorized_client.post(
+        url="/entities/create_entity",
+        json={
+            "address": {
+                "country": "Deutschland",
+                "city": "Waldorferstraße 4",
+                "plz": "72124",
+                "street": "Pliezhausen"
+            },
+            "meta": {
+                "type": "Gütle",
+                "size": 245,
+                "price": 20000,
+                "offer": "Mieten",
+                "description": "Dieses schön gelegene Gütle in Pliezhausen ladet dich ein für deinen Geburstag ein."
+            },
+            "properties": [
+                "Schuppen",
+                "Grillstelle",
+                "Kamin"
+            ]
+        },
+    )
+
+    assert response.status_code == 201
+    return response.json()["id"]
+
+@pytest.fixture
+def entity_image(authorized_client: TestClient, entity):
+    response = authorized_client.put(
+        url = f"/entities/upload/{entity}",
+        files={"file": ("bild1.png", 
+                        open("/Users/tom/Documents/ELTS/ELTS_backend/tests/data/bild1.png", "rb"),
+                        "image/png")}
+    )
+    
+    assert response.status_code == 200
+    return entity

@@ -1,10 +1,7 @@
+from app import models
 from enum import Enum
-from uuid import UUID
-from bson import ObjectId
-from datetime import datetime
-from typing import Optional, Dict
-from fastapi import HTTPException, status
-from pydantic import BaseModel, Field, field_validator, validator, EmailStr
+from typing import List, Optional
+from pydantic import BaseModel, Field, UUID4, validator
 
 
 class Address(BaseModel):
@@ -13,6 +10,12 @@ class Address(BaseModel):
     plz: str
     street: str
 
+    @validator("plz")
+    def validate_plz_length(cls, value):
+        if value is not None and (len(value) != 5):
+            raise ValueError("PLZ must be exactly 5 digits long.")
+        return value
+
 
 class Type(str, Enum):
     Gütle = "Gütle"
@@ -20,90 +23,96 @@ class Type(str, Enum):
     Kleingarten = "Kleingarten"
 
 
+class Offer(str, Enum):
+    Mieten = "Mieten"
+    Kaufen = "Kaufen"
+    Pachten = "Pachten"
+
+
+class Property(str, Enum):
+    Schuppen = "Schuppen"
+    Grillstelle = "Grillstelle"
+    Garage = "Garage"
+    Garten = "Garten"
+    Swimmingpool = "Swimmingpool"
+    Balkon = "Balkon"
+    Carport = "Carport"
+    Fitnessraum = "Fitnessraum"
+    Terrasse = "Terrasse"
+    Kamin = "Kamin"
+    Spielplatz = "Spielplatz"
+
+
 class Meta(BaseModel):
     type: Type
     size: int
     price: float
-    description: str
+    offer: Offer
+    description: Optional[str] = Field(..., max_length=100)
 
 
-class Entity(BaseModel):
-    userId: Optional[str] = None
-    email: Optional[EmailStr] = None
-    username: Optional[str] = None
-    date: datetime = Field(default_factory=datetime.now)
+class EntityModel(BaseModel):
+    owner_id: Optional[UUID4] = None
     address: Address
     meta: Meta
-    properties: Optional[list[str]] = []
-    images: Optional[Dict[str, str]] = {}
+    properties: List[Property]
 
-    @field_validator("userId", mode="after")
-    def validate_userId(cls, value):
-        try:
-            UUID(value)
-        except ValueError:
-            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-                                detail="userId must be a valid ObjectId")
-        return value
-
-    @validator("images", pre=True, always=True)
-    def validate_images(cls, value):
-        return parse_images(value)
-
-    class Config:
-        json_encoders = {
-            ObjectId: lambda x: str(x)
+    def to_flat_dict(self, owner_id: UUID4) -> dict:
+        return {
+            "owner_id": owner_id,
+            "country": self.address.country,
+            "city": self.address.city,
+            "plz": self.address.plz,
+            "street": self.address.street,
+            "type": self.meta.type.value,
+            "size": self.meta.size,
+            "price": self.meta.price,
+            "offer": self.meta.offer.value,
+            "attributes": [prop.value for prop in self.properties],
+            "description": self.meta.description,
         }
-
-        use_enum_values = True
-
-        json_schema_extra = {
-            "address": {
-                "country": "Musterland",
-                "city": "Musterstadt",
-                "plz": "12345",
-                "street": "Musterstraße"
-            },
-            "meta": {
-                "type": "house",
-                "size": "100m²",
-                "rooms": 4,
-                "price": "100000€",
-                "description": "This is a beautiful house"
-            },
-            "properties": {
-                "garden": True,
-                "garage": True
-            }
-        }
-
 
 class EntityResponse(BaseModel):
-    id: str = Field(..., alias="_id")
+    id: UUID4
+    date: str
+    username: str
+    email: str
     meta: Meta
     address: Address
-    images: Optional[Dict[str, str]] = {}
+    images: dict[str, UUID4]
+    attributes: List[str]
 
-    @field_validator("id", mode="before")
-    def validate_object_id(cls, value):
-        try:
-            obj_id = ObjectId(value)
-            return str(obj_id)
-        except ValueError:
-            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-                                detail="Invalid ObjectId")
+    class Config:
+        from_attributes = True
 
-    @validator("images", pre=True, always=True)
-    def validate_images(cls, value):
-        return parse_images(value)
+    @classmethod
+    def from_orm(cls, entity: models.Entity):
+        images_dict = {
+            image.filename: str(image.id)
+            for image in entity.images
+        }
+        
+        attribute_list = [prop for prop in entity.attributes]
+        
+        return cls(
+            id=str(entity.id),
+            date=str(entity.created_at),
+            username=entity.user.username,
+            email=entity.user.email,
+            meta=Meta(
+                type=entity.type,
+                size=entity.size,
+                price=entity.price,
+                offer=entity.offer,
+                description=entity.description
+            ),
+            address=Address(
+                country=entity.country,
+                city=entity.city,
+                plz=entity.plz,
+                street=entity.street
+            ),
+            images=images_dict,
+            attributes=attribute_list
+        )
 
-
-def parse_images(value: Optional[Dict]) -> Optional[Dict[str, str]]:
-    if isinstance(value, dict):
-        images_dict = {k: v["png"] for k, v in value.items() if "png" in v}
-        return images_dict
-    elif value == {}:
-        return value
-    else:
-        raise ValueError(
-            "Images should be a dictionary where keys are image IDs and values are image paths")

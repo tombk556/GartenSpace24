@@ -6,6 +6,7 @@ from app.google.router import google
 from app.entities.router import entities
 
 from fastapi import FastAPI
+from app.middleware import RateLimitMiddleware
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.sessions import SessionMiddleware
 
@@ -21,6 +22,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 app.add_middleware(SessionMiddleware, secret_key=settings.secret_key)
+app.add_middleware(RateLimitMiddleware, max_requests=60, time_window=60)
 
 @app.get("/")
 def root():
@@ -28,5 +30,5 @@ def root():
 
 
 app.include_router(auth)
-app.include_router(entities)
 app.include_router(google)
+app.include_router(entities)

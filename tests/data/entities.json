@@ -10,12 +10,13 @@
             "type": "Gütle",
             "size": 245,
             "price": 20000,
-            "description": "Dieses schön gelegene Gütle in Pliezhausen ladet dich ein für deinen Geburstag. "
+            "offer": "Mieten",
+            "description": "Dieses schön gelegene Gütle in Pliezhausen ladet dich ein für deinen Geburstag ein."
         },
         "properties": [
             "Schuppen",
             "Grillstelle",
-            "Parkplätze"
+            "Kamin"
         ]
     },
     {
@@ -29,12 +30,13 @@
             "type": "Gütle",
             "size": 245,
             "price": 20000,
-            "description": "Dieses schön gelegene Gütle in Pliezhausen ladet dich ein für deinen Geburstag. "
+            "offer": "Mieten",
+            "description": "Dieses schön gelegene Gütle in Pliezhausen ladet dich ein für deinen Geburstag ein."
         },
         "properties": [
             "Schuppen",
             "Grillstelle",
-            "Parkplätze"
+            "Kamin"
         ]
     },
     {
@@ -48,13 +50,13 @@
             "type": "Gütle",
             "size": 245,
             "price": 20000,
-            "description": "Dieses schön gelegene Gütle in Pliezhausen ladet dich ein für deinen Geburstag. "
+            "offer": "Mieten",
+            "description": "Dieses schön gelegene Gütle in Pliezhausen ladet dich ein für deinen Geburstag ein."
         },
         "properties": [
             "Schuppen",
             "Grillstelle",
-            "Parkplätze"
+            "Kamin"
         ]
     }
-
 ]
