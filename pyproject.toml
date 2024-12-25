@@ -16,4 +16,5 @@ dependencies = [
     "uvicorn>=0.34.0",
     "python-multipart>=0.0.20",
     "itsdangerous>=2.2.0",
+    "google-api-python-client>=2.156.0",
 ]
