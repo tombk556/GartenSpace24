@@ -60,6 +60,13 @@ def update_user(update_user: schemas.UserUpdate, current_user: schemas.User = De
 
     user = db.query(models.User).filter(
         models.User.id == current_user.id)
+    
+    if user.first().google_account:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Google account cannot be updated"
+        )
+    
     user.update(update_user.model_dump(), synchronize_session=False)
     db.commit()
 

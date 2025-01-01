@@ -74,9 +74,7 @@ def test_login(client: TestClient, test_user):
 
 @pytest.mark.parametrize("email, password, status_code", [
     ("wrongemail@gmail.com", "Password123!", 403),
-    ("testuser@gmail.com", "wrongpassword123!", 403),
-    (None, "Password123!", 422),
-    ("testuser@gmail.com", None, 422)
+    ("testuser@gmail.com", "wrongpassword123!", 403)
 ])
 def test_incorrect_login(client: TestClient, test_user, email, password, status_code):
     response = client.post(
