@@ -22,7 +22,19 @@ class BannedTokens(Base):
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, unique=True, nullable=False)
     token = Column(String, nullable=False)
     banned_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text("now()"))
-    
+
+class Advert(Base):
+    __tablename__ = "adverts"
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, unique=True, nullable=False)
+    owner_id = Column(UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text("now()"))
+    plz = Column(String, nullable=False)
+    city = Column(String, nullable=False)
+    country = Column(String, nullable=False)
+    type = Column(String, nullable=False)
+    offer = Column(String, nullable=False)
+    attributes = Column(ARRAY(String), nullable=False)
+    description = Column(String, nullable=True)
 
 class Entity(Base):
     __tablename__ = "entities"

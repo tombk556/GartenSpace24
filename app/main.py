@@ -3,6 +3,7 @@ from app.db import engine
 from app.config import settings
 from app.auth.router import auth
 from app.google.router import google
+from app.advert.router import advert
 from app.entities.router import entities
 
 from fastapi import FastAPI
@@ -32,3 +33,4 @@ def root():
 app.include_router(auth)
 app.include_router(google)
 app.include_router(entities)
+app.include_router(advert)
