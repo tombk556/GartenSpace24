@@ -36,6 +36,8 @@ class Advert(Base):
     attributes = Column(ARRAY(String), nullable=False)
     description = Column(String, nullable=True)
 
+    user= relationship("User", backref="adverts", lazy="joined")
+
 class Entity(Base):
     __tablename__ = "entities"
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, unique=True, nullable=False)

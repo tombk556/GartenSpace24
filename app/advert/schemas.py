@@ -46,3 +46,33 @@ class AdvertModel(BaseModel):
         if value is not None and (len(value) != 5):
             raise ValueError("PLZ must be exactly 5 digits long.")
         return value
+    
+    
+class AdvertResponse(BaseModel):
+    id: UUID4
+    date: str
+    username: str
+    email: str
+    city: str
+    plz: str
+    country: str
+    attributes: List[str]
+    
+    class Config:
+        from_attributes = True
+        
+    @classmethod
+    def from_orm(cls, advert: models.Advert):
+        
+        attribute_list = [prop for prop in advert.attributes]
+
+        return cls(
+            id=str(advert.id),
+            date=str(advert.created_at),
+            username=advert.user.username,
+            email=advert.user.email,
+            city=advert.city,
+            plz=advert.plz,
+            country=advert.country,
+            attributes=attribute_list
+        )

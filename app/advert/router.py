@@ -2,7 +2,7 @@ from app import models
 from app.auth import oauth2
 from app.db import PostgresDB
 from app.auth.schemas import User
-from app.advert.schemas import AdvertModel
+from app.advert.schemas import AdvertModel, AdvertResponse
 
 from uuid import UUID
 from io import BytesIO
@@ -27,3 +27,20 @@ def create_advert(advert: AdvertModel, current_user: User = Depends(oauth2.get_c
     db.refresh(new_advert)
     
     return {"id": new_advert.id}
+
+@advert.get("/get_all_adverts", status_code=status.HTTP_200_OK, response_model=list[AdvertResponse])
+def get_all_adverts(db: Session = Depends(PostgresDB.get_db), skip: int = Query(0, ge=0),
+                    limit: int = Query(10, ge=1)):
+    adverts = (db.query(models.Advert).offset(skip).limit(limit).all())
+    return [AdvertResponse.from_orm(advert) for advert in adverts]
+
+
+@advert.get("/get_advert/{id}", status_code=status.HTTP_200_OK)
+def get_advert(id: UUID, db: Session = Depends(PostgresDB.get_db)):
+    advert = db.query(models.Advert).filter(models.Advert.id == id).first()
+
+    if not advert:
+        raise HTTPException(
+            status_code=404, detail=f"The advert with the id {id} cannot be found"
+        )
+    return AdvertResponse.from_orm(advert)
