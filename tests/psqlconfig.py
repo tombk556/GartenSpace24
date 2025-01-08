@@ -143,3 +143,40 @@ def entity_image(authorized_client: TestClient, entity):
     
     assert response.status_code == 200
     return entity
+
+
+@pytest.fixture
+def adverts(authorized_client: TestClient):
+    adverts = load_json_data("./data/adverts.json")
+    ids = []
+    for advert in adverts:
+        response = authorized_client.post(
+            url="/advert/create_advert",
+            json=advert
+        )
+
+        assert response.status_code == 201
+        ids.append(response.json())
+
+    return ids
+
+@pytest.fixture
+def advert(authorized_client: TestClient):
+    response = authorized_client.post(
+        url="/advert/create_advert",
+        json={
+            "plz": "07112",
+            "city": "Stuttgart",
+            "country": "Baden-Württemberg",
+            "type": "Schrebergarten",
+            "offer": "Mieten",
+            "attributes": [
+                "Schuppen",
+                "Kamin",
+                "Terrasse"
+            ],
+            "description": "Ich suche ein Gütle in meiner Heimat Stuttgart"
+        }
+    )
+    assert response.status_code == 201
+    return response.json()["id"]
