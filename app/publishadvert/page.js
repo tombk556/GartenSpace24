@@ -1,10 +1,14 @@
 import React from 'react'
+import ProtectedRoute from '@components/ProtectedRoute'
+import AdvertForm from './components/AdvertForm'
 
 const page = () => {
   return (
-    <div>
-      hallo
-    </div>
+    <ProtectedRoute>
+      <div>
+          <AdvertForm />
+      </div>
+    </ProtectedRoute>
   )
 }
 
