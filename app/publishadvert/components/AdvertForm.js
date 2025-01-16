@@ -85,9 +85,9 @@ export default function EntityForm() {
 
       const result = await response.json();
       const advertID = result.id;
-      console.log("Form Data Submitted:", result);
 
-
+      setIsLoading(false);
+      router.push(`http://localhost:8000/advert/get_advert/${advertID}`);
 
     } catch (error) {
       console.error("Submission error:", error);
