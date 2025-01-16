@@ -57,6 +57,7 @@ class AdvertResponse(BaseModel):
     plz: str
     country: str
     attributes: List[str]
+    description: str
     
     class Config:
         from_attributes = True
@@ -74,5 +75,6 @@ class AdvertResponse(BaseModel):
             city=advert.city,
             plz=advert.plz,
             country=advert.country,
+            description=advert.description,
             attributes=attribute_list
         )
