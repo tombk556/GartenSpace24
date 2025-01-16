@@ -48,7 +48,15 @@ const DropdownMenu = () => {
               className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
               role="menuitem"
             >
-              Neues Inserat erstellen
+              Neue Anzeige erstellen
+            </Link>
+            <Link
+              href="/publishadvert"
+              onClick={handleItemClick}
+              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+              role="menuitem"
+            >
+              Neue Anfrage erstellen
             </Link>
             <Link
               href="/profile"
@@ -56,7 +64,7 @@ const DropdownMenu = () => {
               className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
               role="menuitem"
             >
-              User Profile
+              Nutzer Profil
             </Link>
             <Link
               href="/anzeigen"
