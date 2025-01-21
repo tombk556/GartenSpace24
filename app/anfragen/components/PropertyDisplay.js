@@ -1,29 +1,39 @@
-import Link from "next/link";
-import { useState, useEffect } from "react";
+"use client";
+
 import { FaLocationDot } from "react-icons/fa6";
+import Link from "@node_modules/next/link";
 
 export default function PropertyDisplay({ property }) {
+  const formattedDate = new Date(property.date).toLocaleDateString("de-DE", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  });
 
   return (
-    <div className="flex flex-wrap justify-center items-start p-4 border-2 border-gray-300 rounded-lg">
-      <div className="w-full md:w-1/2 md:pl-4">
-          <div className="text-l text-gray-700 p-4 mb-4 font-bold">
-            <p>{property.description}</p>
-          </div>
-          <div className="text-s text-gray-700 p-4 mb-4 font-thin inline-flex items-center">
-            <FaLocationDot className="mr-2" />
-            <p>
-              {property.city} - {property.plz}
-            </p>
-          </div>
-          <div className="flex justify-around space-x-4">
-            <div>
-              <p className="text-xs">{property.offer}</p>
-            </div>
-            <div>
-            </div>
-          </div>
+    <Link href={`/anfragen/${property.id}`}>
+      <div className="flex flex-col items-center justify-center p-6 border-2 border-gray-300 rounded-lg shadow-md bg-white w-80 h-80 mx-auto">
+        <div className="text-center mb-4 flex-1 flex items-center justify-center">
+          <p className="text-lg font-bold text-gray-800">
+            {property.description}
+          </p>
+        </div>
+
+        <div className="flex items-center justify-center text-gray-700 text-sm mb-4">
+          <FaLocationDot className="mr-2 black" />
+          <p>
+            {property.city} - {property.plz}
+          </p>
+        </div>
+        <div className="text-sm text-gray-600 text-center">
+          <p>
+            <span className="font-semibold">Von:</span> {property.username}
+          </p>
+          <p>
+            <span className="font-semibold">Datum:</span> {formattedDate}
+          </p>
+        </div>
       </div>
-    </div>
+    </Link>
   );
 }
