@@ -58,6 +58,8 @@ class AdvertResponse(BaseModel):
     country: str
     attributes: List[str]
     description: str
+    type: Type
+    offer: Offer
     
     class Config:
         from_attributes = True
@@ -69,12 +71,14 @@ class AdvertResponse(BaseModel):
 
         return cls(
             id=str(advert.id),
+            type=advert.type,
+            offer=advert.offer,
+            description=advert.description,
             date=str(advert.created_at),
             username=advert.user.username,
             email=advert.user.email,
             city=advert.city,
             plz=advert.plz,
             country=advert.country,
-            description=advert.description,
-            attributes=attribute_list
+            attributes=attribute_list,
         )
