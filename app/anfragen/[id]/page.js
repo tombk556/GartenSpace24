@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import PropertyHeader from "../components/PropertyHeader";
+import PlacePriceCard from "../components/PlacePriceCard";
 
 const Page = () => {
   const [id, setId] = useState("");
@@ -28,13 +30,11 @@ const Page = () => {
 
 
    return (
-     <div>
-       {property && (
-         <div>
-            <p>{property.id}</p>
-           <p>{property.description}</p>
-         </div>
-       )}
+     <div className="container mx-auto p-4">
+     <hr className="mt-2" />
+     {property && <PropertyHeader property={property} />}
+     <hr className="mt-2" />
+     {property && <PlacePriceCard property={property} />}
      </div>
    )
 }
