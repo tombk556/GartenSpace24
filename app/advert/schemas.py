@@ -2,7 +2,6 @@ from app import models
 from enum import Enum
 from typing import List, Optional
 from pydantic import BaseModel, Field, UUID4, field_validator
-from app.entities.schemas import Address
 
 
 class Type(str, Enum):

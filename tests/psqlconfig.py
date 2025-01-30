@@ -109,7 +109,7 @@ def entity(authorized_client: TestClient):
         url="/entities/create_entity",
         json={
             "address": {
-                "country": "Deutschland",
+                "country": "Baden-Württemberg",
                 "city": "Waldorferstraße 4",
                 "plz": "72124",
                 "street": "Pliezhausen"

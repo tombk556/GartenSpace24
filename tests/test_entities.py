@@ -9,7 +9,7 @@ def test_create_entity_201(authorized_client: TestClient):
         url="/entities/create_entity",
         json={
             "address": {
-                "country": "Deutschland",
+                "country": "Baden-Württemberg",
                 "city": "Waldorferstraße 4",
                 "plz": "72124",
                 "street": "Pliezhausen"
@@ -38,7 +38,7 @@ def test_create_entity_422_1(authorized_client: TestClient):
         url="/entities/create_entity",
         json={
             "address": {
-                "country": "Deutschland",
+                "country": "Baden-Württemberg",
                 "city": "Waldorferstraße 4",
                 "plz": "7212490",
                 "street": "Pliezhausen"
@@ -66,7 +66,7 @@ def test_create_entity_422_2(authorized_client: TestClient):
         url="/entities/create_entity",
         json={
             "address": {
-                "country": "Deutschland",
+                "country": "Baden-Württemberg",
                 "city": "Waldorferstraße 4",
                 "plz": "7212",
                 "street": "Pliezhausen"

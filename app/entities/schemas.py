@@ -1,20 +1,10 @@
 from app import models
 from enum import Enum
 from typing import List, Optional
-from pydantic import BaseModel, Field, UUID4, validator
+from pydantic import BaseModel, Field, UUID4, field_validator
 
 
-class Address(BaseModel):
-    country: str
-    city: str
-    plz: str
-    street: str
 
-    @validator("plz")
-    def validate_plz_length(cls, value):
-        if value is not None and (len(value) != 5):
-            raise ValueError("PLZ must be exactly 5 digits long.")
-        return value
 
 
 class Type(str, Enum):
@@ -42,6 +32,35 @@ class Property(str, Enum):
     Kamin = "Kamin"
     Spielplatz = "Spielplatz"
 
+class Country(str, Enum):
+    BadenWtrttemberg = "Baden-Württemberg"
+    Bayern = "Bayern"
+    Berlin = "Berlin"
+    Brandenburg = "Brandenburg"
+    Bremen = "Bremen"
+    Hamburg = "Hamburg"
+    Hessen = "Hessen"
+    MecklenburgVorpommern = "Mecklenburg-Vorpommern"
+    Niedersachsen = "Niedersachsen"
+    NordrheinWestfalen = "Nordrhein-Westfalen"
+    RheinlandPfalz = "Rheinland-Pfalz"
+    Saarland = "Saarland"
+    Sachsen = "Sachsen"
+    SachsenAnhalt = "Sachsen-Anhalt"
+    SchleswigHolstein = "Schleswig-Holstein"
+    Thueringen = "Thueringen"
+
+class Address(BaseModel):
+    country: Country
+    city: str
+    plz: str
+    street: str
+
+    @field_validator("plz")
+    def validate_plz_length(cls, value):
+        if value is not None and (len(value) != 5):
+            raise ValueError("PLZ must be exactly 5 digits long.")
+        return value
 
 class Meta(BaseModel):
     type: Type
