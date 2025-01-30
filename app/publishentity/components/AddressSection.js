@@ -59,16 +59,30 @@ export default function AddressSection({ formData, setFormData }) {
             Bundesland:
           </label>
           <div className="mt-2">
-            <input
-              type="text"
-              name="country"
-              id="country"
-              autoComplete="address-level1"
-              placeholder="Baden-Württemberg"
+            <select
+              id="offer"
+              name="offer"
               className="w-full text-gray-800 px-4 py-1.5 rounded-md border-2 border-gray-800 focus:outline-none"
-              value={formData.region}
+              value={formData.offer}
               onChange={handleChange}
-            />
+            >
+              <option value="Baden-Württemberg">Baden-Württemberg</option>
+              <option value="Bayern">Bayern</option>
+              <option value="Berlin">Berlin</option>
+              <option value="Brandenburg">Brandenburg</option>
+              <option value="Bremen">Bremen</option>
+              <option value="Hamburg">Hamburg</option>
+              <option value="Hessen">Hessen</option>
+              <option value="Mecklenburg-Vorpommern">Mecklenburg-Vorpommern</option>
+              <option value="Niedersachsen">Niedersachsen</option>
+              <option value="Nordrhein-Westfalen">Nordrhein-Westfalen</option>
+              <option value="Rheinland-Pfalz">Rheinland-Pfalz"</option>
+              <option value="Saarland">Saarland</option>
+              <option value="Sachsen">Sachsen</option>
+              <option value="Sachsen-Anhalt">Sachsen-Anhalt</option>
+              <option value="Schleswig-Holstein">Schleswig-Holstein</option>
+              <option value="Thüringen">Thüringen</option>
+            </select>
           </div>
         </div>
         <div className="sm:col-span-2">
