@@ -23,23 +23,23 @@ const Nav = () => {
       <div className="sm:flex hidden mr-5">
         {user ? (
           <div className="flex gap-3 md:gap-5">
-            <Link href="/venues" className="black_btn">
+            <Link href="/displayvenues" className="black_btn">
               Anzeigen
             </Link>
-            <Link href="/anfragen" className="black_btn">
+            <Link href="/displayadverts" className="black_btn">
               Anfragen
             </Link>
             <DropdownMenu />
           </div>
         ) : (
           <div className="flex gap-3 md:gap-5">
-            <Link href="/venues" className="black_btn">
+            <Link href="/displayvenues" className="black_btn">
               Anzeigen
             </Link>
-            <Link href="/anfragen" className="black_btn">
+            <Link href="/displayadverts" className="black_btn">
               Anfragen
             </Link>
-            <Link href="/login" className="black_btn">
+            <Link href="/authlogin" className="black_btn">
               Login
             </Link>
           </div>

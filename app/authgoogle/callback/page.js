@@ -17,7 +17,7 @@ export default function Page() {
     } else if (error) {
       setErrorMessage(error);
     } else {
-      router.push('/login');
+      router.push('/authlogin');
     }
   }, [router]);
 

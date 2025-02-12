@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
-import { formatCurrency } from "@app/venues/Hooks";
-import { SquareMeter } from "@app/venues/Hooks";
+import { formatCurrency } from "@app/displayvenues/Hooks";
+import { SquareMeter } from "@app/displayvenues/Hooks";
 
 function EntityTable({ entities, onDelete }) {
   return (
