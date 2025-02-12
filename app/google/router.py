@@ -42,7 +42,7 @@ async def auth_google(request: Request, db: Session = Depends(PostgresDB.get_db)
 
     try:
         access_token = check_user_and_create_token(user_info, db)
-        redirect_url = f"{settings.frontend_url}/google/callback?token={access_token}"
+        redirect_url = f"{settings.frontend_url}/authgoogle/callback?token={access_token}"
         return RedirectResponse(url=redirect_url)
     except HTTPException as e:
         if e.status_code == status.HTTP_409_CONFLICT:
