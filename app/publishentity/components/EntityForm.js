@@ -37,7 +37,7 @@ export default function EntityForm() {
     description: "",
     street: "",
     city: "",
-    country: "",
+    country: "Baden-Württemberg",
     plz: "",
     price: "",
     type: "Gütle",

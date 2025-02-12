@@ -60,10 +60,10 @@ export default function AddressSection({ formData, setFormData }) {
           </label>
           <div className="mt-2">
             <select
-              id="offer"
-              name="offer"
+              id="country"
+              name="country"
               className="w-full text-gray-800 px-4 py-1.5 rounded-md border-2 border-gray-800 focus:outline-none"
-              value={formData.offer}
+              value={formData.country}
               onChange={handleChange}
             >
               <option value="Baden-Württemberg">Baden-Württemberg</option>
@@ -76,7 +76,7 @@ export default function AddressSection({ formData, setFormData }) {
               <option value="Mecklenburg-Vorpommern">Mecklenburg-Vorpommern</option>
               <option value="Niedersachsen">Niedersachsen</option>
               <option value="Nordrhein-Westfalen">Nordrhein-Westfalen</option>
-              <option value="Rheinland-Pfalz">Rheinland-Pfalz"</option>
+              <option value="Rheinland-Pfalz">Rheinland-Pfalz</option>
               <option value="Saarland">Saarland</option>
               <option value="Sachsen">Sachsen</option>
               <option value="Sachsen-Anhalt">Sachsen-Anhalt</option>
