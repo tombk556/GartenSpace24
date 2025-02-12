@@ -11,7 +11,7 @@ export default function PropertyDisplay({ property }) {
   });
 
   return (
-    <Link href={`/anfragen/${property.id}`}>
+    <Link href={`/displayadverts/${property.id}`}>
       <div className="flex flex-col items-center justify-center p-6 border-2 border-gray-300 rounded-lg shadow-md bg-white w-80 h-80 mx-auto">
         <div className="text-center mb-4 flex-1 flex items-center justify-center">
           <p className="text-lg font-bold text-gray-800">

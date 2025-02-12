@@ -32,7 +32,7 @@ function EntityTable({ entities, onDelete }) {
         {entities.map(entity => (
           <tr key={entity.id}>
             <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-700 hover:underline">
-              <Link href={`/venues/${entity.id}`}>
+              <Link href={`/displayvenues/${entity.id}`}>
                 {entity.id}
               </Link>
             </td>

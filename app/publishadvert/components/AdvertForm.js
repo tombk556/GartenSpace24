@@ -6,7 +6,7 @@ import Link from "next/link";
 import ErrorMessage from "@components/ErrorMessage";
 import AddressSection from "./AddressSection";
 import PropertiesSection from "./PropertiesSection";
-import LoadingModal from "@app/publishentity/components/LoadingModal";
+import LoadingModal from "@app/publishvenue/components/LoadingModal";
 import PriceOfferSection from "./PriceOfferSection";
 import DescriptionSection from "./DescriptionSection";
 
