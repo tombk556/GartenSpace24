@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { formatCurrency } from "@app/displayvenues/Hooks";
 import { SquareMeter } from "@app/displayvenues/Hooks";
 
-function EntityTable({ entities, onDelete }) {
+function VenueTable({ entities, onDelete }) {
   return (
     <table className="min-w-full divide-y divide-gray-200 border">
       <thead className="bg-gray-50">
@@ -63,4 +63,4 @@ function EntityTable({ entities, onDelete }) {
   );
 }
 
-export default EntityTable;
+export default VenueTable;

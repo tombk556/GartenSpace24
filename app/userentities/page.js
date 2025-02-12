@@ -3,7 +3,8 @@
 import React from "react";
 import Link from "next/link";
 import useEntities from "./Hooks/useEntities";
-import EntityTable from "./components/EntityTable";
+import VenueTable from "./components/VenueTable";
+import AdvertTable from "./components/AdvertTable";
 import ProtectedRoute from "@components/ProtectedRoute";
 
 const Page = () => {
@@ -16,17 +17,21 @@ const Page = () => {
   return (
     <ProtectedRoute>
       <div className="p-4">
-        <p className="text-xl orange_text font-bold mb-4">Meine Anzeigen</p>
+        <p className="text-xl orange_text font-bold mb-4">Meine Anzeigen und Anfragen</p>
 
         {entities.length === 0 ? (
           <div className="text-gray-700">
             Sie haben keine Anzeigen.{" "}
             <Link href="/publishentity" className="orange_text hover:underline">
-              Jetzt Anzeige erstellen
+              Jetzt Anzeige oder Anfrage erstellen
             </Link>
           </div>
         ) : (
-          <EntityTable entities={entities} onDelete={deleteEntity} />
+          <div>
+          <VenueTable entities={entities} onDelete={deleteEntity} />
+
+          <AdvertTable entities={entities} onDelete={deleteEntity} />
+          </div>
         )}
       </div>
     </ProtectedRoute>
