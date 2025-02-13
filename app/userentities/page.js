@@ -12,7 +12,6 @@ const Page = () => {
   const { entities, loading, error, deleteEntity } = useEntities();
   const { adverts, loadingAdverts, errorAdverts, deleteAdvert } = useAdverts();
 
-  // Show loading indicator if data is still being fetched
   if (loading || loadingAdverts) {
     return <div className="p-4">Lädt...</div>;
   }
@@ -23,7 +22,7 @@ const Page = () => {
     content = (
       <div className="text-gray-700">
         Sie haben keine Anzeigen. Jetzt eine{" "}
-        <Link href="/publishentity" className="orange_text hover:underline">
+        <Link href="/publishvenue" className="orange_text hover:underline">
           Anzeige
         </Link>
         {" oder eine "}

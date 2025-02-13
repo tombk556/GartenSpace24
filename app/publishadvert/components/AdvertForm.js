@@ -87,7 +87,7 @@ export default function EntityForm() {
       const advertID = result.id;
 
       setIsLoading(false);
-      router.push(`/anfragen/${advertID}`);
+      router.push(`/displayadverts/${advertID}`);
 
     } catch (error) {
       console.error("Submission error:", error);
