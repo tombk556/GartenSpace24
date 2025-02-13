@@ -2,37 +2,57 @@
 
 import React from "react";
 import Link from "next/link";
-import useEntities from "./Hooks/useEntities";
+import useEntities from "./Hooks/useVenues";
+import useAdverts from "./Hooks/useAdverts";
 import VenueTable from "./components/VenueTable";
 import AdvertTable from "./components/AdvertTable";
 import ProtectedRoute from "@components/ProtectedRoute";
 
 const Page = () => {
   const { entities, loading, error, deleteEntity } = useEntities();
+  const { adverts, loadingAdverts, errorAdverts, deleteAdvert } = useAdverts();
 
-  if (loading) {
+  // Show loading indicator if data is still being fetched
+  if (loading || loadingAdverts) {
     return <div className="p-4">Lädt...</div>;
+  }
+
+  let content;
+
+  if (entities.length === 0 && adverts.length === 0) {
+    content = (
+      <div className="text-gray-700">
+        Sie haben keine Anzeigen. Jetzt eine{" "}
+        <Link href="/publishentity" className="orange_text hover:underline">
+          Anzeige
+        </Link>
+        {" oder eine "}
+        <Link href="/publishadvert" className="orange_text hover:underline">
+          Anfrage
+        </Link>
+      </div>
+    );
+  } else if (entities.length > 0 && adverts.length === 0) {
+    content = <VenueTable entities={entities} onDelete={deleteEntity} />;
+  } else if (adverts.length > 0 && entities.length === 0) {
+    content = <AdvertTable adverts={adverts} onDelete={deleteAdvert} />;
+  } else {
+    content = (
+      <div>
+        <VenueTable entities={entities} onDelete={deleteEntity} />
+        <br />
+        <AdvertTable adverts={adverts} onDelete={deleteAdvert} />
+      </div>
+    );
   }
 
   return (
     <ProtectedRoute>
       <div className="p-4">
-        <p className="text-xl orange_text font-bold mb-4">Meine Anzeigen und Anfragen</p>
-
-        {entities.length === 0 ? (
-          <div className="text-gray-700">
-            Sie haben keine Anzeigen.{" "}
-            <Link href="/publishentity" className="orange_text hover:underline">
-              Jetzt Anzeige oder Anfrage erstellen
-            </Link>
-          </div>
-        ) : (
-          <div>
-          <VenueTable entities={entities} onDelete={deleteEntity} />
-
-          <AdvertTable entities={entities} onDelete={deleteEntity} />
-          </div>
-        )}
+        <p className="text-xl orange_text font-bold mb-4">
+          Meine Anzeigen und Anfragen
+        </p>
+        {content}
       </div>
     </ProtectedRoute>
   );

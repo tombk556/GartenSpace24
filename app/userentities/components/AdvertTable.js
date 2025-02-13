@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { formatCurrency } from "@app/displayvenues/Hooks";
 import { SquareMeter } from "@app/displayvenues/Hooks";
 
-function AdvertTable({ entities, onDelete }) {
+function AdvertTable({ adverts, onDelete }) {
   return (
     <table className="min-w-full divide-y divide-gray-200 border">
       <thead className="bg-gray-50">
@@ -15,10 +15,10 @@ function AdvertTable({ entities, onDelete }) {
             Typ
           </th>
           <th className="px-6 py-3 text-left text-m font-medium text-gray-800 tracking-wider">
-            Größe
+            Stadt
           </th>
           <th className="px-6 py-3 text-left text-m font-medium text-gray-800 tracking-wider">
-            Preis
+            PLZ
           </th>
           <th className="px-6 py-3 text-left text-m font-medium text-gray-800 tracking-wider">
             Beschreibung
@@ -29,28 +29,28 @@ function AdvertTable({ entities, onDelete }) {
         </tr>
       </thead>
       <tbody className="bg-white divide-y divide-gray-200">
-        {entities.map(entity => (
-          <tr key={entity.id}>
+        {adverts.map(advert => (
+          <tr key={advert.id}>
             <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-700 hover:underline">
-              <Link href={`/displayvenues/${entity.id}`}>
-                {entity.id}
+              <Link href={`/displayadverts/${advert.id}`}>
+                {advert.id}
               </Link>
             </td>
             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-              {entity.meta.type}
+              {advert.type}
             </td>
             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-              {SquareMeter(entity.meta.size)}
+              {advert.city}
             </td>
             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-              {formatCurrency(entity.meta.price)}
+              {advert.plz}
             </td>
             <td className="px-6 py-4 whitespace-normal text-sm text-gray-700">
-              {entity.meta.description}
+              {advert.description}
             </td>
             <td className="px-6 py-4 whitespace-normal text-sm text-gray-700">
               <button
-                onClick={() => onDelete(entity.id)}
+                onClick={() => onDelete(advert.id)}
                 className="text-red-700 hover:text-red-800 font-medium"
               >
                 Löschen
