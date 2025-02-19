@@ -12,13 +12,13 @@ function VenueTable({ entities, onDelete }) {
             ID
           </th>
           <th className="px-6 py-3 text-left text-m font-medium text-gray-800 tracking-wider">
-            Typ
-          </th>
-          <th className="px-6 py-3 text-left text-m font-medium text-gray-800 tracking-wider">
             Größe
           </th>
           <th className="px-6 py-3 text-left text-m font-medium text-gray-800 tracking-wider">
             Preis
+          </th>
+          <th className="px-6 py-3 text-left text-m font-medium text-gray-800 tracking-wider">
+            Angebot
           </th>
           <th className="px-6 py-3 text-left text-m font-medium text-gray-800 tracking-wider">
             Beschreibung
@@ -37,13 +37,13 @@ function VenueTable({ entities, onDelete }) {
               </Link>
             </td>
             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-              {entity.meta.type}
-            </td>
-            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
               {SquareMeter(entity.meta.size)}
             </td>
             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
               {formatCurrency(entity.meta.price)}
+            </td>
+            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+              {entity.meta.offer}
             </td>
             <td className="px-6 py-4 whitespace-normal text-sm text-gray-700">
               {entity.meta.description}

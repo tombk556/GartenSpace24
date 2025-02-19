@@ -12,7 +12,7 @@ function AdvertTable({ adverts, onDelete }) {
             ID
           </th>
           <th className="px-6 py-3 text-left text-m font-medium text-gray-800 tracking-wider">
-            Typ
+            Angebot
           </th>
           <th className="px-6 py-3 text-left text-m font-medium text-gray-800 tracking-wider">
             Stadt
@@ -37,7 +37,7 @@ function AdvertTable({ adverts, onDelete }) {
               </Link>
             </td>
             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-              {advert.type}
+              {advert.offer}
             </td>
             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
               {advert.city}
