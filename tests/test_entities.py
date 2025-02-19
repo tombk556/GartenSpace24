@@ -15,7 +15,6 @@ def test_create_entity_201(authorized_client: TestClient):
                 "street": "Pliezhausen"
             },
             "meta": {
-                "type": "Gütle",
                 "size": 245,
                 "price": 20000,
                 "offer": "Mieten",
@@ -44,7 +43,6 @@ def test_create_entity_422_1(authorized_client: TestClient):
                 "street": "Pliezhausen"
             },
             "meta": {
-                "type": "Gütle",
                 "size": 245,
                 "price": 20000,
                 "offer": "Mieten",
@@ -72,7 +70,6 @@ def test_create_entity_422_2(authorized_client: TestClient):
                 "street": "Pliezhausen"
             },
             "meta": {
-                "type": "Gütle",
                 "size": 245,
                 "price": 20000,
                 "offer": "Mieten",

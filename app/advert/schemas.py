@@ -4,12 +4,6 @@ from typing import List, Optional
 from pydantic import BaseModel, Field, UUID4, field_validator
 
 
-class Type(str, Enum):
-    Gütle = "Gütle"
-    Schrebergarten = "Schrebergarten"
-    Kleingarten = "Kleingarten"
-
-
 class Offer(str, Enum):
     Mieten = "Mieten"
     Kaufen = "Kaufen"
@@ -35,7 +29,6 @@ class AdvertModel(BaseModel):
     plz: str
     city: str
     country: str
-    type: Type
     offer: Offer
     attributes: List[Property]
     description: Optional[str] = Field(..., max_length=200)
@@ -57,7 +50,6 @@ class AdvertResponse(BaseModel):
     country: str
     attributes: List[str]
     description: str
-    type: Type
     offer: Offer
     
     class Config:
@@ -70,7 +62,6 @@ class AdvertResponse(BaseModel):
 
         return cls(
             id=str(advert.id),
-            type=advert.type,
             offer=advert.offer,
             description=advert.description,
             date=str(advert.created_at),

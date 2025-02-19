@@ -15,7 +15,6 @@ def test_create_advert_201(authorized_client: TestClient):
             "plz": "07112",
             "city": "Stuttgart",
             "country": "Baden-Württemberg",
-            "type": "Schrebergarten",
             "offer": "Mieten",
             "attributes": [
                 "Schuppen",
@@ -34,7 +33,6 @@ def test_create_advert_422_1(authorized_client: TestClient):
         json={
             "plz": "07112",
             "country": "Baden-Württemberg",
-            "type": "Schrebergarten",
             "offer": "Mieten",
             "attributes": [
                 "Schuppen",
@@ -52,7 +50,6 @@ def test_create_advert_422_2(authorized_client: TestClient):
         json={
             "plz": "07112",
             "country": "Baden-Württemberg",
-            "type": "Schrebergarten",
             "offer": "Mieten",
             "attributes": [
                 "Schuppen",

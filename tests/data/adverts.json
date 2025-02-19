@@ -3,7 +3,6 @@
         "plz": "01099",
         "city": "Dresden",
         "country": "Sachsen",
-        "type": "Kleingarten",
         "offer": "Mieten",
         "attributes": [
             "Schuppen",
@@ -16,7 +15,6 @@
         "plz": "72124",
         "city": "Pliezhausen",
         "country": "Baden-Württemberg",
-        "type": "Gütle",
         "offer": "Mieten",
         "attributes": [
             "Schuppen",
@@ -29,7 +27,6 @@
         "plz": "07112",
         "city": "Stuttgart",
         "country": "Baden-Württemberg",
-        "type": "Schrebergarten",
         "offer": "Mieten",
         "attributes": [
             "Schuppen",

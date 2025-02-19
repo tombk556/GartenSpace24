@@ -4,15 +4,6 @@ from typing import List, Optional
 from pydantic import BaseModel, Field, UUID4, field_validator
 
 
-
-
-
-class Type(str, Enum):
-    Gütle = "Gütle"
-    Schrebergarten = "Schrebergarten"
-    Kleingarten = "Kleingarten"
-
-
 class Offer(str, Enum):
     Mieten = "Mieten"
     Kaufen = "Kaufen"
@@ -32,6 +23,7 @@ class Property(str, Enum):
     Kamin = "Kamin"
     Spielplatz = "Spielplatz"
 
+
 class Country(str, Enum):
     BadenWtrttemberg = "Baden-Württemberg"
     Bayern = "Bayern"
@@ -50,6 +42,7 @@ class Country(str, Enum):
     SchleswigHolstein = "Schleswig-Holstein"
     Thueringen = "Thueringen"
 
+
 class Address(BaseModel):
     country: Country
     city: str
@@ -62,8 +55,8 @@ class Address(BaseModel):
             raise ValueError("PLZ must be exactly 5 digits long.")
         return value
 
+
 class Meta(BaseModel):
-    type: Type
     size: int
     price: float
     offer: Offer
@@ -83,13 +76,13 @@ class EntityModel(BaseModel):
             "city": self.address.city,
             "plz": self.address.plz,
             "street": self.address.street,
-            "type": self.meta.type.value,
             "size": self.meta.size,
             "price": self.meta.price,
             "offer": self.meta.offer.value,
             "attributes": [prop.value for prop in self.properties],
             "description": self.meta.description,
         }
+
 
 class EntityResponse(BaseModel):
     id: UUID4
@@ -110,16 +103,15 @@ class EntityResponse(BaseModel):
             image.filename: str(image.id)
             for image in entity.images
         }
-        
+
         attribute_list = [prop for prop in entity.attributes]
-        
+
         return cls(
             id=str(entity.id),
             date=str(entity.created_at),
             username=entity.user.username,
             email=entity.user.email,
             meta=Meta(
-                type=entity.type,
                 size=entity.size,
                 price=entity.price,
                 offer=entity.offer,
@@ -134,4 +126,3 @@ class EntityResponse(BaseModel):
             images=images_dict,
             attributes=attribute_list
         )
-
