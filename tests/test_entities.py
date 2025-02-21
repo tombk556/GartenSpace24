@@ -4,19 +4,46 @@ from .psqlconfig import token, entities, entity_image, entity
 from .psqlconfig import client, session, test_user, authorized_client
 
 
-def test_create_entity_201(authorized_client: TestClient):
+def test_create_entity_201_1(authorized_client: TestClient):
     response = authorized_client.post(
         url="/entities/create_entity",
         json={
             "address": {
                 "country": "Baden-Württemberg",
                 "city": "Waldorferstraße 4",
-                "plz": "72124",
+                "plz": "01099",
                 "street": "Pliezhausen"
             },
             "meta": {
                 "size": 245,
-                "price": 20000,
+                "price": 100000.99,
+                "offer": "Mieten",
+                "description": "Dieses schön gelegene Gütle in Pliezhausen ladet dich ein für deinen Geburstag ein."
+            },
+            "properties": [
+                "Schuppen",
+                "Grillstelle",
+                "Kamin"
+            ]
+        },
+    )
+
+    assert response.status_code == 201
+    return response.json()
+
+def test_create_entity_201_2(authorized_client: TestClient):
+    response = authorized_client.post(
+        url="/entities/create_entity",
+        json={
+            "address": {
+                "country": "Baden-Württemberg",
+                "city": "Waldorferstraße 4",
+                "plz": "01099",
+                "street": "Pliezhausen"
+            },
+            "meta": {
+                "size": 245,
+                "price": "100000,99",
                 "offer": "Mieten",
                 "description": "Dieses schön gelegene Gütle in Pliezhausen ladet dich ein für deinen Geburstag ein."
             },
@@ -72,6 +99,88 @@ def test_create_entity_422_2(authorized_client: TestClient):
             "meta": {
                 "size": 245,
                 "price": 20000,
+                "offer": "Mieten",
+                "description": "Dieses schön gelegene Gütle in Pliezhausen ladet dich ein für deinen Geburstag ein."
+            },
+            "properties": [
+                "Schuppen",
+                "Grillstelle",
+                "Kamin",
+                "Bierpong"
+            ]
+        }
+    )
+
+    assert response.status_code == 422
+
+
+def test_create_entity_422_3(authorized_client: TestClient):
+    response = authorized_client.post(
+        url="/entities/create_entity",
+        json={
+            "address": {
+                "country": "Baden-Württemberg",
+                "city": "Waldorferstraße 4",
+                "plz": "010991",
+                "street": "Pliezhausen"
+            },
+            "meta": {
+                "size": 245,
+                "price": 20000,
+                "offer": "Mieten",
+                "description": "Dieses schön gelegene Gütle in Pliezhausen ladet dich ein für deinen Geburstag ein."
+            },
+            "properties": [
+                "Schuppen",
+                "Grillstelle",
+                "Kamin",
+                "Bierpong"
+            ]
+        }
+    )
+
+    assert response.status_code == 422
+
+def test_create_entity_422_4(authorized_client: TestClient):
+    response = authorized_client.post(
+        url="/entities/create_entity",
+        json={
+            "address": {
+                "country": "Baden-Württemberg",
+                "city": "Waldorferstraße 4",
+                "plz": "010991",
+                "street": "Pliezhausen"
+            },
+            "meta": {
+                "size": 245,
+                "price": 20000.2342,
+                "offer": "Mieten",
+                "description": "Dieses schön gelegene Gütle in Pliezhausen ladet dich ein für deinen Geburstag ein."
+            },
+            "properties": [
+                "Schuppen",
+                "Grillstelle",
+                "Kamin",
+                "Bierpong"
+            ]
+        }
+    )
+
+    assert response.status_code == 422
+
+def test_create_entity_422_5(authorized_client: TestClient):
+    response = authorized_client.post(
+        url="/entities/create_entity",
+        json={
+            "address": {
+                "country": "Baden-Württemberg",
+                "city": "Waldorferstraße 4",
+                "plz": "010991",
+                "street": "Pliezhausen"
+            },
+            "meta": {
+                "size": 245,
+                "price": 10000_000.01,
                 "offer": "Mieten",
                 "description": "Dieses schön gelegene Gütle in Pliezhausen ladet dich ein für deinen Geburstag ein."
             },

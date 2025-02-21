@@ -1,5 +1,6 @@
-from app import models
 from enum import Enum
+from app import models
+from decimal import Decimal
 from typing import List, Optional
 from pydantic import BaseModel, Field, UUID4, field_validator
 
@@ -43,24 +44,26 @@ class Country(str, Enum):
     Thueringen = "Thueringen"
 
 
+
 class Address(BaseModel):
     country: Country
-    city: str
-    plz: str
-    street: str
-
-    @field_validator("plz")
-    def validate_plz_length(cls, value):
-        if value is not None and (len(value) != 5):
-            raise ValueError("PLZ must be exactly 5 digits long.")
-        return value
+    city: str = Field(..., max_length=52)
+    plz: str = Field(..., pattern=r"^\d{5}$",
+                     min_length=5, max_length=5)
+    street: str = Field(..., max_length=52)
 
 
 class Meta(BaseModel):
     size: int
-    price: float
+    price: Optional[Decimal] = Field(ge=0.01, le=1000_000.00, decimal_places=2)
     offer: Offer
     description: Optional[str] = Field(..., max_length=100)
+    
+    @field_validator("price", mode="before")
+    def convert_comma_to_dot(cls, v):
+        if isinstance(v, str):
+            return v.replace(",", ".")
+        return v
 
 
 class EntityModel(BaseModel):
