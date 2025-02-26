@@ -43,7 +43,7 @@ const DropdownMenu = () => {
             aria-labelledby="options-menu"
           >
             <Link
-              href="/publishentity"
+              href="/publishvenue"
               onClick={handleItemClick}
               className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
               role="menuitem"
@@ -59,7 +59,7 @@ const DropdownMenu = () => {
               Neue Anfrage erstellen
             </Link>
             <Link
-              href="/profile"
+              href="/authprofile"
               onClick={handleItemClick}
               className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
               role="menuitem"
@@ -67,12 +67,12 @@ const DropdownMenu = () => {
               Nutzer Profil
             </Link>
             <Link
-              href="/anzeigen"
+              href="/userentities"
               onClick={handleItemClick}
               className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
               role="menuitem"
             >
-              Anzeigen
+              Anzeigen & Anfragen
             </Link>
             <button
               onClick={() => {

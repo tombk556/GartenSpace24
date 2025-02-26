@@ -49,7 +49,7 @@ export default function PropertyDisplay({ property }) {
         </div>
       )}
       <div className="w-full md:w-1/2 md:pl-4">
-        <Link href={`/venues/${property.id}`}>
+        <Link href={`/displayvenues/${property.id}`}>
           <div className="text-l text-gray-700 p-4 mb-4 font-bold">
             <p>{property.meta.description}</p>
           </div>

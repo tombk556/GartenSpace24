@@ -3,7 +3,6 @@ import Link from "@node_modules/next/link";
 import {
   FaLocationDot,
   FaHouseChimney,
-  FaMagnifyingGlass,
   FaEnvelope
 } from "react-icons/fa6";
 const PlacePriceCard = ({ property }) => {
@@ -17,13 +16,6 @@ const PlacePriceCard = ({ property }) => {
         <p className="text-s">
           {property.city} - {property.plz}
         </p>
-      </div>
-      <div>
-        <div className="text-xl flex items-center">
-          <FaMagnifyingGlass className="mr-2" />
-          <p className="font-semibold">{property.type}</p>
-        </div>
-        <p className="text-s">{property.offer}</p>
       </div>
       <div>
         <div className="text-xl flex items-center">

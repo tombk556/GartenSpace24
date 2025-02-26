@@ -100,7 +100,7 @@ export default function EntityForm() {
 
       setIsLoading(false);
 
-      router.push(`/venues/${entityId}`);
+      router.push(`/displayvenues/${entityId}`);
 
     } catch (error) {
       console.error("Submission error:", error);

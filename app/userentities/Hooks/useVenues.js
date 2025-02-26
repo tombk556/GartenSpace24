@@ -1,7 +1,6 @@
-// useEntities.js
 import { useState, useEffect } from 'react';
 
-function useEntities() {
+function useVenues() {
   const [entities, setEntities] = useState([]);
   const [loading, setLoading] = useState(true); // Loading state
   const [error, setError] = useState(null);     // Error state
@@ -70,4 +69,4 @@ function useEntities() {
   return { entities, loading, error, deleteEntity };
 }
 
-export default useEntities;
+export default useVenues;

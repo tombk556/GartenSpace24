@@ -6,7 +6,7 @@ import Link from "next/link";
 import ErrorMessage from "@components/ErrorMessage";
 import AddressSection from "./AddressSection";
 import PropertiesSection from "./PropertiesSection";
-import LoadingModal from "@app/publishentity/components/LoadingModal";
+import LoadingModal from "@app/publishvenue/components/LoadingModal";
 import PriceOfferSection from "./PriceOfferSection";
 import DescriptionSection from "./DescriptionSection";
 
@@ -87,7 +87,7 @@ export default function EntityForm() {
       const advertID = result.id;
 
       setIsLoading(false);
-      router.push(`/anfragen/${advertID}`);
+      router.push(`/displayadverts/${advertID}`);
 
     } catch (error) {
       console.error("Submission error:", error);

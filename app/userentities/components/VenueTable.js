@@ -1,9 +1,9 @@
 import React from 'react';
 import Link from 'next/link';
-import { formatCurrency } from "@app/venues/Hooks";
-import { SquareMeter } from "@app/venues/Hooks";
+import { formatCurrency } from "@app/displayvenues/Hooks";
+import { SquareMeter } from "@app/displayvenues/Hooks";
 
-function EntityTable({ entities, onDelete }) {
+function VenueTable({ entities, onDelete }) {
   return (
     <table className="min-w-full divide-y divide-gray-200 border">
       <thead className="bg-gray-50">
@@ -12,13 +12,13 @@ function EntityTable({ entities, onDelete }) {
             ID
           </th>
           <th className="px-6 py-3 text-left text-m font-medium text-gray-800 tracking-wider">
-            Typ
-          </th>
-          <th className="px-6 py-3 text-left text-m font-medium text-gray-800 tracking-wider">
             Größe
           </th>
           <th className="px-6 py-3 text-left text-m font-medium text-gray-800 tracking-wider">
             Preis
+          </th>
+          <th className="px-6 py-3 text-left text-m font-medium text-gray-800 tracking-wider">
+            Angebot
           </th>
           <th className="px-6 py-3 text-left text-m font-medium text-gray-800 tracking-wider">
             Beschreibung
@@ -32,18 +32,18 @@ function EntityTable({ entities, onDelete }) {
         {entities.map(entity => (
           <tr key={entity.id}>
             <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-700 hover:underline">
-              <Link href={`/venues/${entity.id}`}>
+              <Link href={`/displayvenues/${entity.id}`}>
                 {entity.id}
               </Link>
-            </td>
-            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-              {entity.meta.type}
             </td>
             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
               {SquareMeter(entity.meta.size)}
             </td>
             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
               {formatCurrency(entity.meta.price)}
+            </td>
+            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+              {entity.meta.offer}
             </td>
             <td className="px-6 py-4 whitespace-normal text-sm text-gray-700">
               {entity.meta.description}
@@ -63,4 +63,4 @@ function EntityTable({ entities, onDelete }) {
   );
 }
 
-export default EntityTable;
+export default VenueTable;
