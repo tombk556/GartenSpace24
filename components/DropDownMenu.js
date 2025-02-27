@@ -64,7 +64,7 @@ const DropdownMenu = () => {
               className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
               role="menuitem"
             >
-              Nutzer Profil
+              Mein Konto
             </Link>
             <Link
               href="/userentities"
@@ -82,7 +82,7 @@ const DropdownMenu = () => {
               className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
               role="menuitem"
             >
-              Logout
+              Abmelden
             </button>
           </div>
         </div>

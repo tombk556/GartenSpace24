@@ -44,22 +44,22 @@ export default function Page() {
     <div className="grid md:grid-cols-2 items-center gap-10 max-w-6xl w-full">
       <div>
         <h2 className="lg:text-5xl text-4xl font-extrabold lg:leading-[55px] text-black-800">
-          Login to access your Account
+          Anmelden, um auf dein Konto zuzugreifen
         </h2>
         <p className="lg:text-2xl mt-6 text-gray-800">
-          Access your account to manage your venues, bookings and more.
+          Greife auf dein Konto zu, um deine Gärten, Buchungen und mehr zu verwalten.
         </p>
         <p className="lg:text-xl mt-12 text-gray-800">
-          Don't have an account?{" "}
+          Du hast noch kein Konto?{" "}
           <Link href="/authsignup" className="green_text font-semibold hover:underline">
-            Register here
+            Hier registrieren
           </Link>
         </p>
       </div>
 
       <form className="max-w-md md:ml-auto w-full" onSubmit={handleSubmit}>
         <h3 className="text-black-800 text-3xl font-extrabold mb-8">
-          Login
+          Anmelden
         </h3>
 
         <div className="space-y-4">
@@ -70,7 +70,7 @@ export default function Page() {
               autoComplete="email"
               required
               className="w-full text-gray-800 px-4 py-3.5 rounded-md border-2 border-gray-800 focus:outline-none focus:transform focus:scale-105 transition-transform duration-200"
-              placeholder="Email address"
+              placeholder="Email Addresse"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
             />
@@ -82,33 +82,19 @@ export default function Page() {
               autoComplete="current-password"
               required
               className="w-full text-gray-800 px-4 py-3.5 rounded-md border-2 border-gray-800 focus:outline-none focus:transform focus:scale-105 transition-transform duration-200"
-              placeholder="Password"
+              placeholder="Passwort"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
           <ErrorMessage message={error} />
           <div className="flex flex-wrap items-center justify-between gap-4">
-            <div className="flex items-center">
-              <input
-                id="remember-me"
-                name="remember-me"
-                type="checkbox"
-                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-              />
-              <label
-                htmlFor="remember-me"
-                className="ml-3 block text-sm text-gray-800"
-              >
-                Remember me
-              </label>
-            </div>
             <div className="text-sm">
               <Link
                 href="#"
-                className="font-semibold"
+                className="font-semibold hover:underline"
               >
-                Forgot your password?
+                Passwort vergessen?
               </Link>
             </div>
           </div>
@@ -119,12 +105,12 @@ export default function Page() {
             type="submit"
             className="black_btn w-full text-white text-sm font-semibold py-3.5 rounded-md"
           >
-            Login
+            Anmelden
           </button>
         </div>
         <div className="mt-3 flex items-center gap-4">
           <hr className="w-full border-gray-300" />
-          <p className="text-sm text-gray-800 text-center">or</p>
+          <p className="text-sm text-gray-800 text-center">oder</p>
           <hr className="w-full border-gray-300" />
         </div>
         <div className="mt-3">
@@ -134,7 +120,7 @@ export default function Page() {
             onClick={() => window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/login/google`}
           >
             <FcGoogle size={20} className="mr-2" /> 
-            Continue with Google
+            Mit Google Anmelden
           </button>
         </div>
       </form>

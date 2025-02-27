@@ -73,9 +73,9 @@ export default function Profile() {
 
   return (
     <div className="w-full max-w-lg mx-auto mt-10 p-6 rounded-lg">
-          <h2 className="text-2xl font-bold mb-4">User Profile</h2>
-          <p className="text-gray-700 mb-6"> ID:
-            <span className="green_text"> {user.id}</span>
+          <h2 className="text-2xl font-bold mb-4">Mein Konto</h2>
+          <p className="text-gray-700 mb-6"> Nutzer-ID:
+            <span className="font-semibold"> {user.id}</span>
           </p>
           <form onSubmit={updateAccount} className="space-y-4">
             <div>
@@ -90,7 +90,7 @@ export default function Profile() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">Username:</label>
+              <label className="block text-sm font-medium text-gray-700">Nutzername:</label>
               <input
                 type="text"
                 name="username"
@@ -104,14 +104,14 @@ export default function Profile() {
               type="submit"
               className="black_btn w-full text-white text-sm font-semibold py-3.5 rounded-md"
             >
-              Update Profile
+              Konto aktualisieren
             </button>
             <button
               type="submit"
               className="red_btn w-full text-white text-sm font-semibold py-3.5 rounded-md"
               onClick={deleteAccount}
             >
-              Delete Account
+              Konto löschen
             </button>
           </form>
         </div>

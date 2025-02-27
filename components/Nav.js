@@ -40,7 +40,7 @@ const Nav = () => {
               Anfragen
             </Link>
             <Link href="/authlogin" className="black_btn">
-              Login
+              Anmelden
             </Link>
           </div>
         )}

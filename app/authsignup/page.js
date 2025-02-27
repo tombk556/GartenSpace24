@@ -53,7 +53,7 @@ export default function Page() {
     <div className="max-w-md w-full mx-auto rounded-2xl">
       <form className="max-w-md md:ml-auto w-full" onSubmit={handleSubmit}>
         <h3 className="text-black-800 text-3xl font-extrabold mb-8">
-          Create Your Account
+          Konto erstellen
         </h3>
         <div className="space-y-4 mt-2">
           <div>
@@ -63,7 +63,7 @@ export default function Page() {
               autoComplete="email"
               required
               className="w-full text-gray-800 px-4 py-3.5 rounded-md border-2 border-gray-800 focus:outline-none focus:transform focus:scale-105 transition-transform duration-200"
-              placeholder="Email address"
+              placeholder="Email Addresse"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
@@ -75,7 +75,7 @@ export default function Page() {
               autoComplete="username"
               required
               className="w-full text-gray-800 px-4 py-3.5 rounded-md border-2 border-gray-800 focus:outline-none focus:transform focus:scale-105 transition-transform duration-200"
-              placeholder="Username"
+              placeholder="Nutzername"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
             />
@@ -87,7 +87,7 @@ export default function Page() {
               autoComplete="current-password"
               required
               className="w-full text-gray-800 px-4 py-3.5 rounded-md border-2 border-gray-800 focus:outline-none focus:transform focus:scale-105 transition-transform duration-200"
-              placeholder="Password"
+              placeholder="Passwort"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
@@ -106,12 +106,12 @@ export default function Page() {
                 htmlFor="remember-me"
                 className="ml-3 block text-sm text-gray-800"
               >
-                I accept the {" "}
+                Ich aktzeptiere die {" "}
                 <Link
                   href="#"
-                  className="font-semibold green_text"
+                  className="font-semibold hover:underline"
                 >
-                  Terms & Conditions
+                  Nutzungsbedingungen
                 </Link>
               </label>
             </div>
@@ -123,12 +123,12 @@ export default function Page() {
             type="submit"
             className="black_btn w-full text-white text-sm font-semibold py-3.5 rounded-md"
           >
-            Create an Account
+            Konto erstellen
           </button>
         </div>
         <div className="mt-3 flex items-center gap-4">
           <hr className="w-full border-gray-300" />
-          <p className="text-sm text-gray-800 text-center">or</p>
+          <p className="text-sm text-gray-800 text-center">oder</p>
           <hr className="w-full border-gray-300" />
         </div>
         <div className="mt-3">
@@ -140,7 +140,7 @@ export default function Page() {
             }
           >
             <FcGoogle size={20} className="mr-2" />
-            Signup with Google
+            Mit Google Anmelden
           </button>
         </div>
       </form>
