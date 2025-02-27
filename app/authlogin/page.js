@@ -51,7 +51,7 @@ export default function Page() {
         </p>
         <p className="lg:text-xl mt-12 text-gray-800">
           Don't have an account?{" "}
-          <Link href="/authsignup" className="orange_text font-semibold hover:underline">
+          <Link href="/authsignup" className="green_text font-semibold hover:underline">
             Register here
           </Link>
         </p>

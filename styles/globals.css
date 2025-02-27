@@ -142,6 +142,6 @@
   @apply flex justify-between items-center;
 }
 
-.orange_text {
-  color: #F25623;
+.green_text {
+  color : #009243;
 }

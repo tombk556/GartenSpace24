@@ -8,7 +8,7 @@ export default function ProfileForm() {
       <div className="space-y-12">
         {/* Beschreibung und Fotos */}
         <div className="border-b border-gray-900/10 pb-12">
-        <h1 className="orange_text text-2xl font-bold">Neues Inserat erstellen und veröffentlichen</h1>
+        <h1 className="green_text text-2xl font-bold">Neues Inserat erstellen und veröffentlichen</h1>
           <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
             <div className="sm:col-span-4">
               <label htmlFor="shortDesc" className="text-l font-semibold text-gray-700">
@@ -51,7 +51,7 @@ export default function ProfileForm() {
                   <div className="mt-4 flex text-m leading-6 text-gray-600">
                     <label
                       htmlFor="file-upload"
-                      className="relative cursor-pointer rounded-md bg-white font-semibold orange_text"
+                      className="relative cursor-pointer rounded-md bg-white font-semibold green_text"
                     >
                       <span>Fotos hochladen</span>
                       <input id="image-upload" name="image-upload" type="file" className="sr-only" />

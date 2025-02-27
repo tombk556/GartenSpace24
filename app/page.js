@@ -3,14 +3,10 @@ const Home = () => {
   return (
     <section>
       <h1 className="head_text text-center">
-        Discover and Rent
         <br className="max-hd:hidden" />
-        <span className="orange_text text-center">Event Locations</span>
+        <span className="green_text text-center">Endlich im Garten</span>
       </h1>
-      <p className="desc text-center">
-        Event Location To Share is a platform that connects event organizers
-        and venue owners. <br />
-      </p>
+      <p className="desc text-center">GardenSpace24 ist die Plattform für die einfache und sichere Vermittlung von Gärten in ganz Deutschland</p>
     </section>
   );
 };

@@ -75,7 +75,7 @@ export default function Profile() {
     <div className="w-full max-w-lg mx-auto mt-10 p-6 rounded-lg">
           <h2 className="text-2xl font-bold mb-4">User Profile</h2>
           <p className="text-gray-700 mb-6"> ID:
-            <span className="orange_text"> {user.id}</span>
+            <span className="green_text"> {user.id}</span>
           </p>
           <form onSubmit={updateAccount} className="space-y-4">
             <div>

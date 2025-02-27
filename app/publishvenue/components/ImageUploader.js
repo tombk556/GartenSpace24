@@ -45,7 +45,7 @@ export default function ImageUploader({ selectedImages, setSelectedImages }) {
           <div className="mt-4 flex text-m leading-6 text-gray-600">
             <label
               htmlFor="image-upload"
-              className="relative cursor-pointer rounded-md bg-white font-semibold orange_text"
+              className="relative cursor-pointer rounded-md bg-white font-semibold green_text"
             >
               <span> Fotos hochladen</span>
               <p className="text-xs leading-5 text-gray-700">

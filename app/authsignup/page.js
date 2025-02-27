@@ -109,7 +109,7 @@ export default function Page() {
                 I accept the {" "}
                 <Link
                   href="#"
-                  className="font-semibold orange_text"
+                  className="font-semibold green_text"
                 >
                   Terms & Conditions
                 </Link>

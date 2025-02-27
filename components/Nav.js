@@ -13,10 +13,10 @@ const Nav = () => {
     <nav className="fixed flex-between w-full pt-3 z-50 bg-white">
       <Link href="/" className="flex gap-2 flex-center ml-5">
         <Image
-          src="/assets/images/logo_icon.png"
-          alt="Promptopia Logo"
-          width={110}
-          height={110}
+          src="/assets/images/Logo_GardenSpace24.svg"
+          alt="logo"
+          width={220}
+          height={220}
           className="object-contain"
         />
       </Link>

@@ -8,7 +8,7 @@ export default function DescriptionSection({ formData, setFormData }) {
 
   return (
     <div className="border-b border-gray-900/10 pb-12">
-      <h1 className="orange_text text-2xl font-bold">
+      <h1 className="green_text text-2xl font-bold">
         Neues Inserat erstellen und veröffentlichen
       </h1>
       <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">

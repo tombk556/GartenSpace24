@@ -22,11 +22,11 @@ const Page = () => {
     content = (
       <div className="text-gray-700">
         Sie haben keine Anzeigen. Jetzt eine{" "}
-        <Link href="/publishvenue" className="orange_text hover:underline">
+        <Link href="/publishvenue" className="green_text hover:underline">
           Anzeige
         </Link>
         {" oder eine "}
-        <Link href="/publishadvert" className="orange_text hover:underline">
+        <Link href="/publishadvert" className="green_text hover:underline">
           Anfrage
         </Link>
       </div>
@@ -48,7 +48,7 @@ const Page = () => {
   return (
     <ProtectedRoute>
       <div className="p-4">
-        <p className="text-xl orange_text font-bold mb-4">
+        <p className="text-xl green_text font-bold mb-4">
           Meine Anzeigen und Anfragen
         </p>
         {content}

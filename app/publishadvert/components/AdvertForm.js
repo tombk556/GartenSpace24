@@ -125,7 +125,7 @@ export default function EntityForm() {
             className="ml-3 block text-sm text-gray-800"
           >
             Ich akzeptiere die{" "}
-            <Link href="#" className="font-semibold orange_text">
+            <Link href="#" className="font-semibold green_text">
               Nutzungsbedingungen
             </Link>
           </label>
