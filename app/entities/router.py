@@ -7,6 +7,8 @@ from app.entities.schemas import EntityModel, EntityResponse
 from uuid import UUID
 from io import BytesIO
 from fastapi import Query
+from typing import Optional
+from sqlalchemy import or_
 from sqlalchemy.orm import Session
 from fastapi.responses import StreamingResponse
 from fastapi import APIRouter, Depends, status, UploadFile, File, HTTPException
@@ -29,9 +31,29 @@ def create_entity(entity: EntityModel, current_user: User = Depends(oauth2.get_c
 
 
 @entities.get("/get_all_entities", status_code=status.HTTP_200_OK, response_model=list[EntityResponse])
-def get_all_entities(db: Session = Depends(PostgresDB.get_db), skip: int = Query(0, ge=0),
-                     limit: int = Query(10, ge=1)):
-    entities = (db.query(models.Entity).offset(skip).limit(limit).all())
+def get_all_entities(
+    db: Session = Depends(PostgresDB.get_db),
+    skip: int = Query(0, ge=0),
+    limit: int = Query(10, ge=1),
+    search: Optional[str] = Query(None, description="PLZ, Stadt oder Land"),
+    offer: Optional[str] = Query(None, description="Mieten, Kaufen, Pachten etc.")
+):
+    query = db.query(models.Entity)
+
+    if search:
+        query = query.filter(
+            or_(
+                models.Entity.country.ilike(f"%{search}%"),
+                models.Entity.city.ilike(f"%{search}%"),
+                models.Entity.plz.ilike(f"%{search}%")
+            )
+        )
+
+    if offer:
+        query = query.filter(models.Entity.offer.ilike(f"%{offer}%"))
+
+    entities = query.offset(skip).limit(limit).all()
+    
     return [EntityResponse.from_orm(entity) for entity in entities]
 
 
