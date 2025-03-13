@@ -4,13 +4,15 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { FaAngleDown } from "react-icons/fa6";
 
-const SearchBar = () => {
+const SearchBar = ({
+  defaultSearchTerm = "",
+  defaultOffer = "Pachten",
+}) => {
   const router = useRouter();
-  const [searchTerm, setSearchTerm] = useState("");
-  const [offer, setOffer] = useState("Mieten");
+  const [searchTerm, setSearchTerm] = useState(defaultSearchTerm);
+  const [offer, setOffer] = useState(defaultOffer);
 
   const handleSearch = () => {
-    // Hier leiten wir auf /suchergebnisse weiter, inklusive Query-Parametern
     router.push(`/searchresult?search=${searchTerm}&offer=${offer}`);
   };
 
@@ -30,9 +32,9 @@ const SearchBar = () => {
             value={offer}
             onChange={(e) => setOffer(e.target.value)}
           >
-            <option value="Mieten">Mieten</option>
-            <option value="Kaufen">Kaufen</option>
             <option value="Pachten">Pachten</option>
+            <option value="Kaufen">Kaufen</option>
+            <option value="Mieten">Mieten</option>
           </select>
           <FaAngleDown className="absolute inset-y-4 right-2" size={20} />
         </div>
