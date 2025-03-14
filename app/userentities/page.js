@@ -7,13 +7,18 @@ import useAdverts from "./Hooks/useAdverts";
 import VenueTable from "./components/VenueTable";
 import AdvertTable from "./components/AdvertTable";
 import ProtectedRoute from "@components/ProtectedRoute";
+import { FaSpinner } from "react-icons/fa";
 
 const Page = () => {
   const { entities, loading, error, deleteEntity } = useEntities();
   const { adverts, loadingAdverts, errorAdverts, deleteAdvert } = useAdverts();
 
   if (loading || loadingAdverts) {
-    return <div className="p-4">Lädt...</div>;
+    return (
+      <div className="p-4">
+        <FaSpinner className="animate-spin text-gray-700 text-4xl" />
+      </div>
+    );
   }
 
   let content;

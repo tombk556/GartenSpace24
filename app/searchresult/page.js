@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import PropertyDisplay from "./components/PropertyDisplay";
 import SearchBar from "@components/SearchBar";
-import { FaSpinner } from "react-icons/fa"; // Import Spinner Icon
+import { FaSpinner } from "react-icons/fa";
 
 export default function SuchergebnissePage() {
   const [entities, setEntities] = useState([]);

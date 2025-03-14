@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import ErrorMessage from "@components/ErrorMessage";
+import { FaSpinner } from "react-icons/fa";
 
 export default function Profile() {
   const [user, setUser] = useState({ email: '', username: '', id: '' });
@@ -69,7 +70,10 @@ export default function Profile() {
       });
     };
 
-  if (loading) return <div className="text-center">Loading...</div>;
+  if (loading) return 
+  <div className="text-center">
+    <FaSpinner className="animate-spin text-gray-700 text-4xl" />
+  </div>;
 
   return (
     <div className="w-full max-w-lg mx-auto mt-10 p-6 rounded-lg">
