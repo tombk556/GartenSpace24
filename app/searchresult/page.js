@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import PropertyDisplay from "../displayvenues/components/PropertyDisplay";
+import PropertyDisplay from "./components/PropertyDisplay";
 import SearchBar from "@components/SearchBar";
 
 export default function SuchergebnissePage() {
