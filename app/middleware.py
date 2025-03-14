@@ -1,6 +1,7 @@
 import time
+import asyncio
 from typing import Dict, List
-from fastapi import Response
+from fastapi import Response, Request
 from collections import defaultdict
 from starlette.middleware.base import BaseHTTPMiddleware
 
@@ -38,3 +39,8 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
             response.headers.append(header, value)
         
         return response
+
+class SlowMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request: Request, call_next):
+        await asyncio.sleep(1)
+        return await call_next(request)

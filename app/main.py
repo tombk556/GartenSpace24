@@ -7,7 +7,7 @@ from app.advert.router import advert
 from app.entities.router import entities
 
 from fastapi import FastAPI
-from app.middleware import RateLimitMiddleware
+from app.middleware import RateLimitMiddleware, SlowMiddleware
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.sessions import SessionMiddleware
 
@@ -24,6 +24,7 @@ app.add_middleware(
 )
 app.add_middleware(SessionMiddleware, secret_key=settings.secret_key)
 app.add_middleware(RateLimitMiddleware, max_requests=60, time_window=60)
+app.add_middleware(SlowMiddleware)
 
 @app.get("/")
 def root():
