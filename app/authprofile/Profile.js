@@ -70,10 +70,7 @@ export default function Profile() {
       });
     };
 
-  if (loading) return 
-  <div className="text-center">
-    <FaSpinner className="animate-spin text-gray-700 text-4xl" />
-  </div>;
+  if (loading) return  <div className="text-center"><FaSpinner className="animate-spin text-gray-700 text-4xl"/></div>;
 
   return (
     <div className="w-full max-w-lg mx-auto mt-10 p-6 rounded-lg">
