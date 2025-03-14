@@ -2,10 +2,12 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { FaLocationDot } from "react-icons/fa6";
 import { formatCurrency, SquareMeter } from "../Hooks";
+import { FaSpinner } from "react-icons/fa"; // Import Spinner Icon
 
 export default function PropertyDisplay({ property }) {
   const id = property.id;
   const fileId = Object.values(property.images)[0];
+
   const [isLoadingImages, setIsLoadingImages] = useState(true);
   const [imageSrc, setImageSrc] = useState(null);
 
@@ -18,12 +20,13 @@ export default function PropertyDisplay({ property }) {
         const imageBlob = await response.blob();
         const imageUrl = URL.createObjectURL(imageBlob);
         setImageSrc(imageUrl);
-        setIsLoadingImages(false);
       } else {
         console.error("Failed to fetch image:", response.statusText);
       }
     } catch (error) {
       console.error("Error fetching image:", error);
+    } finally {
+      setIsLoadingImages(false);
     }
   };
 
@@ -32,22 +35,24 @@ export default function PropertyDisplay({ property }) {
   }, []);
 
   return (
-    <div className="flex flex-wrap justify-center items-start p-4 border-2 border-gray-400 rounded-lg" key={property.id}>
-      {isLoadingImages ? (
-        <div className="w-full md:w-1/2 h-64 bg-gray-300 animate-pulse rounded-lg shadow-lg justify-center"></div>
-      ) : (
-        <div className="w-full md:w-1/2 h-64">
-          {imageSrc ? (
-            <img
-              src={imageSrc}
-              alt="Property Image"
-              className="w-full h-full object-cover rounded-lg shadow-lg"
-            />
-          ) : (
-            <p>No image available</p>
-          )}
-        </div>
-      )}
+    <div
+      className="w-[700px] h-[300px] flex flex-wrap justify-center items-start p-4 border-2 border-gray-400 rounded-lg"
+      key={property.id}
+    >
+      <div className="relative w-full md:w-1/2 h-64 flex items-center justify-center">
+        {isLoadingImages ? (
+          <FaSpinner className="animate-spin text-gray-700 text-4xl" />
+        ) : imageSrc ? (
+          <img
+            src={imageSrc}
+            alt="Property Image"
+            className="w-full h-full object-cover rounded-lg shadow-lg"
+          />
+        ) : (
+          <p>No image available</p>
+        )}
+      </div>
+
       <div className="w-full md:w-1/2 md:pl-4">
         <Link href={`/displayvenues/${property.id}`}>
           <div className="text-l text-gray-700 p-4 mb-4 font-bold">
