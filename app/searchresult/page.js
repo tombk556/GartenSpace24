@@ -18,7 +18,7 @@ export default function SuchergebnissePage() {
   const [totalCount, setTotalCount] = useState(0);
 
   useEffect(() => {
-    setPage(1); // Reset to first page when search changes
+    setPage(1);
   }, [search, offer]);
 
   useEffect(() => {
@@ -35,7 +35,7 @@ export default function SuchergebnissePage() {
       const data = await res.json();
 
       setEntities(data.entities);
-      setTotalPages(Math.ceil(data.total_count / limit)); // Total pages
+      setTotalPages(Math.ceil(data.total_count / limit));
       setTotalCount(data.total_count);
     } catch (error) {
       console.error(error);
@@ -74,7 +74,7 @@ export default function SuchergebnissePage() {
           onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
           disabled={page === 1}
           className={`px-4 py-2 rounded-md ${
-            page === 1 ? "bg-gray-300" : "bg-blue-600 hover:bg-blue-700 text-white"
+            page === 1 ? "bg-gray-300" : "text-white bg-[#009243] hover: hover:bg-green-800 transition-transform duration-300 transform hover:scale-105 hover:shadow-lg"
           }`}
         >
           Zurück
@@ -90,7 +90,7 @@ export default function SuchergebnissePage() {
               key={index}
               onClick={() => setPage(p)}
               className={`px-4 py-2 rounded-md ${
-                page === p ? "bg-blue-700 text-white" : "bg-gray-200 hover:bg-gray-300"
+                page === p ? "text-white bg-[#009243] " : "bg-gray-300 hover: hover:transition-transform duration-300 transform hover:scale-105 hover:shadow-lg"
               }`}
             >
               {p}
@@ -102,7 +102,7 @@ export default function SuchergebnissePage() {
           onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
           disabled={page === totalPages}
           className={`px-4 py-2 rounded-md ${
-            page === totalPages ? "bg-gray-300" : "bg-blue-600 hover:bg-blue-700 text-white"
+            page === totalPages ? "bg-gray-300" : "text-white bg-[#009243] hover: hover:bg-green-800 transition-transform duration-300 transform hover:scale-105 hover:shadow-lg"
           }`}
         >
           Weiter
