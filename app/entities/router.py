@@ -30,7 +30,7 @@ def create_entity(entity: EntityModel, current_user: User = Depends(oauth2.get_c
     return {"id": entity.id}
 
 
-@entities.get("/get_all_entities", status_code=status.HTTP_200_OK, response_model=list[EntityResponse])
+@entities.get("/get_all_entities", status_code=status.HTTP_200_OK)
 def get_all_entities(
     db: Session = Depends(PostgresDB.get_db),
     skip: int = Query(0, ge=0),
@@ -52,9 +52,12 @@ def get_all_entities(
     if offer:
         query = query.filter(models.Entity.offer.ilike(f"%{offer}%"))
 
+    total_count = query.count()  # Total matching records
+
     entities = query.offset(skip).limit(limit).all()
     
-    return [EntityResponse.from_orm(entity) for entity in entities]
+    return {"entities": [EntityResponse.from_orm(entity) for entity in entities], "total_count": total_count}
+
 
 
 @entities.get("/get_entity/{id}", status_code=status.HTTP_200_OK)
