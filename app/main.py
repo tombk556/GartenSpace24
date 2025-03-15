@@ -24,7 +24,7 @@ app.add_middleware(
 )
 app.add_middleware(SessionMiddleware, secret_key=settings.secret_key)
 # app.add_middleware(RateLimitMiddleware, max_requests=60, time_window=60)
-app.add_middleware(SlowMiddleware)
+# app.add_middleware(SlowMiddleware)
 
 @app.get("/")
 def root():
