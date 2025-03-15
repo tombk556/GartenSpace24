@@ -9,51 +9,129 @@ import { FaSpinner } from "react-icons/fa";
 export default function SuchergebnissePage() {
   const [entities, setEntities] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const searchParams = useSearchParams();
   const search = searchParams.get("search");
   const offer = searchParams.get("offer");
+  const limit = 20;
+  const [totalCount, setTotalCount] = useState(0);
 
   useEffect(() => {
-    async function fetchData() {
-      setLoading(true);
-      try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/entities/get_all_entities?search=${search}&offer=${offer}`
-        );
-        const data = await res.json();
-        setEntities(data);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    }
+    setPage(1); // Reset to first page when search changes
+  }, [search, offer]);
 
-    if (search && offer) {
-      fetchData();
-    } else {
+  useEffect(() => {
+    fetchData(page);
+  }, [page, search, offer]);
+
+  async function fetchData(currentPage) {
+    setLoading(true);
+    try {
+      const skip = (currentPage - 1) * limit;
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/entities/get_all_entities?search=${search}&offer=${offer}&skip=${skip}&limit=${limit}`
+      );
+      const data = await res.json();
+
+      setEntities(data.entities);
+      setTotalPages(Math.ceil(data.total_count / limit)); // Total pages
+      setTotalCount(data.total_count);
+    } catch (error) {
+      console.error(error);
+    } finally {
       setLoading(false);
     }
-  }, [search, offer]);
+  }
+
+  function renderPagination() {
+    if (totalPages <= 1) return null;
+
+    const pages = [];
+    const maxPagesToShow = 5;
+
+    if (totalPages <= maxPagesToShow) {
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      pages.push(1);
+      if (page > 3) pages.push("...");
+
+      let start = Math.max(2, page - 1);
+      let end = Math.min(totalPages - 1, page + 1);
+      for (let i = start; i <= end; i++) {
+        pages.push(i);
+      }
+
+      if (page < totalPages - 2) pages.push("...");
+      pages.push(totalPages);
+    }
+
+    return (
+      <div className="flex items-center mt-6 space-x-2">
+        <button
+          onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+          disabled={page === 1}
+          className={`px-4 py-2 rounded-md ${
+            page === 1 ? "bg-gray-300" : "bg-blue-600 hover:bg-blue-700 text-white"
+          }`}
+        >
+          Zurück
+        </button>
+
+        {pages.map((p, index) =>
+          p === "..." ? (
+            <span key={index} className="px-3 py-2">
+              ...
+            </span>
+          ) : (
+            <button
+              key={index}
+              onClick={() => setPage(p)}
+              className={`px-4 py-2 rounded-md ${
+                page === p ? "bg-blue-700 text-white" : "bg-gray-200 hover:bg-gray-300"
+              }`}
+            >
+              {p}
+            </button>
+          )
+        )}
+
+        <button
+          onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
+          disabled={page === totalPages}
+          className={`px-4 py-2 rounded-md ${
+            page === totalPages ? "bg-gray-300" : "bg-blue-600 hover:bg-blue-700 text-white"
+          }`}
+        >
+          Weiter
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex flex-col items-center px-6 mt-20">
       <h1 className="text-5xl font-bold">Suchergebnisse</h1>
       <p className="text-xl text-gray-700">
-        {loading ? "Lade Ergebnisse..." : `${entities.length} Kleingärten gefunden`}
+        {loading && entities.length === 0 ? "Lade Ergebnisse..." : `${totalCount} Kleingärten gefunden`}
       </p>
       <SearchBar defaultOffer={offer} defaultSearchTerm={search} />
       <br />
-      {loading ? (
+      {loading && entities.length === 0 ? (
         <FaSpinner className="animate-spin text-gray-700 text-4xl" />
       ) : entities.length === 0 ? (
         <p className="mt-4 text-2xl text-gray-700">Keine Kleingärten für die Suche gefunden.</p>
       ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          {entities.map((entity) => (
-            <PropertyDisplay key={entity.id} property={entity} />
-          ))}
-        </div>
+        <>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            {entities.map((entity) => (
+              <PropertyDisplay key={entity.id} property={entity} />
+            ))}
+          </div>
+          {renderPagination()}
+        </>
       )}
     </div>
   );
