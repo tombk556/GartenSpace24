@@ -1,4 +1,4 @@
-# be_v1
+# Backend
 uvicorn app.main:app --reload
 
 pytest tests/ -v -s 
