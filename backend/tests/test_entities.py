@@ -202,7 +202,7 @@ def test_get_entities(client: TestClient, entities):
     )
 
     assert response.status_code == 200
-    assert len(response.json()) == 3
+    assert len(response.json()) == 2
 
 
 def test_upload_image(authorized_client: TestClient, entity):
@@ -210,7 +210,7 @@ def test_upload_image(authorized_client: TestClient, entity):
         url=f"/entities/upload/{entity}",
         files={"file": ("bild1.png",
                         open(
-                            "/Users/tom/Documents/ELTS/ELTS_backend/tests/data/bild1.png", "rb"),
+                            "/Users/tom/Documents/GartenSpace24/app/backend/tests/data/bild1.png", "rb"),
                         "image/png")}
     )
 
@@ -227,7 +227,7 @@ def test_upload_images(authorized_client: TestClient, entity):
             files=[
                 ("file", (image,
                           open(
-                              f"/Users/tom/Documents/ELTS/ELTS_backend/tests/data/{image}", "rb"),
+                              f"/Users/tom/Documents/GartenSpace24/app/backend/tests/data/{image}", "rb"),
                           "image/png"))])
 
         assert response.status_code == 200
@@ -258,7 +258,7 @@ def test_download_image(authorized_client: TestClient, entity):
         url=f"/entities/upload/{entity}",
         files={"file": ("bild1.png",
                         open(
-                            "/Users/tom/Documents/ELTS/ELTS_backend/tests/data/bild1.png", "rb"),
+                            "/Users/tom/Documents/GartenSpace24/app/backend/tests/data/bild1.png", "rb"),
                         "image/png")}
     )
     assert response.status_code == 200

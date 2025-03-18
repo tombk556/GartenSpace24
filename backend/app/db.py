@@ -4,7 +4,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
 PSQL_DB_URL = psql.database_url_psql
-engine = create_engine(PSQL_DB_URL.replace("postgres", "postgresql"))
+engine = create_engine(PSQL_DB_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 

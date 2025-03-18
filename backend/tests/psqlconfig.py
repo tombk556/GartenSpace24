@@ -14,7 +14,7 @@ import os
 from app.auth.oauth2 import create_access_token
 
 PSQL_DB_URL = psql.test_database_url_psql
-engine = create_engine(PSQL_DB_URL.replace("postgres", "postgresql"))
+engine = create_engine(PSQL_DB_URL)
 TestingSessionLocal = sessionmaker(
     autocommit=False, autoflush=False, bind=engine)
 
@@ -137,7 +137,7 @@ def entity_image(authorized_client: TestClient, entity):
     response = authorized_client.put(
         url = f"/entities/upload/{entity}",
         files={"file": ("bild1.png", 
-                        open("/Users/tom/Documents/ELTS/ELTS_backend/tests/data/bild1.png", "rb"),
+                        open("/Users/tom/Documents/GartenSpace24/app/backend/tests/data/bild1.png", "rb"),
                         "image/png")}
     )
     
