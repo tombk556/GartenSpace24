@@ -8,7 +8,7 @@ from uuid import UUID
 from io import BytesIO
 from fastapi import Query
 from typing import Optional
-from sqlalchemy import or_
+from sqlalchemy import or_, and_
 from sqlalchemy.orm import Session
 from fastapi.responses import StreamingResponse
 from fastapi import APIRouter, Depends, status, UploadFile, File, HTTPException
@@ -41,11 +41,14 @@ def get_all_entities(
     query = db.query(models.Entity)
 
     if search:
+        
+        city, plz, country = [p.strip() for p in search.split(",")]
+        
         query = query.filter(
             or_(
-                models.Entity.country.ilike(f"%{search}%"),
-                models.Entity.city.ilike(f"%{search}%"),
-                models.Entity.plz.ilike(f"%{search}%")
+                models.Entity.city.ilike(f"%{city}%"),
+                models.Entity.plz.ilike(f"%{plz}%"),
+                models.Entity.country.ilike(f"%{country}%")
             )
         )
 
