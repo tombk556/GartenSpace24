@@ -8,7 +8,7 @@ from uuid import UUID
 from io import BytesIO
 from fastapi import Query
 from typing import Optional
-from sqlalchemy import or_, and_
+from sqlalchemy import or_, and_, case
 from sqlalchemy.orm import Session
 from fastapi.responses import StreamingResponse
 from fastapi import APIRouter, Depends, status, UploadFile, File, HTTPException
@@ -42,19 +42,37 @@ def get_all_entities(
 
     if search:
         
-        city, plz, country = [p.strip() for p in search.split(",")]
+        parts = [p.strip() for p in search.split(",")]
         
-        query = query.filter(
-            or_(
-                models.Entity.city.ilike(f"%{city}%"),
-                models.Entity.plz.ilike(f"%{plz}%"),
-                models.Entity.country.ilike(f"%{country}%")
+        if len(parts) == 3:
+            city, plz, country = parts
+            
+            query = query.filter(
+                and_(
+                    models.Entity.city.ilike(f"%{city}%"),
+                    models.Entity.plz.ilike(f"%{plz}%"),
+                    models.Entity.country.ilike(f"%{country}%")
+                )
             )
-        )
+
+        else:
+            query = query.filter(
+                or_(
+                    models.Entity.city.ilike(f"%{search}%"),
+                    models.Entity.plz.ilike(f"%{search}%"),
+                    models.Entity.country.ilike(f"%{search}%")
+                )
+            )
 
     if offer:
-        query = query.filter(models.Entity.offer.ilike(f"%{offer}%"))
-
+        query = query.order_by(
+            case(
+                (models.Entity.offer == offer, 0),
+                else_=1
+            ),
+            models.Entity.offer
+        )
+        
     total_count = query.count()  # Total matching records
 
     entities = query.offset(skip).limit(limit).all()
