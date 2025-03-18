@@ -1,33 +1,29 @@
-version: '3.8'
+version: "3.9"
 
 services:
+  db:
+    image: postgres:15-alpine
+    container_name: gartenspace24-db
+    environment:
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypass
+      POSTGRES_DB: gartendb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
+    container_name: gartenspace24-backend
     env_file:
       - ./backend/.env
-    volumes:
-      - ./ackend:/app
     ports:
       - "8000:8000"
-    networks:
-      - app-network
-
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    env_file:
-      - ./frontend/.env
-    volumes:
-      - ./frontend:/app
-    ports:
-      - "3000:3000"
     depends_on:
-      - backend
-    networks:
-      - app-network
+      - db
 
-networks:
-  app-network:
+volumes:
+  postgres-data:
