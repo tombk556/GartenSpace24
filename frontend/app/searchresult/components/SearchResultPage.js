@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import PropertyDisplay from "./PropertyDisplay";
 import SearchBar from "@components/SearchBar";
 import { FaSpinner } from "react-icons/fa";
+import NoResultPage from "./NoResultPage";
 
 export default function SearchResultPage() {
   const [entities, setEntities] = useState([]);
@@ -122,7 +123,7 @@ export default function SearchResultPage() {
       {loading && entities.length === 0 ? (
         <FaSpinner className="animate-spin text-gray-700 text-4xl" />
       ) : entities.length === 0 ? (
-        <p className="mt-4 text-2xl text-gray-700">Keine Kleingärten für die Suche gefunden.</p>
+        <NoResultPage />
       ) : (
         <>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
