@@ -17,25 +17,17 @@ const Footer = () => {
         </div>
 
         <span className="text-gray-600 text-sm text-center md:text-left mb-4 md:mb-0">
-          © 2025{" "}
           <Link href="/" className="hover:underline">
-            GartenSpace24™
+            GartenSpace24
           </Link>
-          . All Rights Reserved.
         </span>
 
         <div className="flex flex-wrap justify-center md:justify-end items-center text-sm text-gray-600 font-medium space-x-4 md:space-x-6">
-          <Link href="#" className="hover:underline">
+          <Link href="/about" className="hover:underline">
             About
           </Link>
-          <Link href="#" className="hover:underline">
-            Privacy Policy
-          </Link>
-          <Link href="#" className="hover:underline">
-            Licensing
-          </Link>
-          <Link href="#" className="hover:underline">
-            Contact
+          <Link href="/impressum" className="hover:underline">
+            Impressum
           </Link>
         </div>
       </div>
