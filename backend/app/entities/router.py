@@ -93,10 +93,18 @@ def get_entity(id: UUID, db: Session = Depends(PostgresDB.get_db)):
 
 
 @entities.get("/get_user_entities", status_code=status.HTTP_200_OK, response_model=list[EntityResponse])
-def get_user_entities(current_user: User = Depends(oauth2.get_current_user),
-                      db: Session = Depends(PostgresDB.get_db)):
-    entities = db.query(models.Entity).filter(
-        models.Entity.owner_id == current_user.id).all()
+def get_user_entities(
+    current_user: User = Depends(oauth2.get_current_user),
+    db: Session = Depends(PostgresDB.get_db),
+    skip: int = Query(0, ge=0),
+    limit: int = Query(10, ge=1),
+    ):
+    
+    query = db.query(models.Entity).filter(
+        models.Entity.owner_id == current_user.id)
+    
+    entities = query.offset(skip).limit(limit).all()
+    
     return [EntityResponse.from_orm(entity) for entity in entities]
 
 

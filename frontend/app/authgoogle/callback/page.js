@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from 'next/navigation';
+import { FaSpinner } from "react-icons/fa";
 
 export default function Page() {
   const router = useRouter();
@@ -13,7 +14,7 @@ export default function Page() {
 
     if (token) {
       localStorage.setItem("access_token", token);
-      router.push('/');
+      router.push('/userentities');
     } else if (error) {
       setErrorMessage(error);
     } else {
@@ -26,7 +27,7 @@ export default function Page() {
       {errorMessage ? (
         <div style={{ color: 'red' }}>{errorMessage}</div>
       ) : (
-        <div>Loading...</div>
+        <div><FaSpinner className="animate-spin text-gray-700 text-4xl" /></div>
       )}
     </div>
   );

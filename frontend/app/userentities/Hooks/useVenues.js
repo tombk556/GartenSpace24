@@ -9,7 +9,7 @@ function useVenues() {
     const token = localStorage.getItem("access_token");
     if (token) {
       fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/entities/get_user_entities`,
+        `${process.env.NEXT_PUBLIC_API_URL}/entities/get_user_entities?&limit=10`,
         {
           method: "GET",
           headers: {

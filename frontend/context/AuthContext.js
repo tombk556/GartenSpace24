@@ -61,7 +61,7 @@ export const AuthProvider = ({ children }) => {
                 logout();
             }, expiresIn);
 
-            router.push('/');
+            router.push('/userentities');
             return null;
         } catch (error) {
             console.log('Login Failed:', error);

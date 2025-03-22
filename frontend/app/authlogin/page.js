@@ -15,9 +15,9 @@ export default function Page() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    const token = localStorage.getItem('access_token');
+    const token = localStorage.getItem("access_token");
     if (token) {
-      router.push('/');
+      router.push("/");
     } else {
       const queryParams = new URLSearchParams(window.location.search);
       const errorParam = queryParams.get("error");
@@ -44,24 +44,28 @@ export default function Page() {
     <div className="grid md:grid-cols-2 items-center gap-10 max-w-6xl w-full">
       <div>
         <h2 className="lg:text-5xl text-4xl font-extrabold lg:leading-[55px] text-black-800">
-          Anmelden, um auf dein Konto zuzugreifen
+          Konto erstellen oder anmelden
         </h2>
         <p className="lg:text-2xl mt-6 text-gray-800">
-          Greife auf dein Konto zu, um deine Gärten, Buchungen und mehr zu verwalten.
+          Um einen Kleingarten anzubieten oder eine Suchanfrage aufzugeben,
+          benötigst du ein Konto. 
+          Melde dich an oder registriere dich in wenigen
+          Schritten.
         </p>
-        <p className="lg:text-xl mt-12 text-gray-800">
+        <p className="lg:text-2xl mt-12 text-gray-800">
           Du hast noch kein Konto?{" "}
-          <Link href="/authsignup" className="green_text font-semibold hover:underline">
+          <Link
+            href="/authsignup"
+            className="green_text font-semibold hover:underline"
+          >
             Hier registrieren
           </Link>
         </p>
       </div>
-
       <form className="max-w-md md:ml-auto w-full" onSubmit={handleSubmit}>
         <h3 className="text-black-800 text-3xl font-extrabold mb-8">
           Anmelden
         </h3>
-
         <div className="space-y-4">
           <div>
             <input
@@ -90,16 +94,12 @@ export default function Page() {
           <ErrorMessage message={error} />
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div className="text-sm">
-              <Link
-                href="#"
-                className="font-semibold hover:underline"
-              >
+              <Link href="#" className="font-semibold hover:underline">
                 Passwort vergessen?
               </Link>
             </div>
           </div>
         </div>
-
         <div className="mt-8">
           <button
             type="submit"
@@ -117,9 +117,11 @@ export default function Page() {
           <button
             type="button"
             className="outline_btn w-full text-white text-sm font-semibold py-3.5 rounded-md"
-            onClick={() => window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/login/google`}
+            onClick={() =>
+              (window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/login/google`)
+            }
           >
-            <FcGoogle size={20} className="mr-2" /> 
+            <FcGoogle size={20} className="mr-2" />
             Mit Google Anmelden
           </button>
         </div>
